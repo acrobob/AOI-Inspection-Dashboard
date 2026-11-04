@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOI 檢測看板 / AOI Inspection Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F6F8}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="tpl">
+<div lang="{{t.langCode}}" style="font-family: 'Noto Sans TC', system-ui, sans-serif; color: #1F2937; background: #F5F6F8; min-height: 100vh; padding: 24px 16px 48px; box-sizing: border-box">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+
+<header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #D1D5DB">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.02em">{{t.title}}</h1>
+<p style="margin: 0; font-size: 13px; color: #4B5563">{{t.source}}</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 12px; color: #4B5563; font-family: 'Roboto Mono', monospace">{{t.updated}} 2026-11-04 07:30</p>
+<div role="group" aria-label="語言 / Language" style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{langs}}" as="l" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{l.on}}" onClick="{{l.pick}}" style="{{l.style}}">{{l.label}}</button>
+</template>
+</div>
+</div>
+</header>
+
+<section aria-label="{{t.filters}}" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 12px 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.line}}</span>
+<template data-sc="for" list="{{lines}}" as="p" hint-placeholder-count="5">
+<button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+</template>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.shift}}</span>
+<template data-sc="for" list="{{shifts}}" as="p" hint-placeholder-count="3">
+<button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+</template>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.model}}</span>
+<template data-sc="for" list="{{models}}" as="p" hint-placeholder-count="3">
+<button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+</template>
+</div>
+<div style="display: flex; align-items: center; gap: 6px">
+<label for="f-date" style="font-size: 13px; color: #4B5563">{{t.date}}</label>
+<button id="f-date" type="button" style="min-height: 36px; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; font-family: 'Roboto Mono', monospace">2026-10-29 ~ 2026-11-04</button>
+</div>
+<span style="font-size: 12px; color: #4B5563; margin-left: auto">{{scope}}</span>
+</section>
+
+<section aria-label="KPI" style="display: flex; flex-wrap: wrap; gap: 12px">
+<template data-sc="for" list="{{kpis}}" as="k" hint-placeholder-count="5">
+<div style="flex: 1 1 200px; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #4B5563">{{k.label}}</span>
+<span style="{{k.style}}">{{k.value}}</span>
+<span style="font-size: 12px; color: #4B5563">{{k.sub}}</span>
+</div>
+</template>
+</section>
+
+<section aria-label="{{t.chTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.chTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{ch.sub}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
+<div role="group" aria-label="{{t.xAxis}}" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.xAxis}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{ch.views}}" as="v" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</template>
+</div>
+</div>
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 13px; font-weight: 500; cursor: pointer; padding-right: 12px; border-right: 1px solid #E5E7EB">
+<input type="checkbox" checked="{{ch.stack}}" onChange="{{ch.toggleStack}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">{{t.stack}}
+</label>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px">
+<legend style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{t.cmpPick}}</legend>
+<template data-sc="for" list="{{ch.checks}}" as="c" hint-placeholder-count="5">
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 13px; cursor: pointer">
+<input type="checkbox" checked="{{c.checked}}" onChange="{{c.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
+<span style="{{c.swatch}}"></span>{{c.label}}
+</label>
+</template>
+</fieldset>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 16px; font-size: 12px; color: #374151; min-height: 16px">
+<template data-sc="if" value="{{ch.shiftLegend}}" hint-placeholder-val="{{false}}">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #93C5FD; display: inline-block"></span>{{t.dayLegend}}</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #1E3A8A; display: inline-block"></span>{{t.nightLegend}}</span>
+</template>
+<template data-sc="if" value="{{ch.stackNote}}" hint-placeholder-val="{{true}}">
+<span>{{t.stackNote}}</span>
+</template>
+</div>
+<template data-sc="if" value="{{ch.empty}}" hint-placeholder-val="{{false}}">
+<div style="height: 260px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563; border: 1px dashed #D1D5DB; border-radius: 4px">{{t.cmpEmpty}}</div>
+</template>
+<template data-sc="if" value="{{ch.has}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 8px">
+<div style="display: flex; flex-direction: column; justify-content: space-between; height: 200px; margin-top: 22px; font-size: 11px; color: #4B5563; font-family: 'Roboto Mono', monospace; text-align: right; width: 32px">
+<span>{{ch.axisTop}}</span><span>{{ch.axisMid}}</span><span>0</span>
+</div>
+<div style="flex: 1; min-width: 0; overflow-x: auto">
+<div style="{{ch.innerStyle}}">
+<template data-sc="for" list="{{ch.groups}}" as="g" hint-placeholder-count="7">
+<div style="{{g.groupStyle}}">
+<div style="height: 222px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 8px; border-bottom: 1px solid #D1D5DB">
+<template data-sc="for" list="{{g.bars}}" as="bar" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="font-size: 11px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{bar.total}}</span>
+<div title="{{bar.tip}}" style="{{bar.stackStyle}}">
+<template data-sc="for" list="{{bar.segs}}" as="sg" hint-placeholder-count="4">
+<div title="{{sg.tip}}" style="{{sg.style}}"></div>
+</template>
+</div>
+</div>
+</template>
+</div>
+<div style="display: flex; justify-content: center; gap: 8px; font-size: 11px; color: #4B5563">
+<template data-sc="for" list="{{g.bars}}" as="bar" hint-placeholder-count="2">
+<span style="{{bar.labelStyle}}">{{bar.label}}</span>
+</template>
+</div>
+<span style="{{g.labelStyle}}">{{g.label}}</span>
+</div>
+</template>
+</div>
+</div>
+</div>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{ch.note}}</p>
+</template>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.dTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{t.dNote}}</span>
+</div>
+<template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; font-size: 13px">
+<span style="font-weight: 500">{{d.name}} <span style="color: #4B5563; font-weight: 400">{{d.local}}</span></span>
+<span style="font-family: 'Roboto Mono', monospace">{{d.text}}</span>
+</div>
+<div style="height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden">
+<div style="{{d.bar}}"></div>
+</div>
+</div>
+</template>
+</section>
+
+<section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
+<template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+<span style="width: 72px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{f.ver}}</span>
+<div style="flex: 1; height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden"><div style="{{f.bar}}"></div></div>
+<span style="width: 160px; text-align: right; font-family: 'Roboto Mono', monospace; color: #374151">{{f.text}}</span>
+</div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.fxNote}}</p>
+</section>
+
+<section aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.rvTitle}}</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<template data-sc="for" list="{{rvBoxes}}" as="x" hint-placeholder-count="3">
+<div style="flex: 1 1 120px; border: 1px solid #E5E7EB; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; color: #4B5563">{{x.label}}</span>
+<span style="{{x.style}}">{{x.value}}</span>
+</div>
+</template>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<span style="color: #374151">{{t.fcSrc}}</span>
+<template data-sc="for" list="{{fcTop}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #F3F4F6; padding-bottom: 6px">
+<span>{{c.name}}</span><span style="font-family: 'Roboto Mono', monospace; white-space: nowrap">{{c.val}}</span>
+</div>
+</template>
+</div>
+</section>
+</div>
+
+<section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{tableScope}}</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 960px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: right">
+<template data-sc="for" list="{{lineHeads}}" as="h" hint-placeholder-count="10">
+<th style="{{h.style}}">{{h.label}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{lineRows}}" as="r" hint-placeholder-count="4">
+<tr style="{{r.rowStyle}}">
+<td style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Noto Sans TC', sans-serif; font-weight: 500">{{r.line}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.boards}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.bridge}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.nopin}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.pinhigh}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.missing}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-weight: 500">{{r.dpu}}</td>
+<td style="{{r.rateStyle}}">{{r.rate}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.fc}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.review}}</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
+<div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.imgLoad}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</template>
+</div>
+</div>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: left">
+<template data-sc="for" list="{{bdHeads}}" as="h" hint-placeholder-count="12">
+<th style="padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{boards}}" as="b" hint-placeholder-count="10">
+<tr>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.sn}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.time}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.line}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.shift}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.model}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.type}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.fixture}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.defect}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.reviewStyle}}">{{b.review}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.resultStyle}}">{{b.result}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.op}}</td>
+<td style="padding: 6px 12px; border-bottom: 1px solid #F3F4F6">
+<template data-sc="if" value="{{b.auto}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.thumbStyle}}"><span style="position: absolute; left: 50%; top: 28%; width: 14px; height: 10px; border: 1.5px solid #B91C1C"></span></button>
+</template>
+<template data-sc="if" value="{{b.manual}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.imgBtnStyle}}">{{b.imgLabel}}</button>
+</template>
+</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+<template data-sc="if" value="{{hasImg}}" hint-placeholder-val="{{false}}">
+<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; background: #FAFAFA">
+<template data-sc="if" value="{{imgLoading}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1 1 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563">{{img.loadingText}}</div>
+</template>
+<template data-sc="if" value="{{imgReady}}" hint-placeholder-val="{{false}}">
+<figure style="flex: 1 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px">
+<div role="img" aria-label="{{img.alt}}" style="position: relative; height: 260px; border: 1px dashed #9CA3AF; border-radius: 4px; background: #E5E7EB; display: flex; align-items: center; justify-content: center">
+<span style="font-size: 13px; color: #374151">{{img.placeholder}}</span>
+<div style="position: absolute; left: 58%; top: 34%; width: 54px; height: 40px; border: 2px solid #B91C1C"></div>
+</div>
+<figcaption style="font-size: 12px; color: #4B5563">{{t.caption}}</figcaption>
+</figure>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{img.sn}}</h3>
+<template data-sc="for" list="{{img.rows}}" as="ir" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px"><span style="color: #4B5563">{{ir.k}}</span><span style="font-family: 'Roboto Mono', 'Noto Sans TC', monospace">{{ir.v}}</span></div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{imgNote}}</p>
+<button type="button" onClick="{{closeImg}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; cursor: pointer">{{t.close}}</button>
+</div>
+</template>
+</div>
+</template>
+</section>
+
+</div>
+</div>
+</template>
+<script>
+(function () {
+  function lookup(path, scope) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    var parts = path.split('.');
+    var v = scope;
+    for (var i = 0; i < parts.length; i++) { if (v == null) return undefined; v = v[parts[i]]; }
+    return v;
+  }
+  var WHOLE = /^\{\{([^}]+)\}\}$/;
+  function interp(str, scope) {
+    return str.replace(/\{\{([^}]+)\}\}/g, function (_, p) { var v = lookup(p, scope); return v == null ? '' : String(v); });
+  }
+  function value(str, scope) { var m = str.match(WHOLE); return m ? lookup(m[1], scope) : interp(str, scope); }
+  function render(nodes, scope, out) {
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      if (n.nodeType === 3) { out.push(document.createTextNode(interp(n.nodeValue, scope))); continue; }
+      if (n.nodeType !== 1) continue;
+      if (n.tagName === 'TEMPLATE' && n.dataset.sc) {
+        if (n.dataset.sc === 'if') {
+          if (value(n.getAttribute('value') || '', scope)) render(n.content.childNodes, scope, out);
+        } else {
+          var list = value(n.getAttribute('list') || '', scope) || [];
+          var as = n.getAttribute('as') || 'item';
+          for (var j = 0; j < list.length; j++) {
+            var sc = Object.create(scope); sc[as] = list[j]; sc.$index = j;
+            render(n.content.childNodes, sc, out);
+          }
+        }
+        continue;
+      }
+      var el = n.namespaceURI === 'http://www.w3.org/2000/svg' ? document.createElementNS(n.namespaceURI, n.localName) : document.createElement(n.localName);
+      for (var k = 0; k < n.attributes.length; k++) {
+        var a = n.attributes[k], name = a.name;
+        if (name.indexOf('hint-') === 0) continue;
+        if (name.indexOf('on') === 0 && WHOLE.test(a.value)) {
+          var fn = value(a.value, scope);
+          if (typeof fn === 'function') el.addEventListener(name.slice(2), fn);
+          continue;
+        }
+        var v = value(a.value, scope);
+        if (name === 'checked') { el.checked = !!v; continue; }
+        if (v === false || v == null) continue;
+        el.setAttribute(name, v === true ? '' : String(v));
+      }
+      var kids = [];
+      render(n.childNodes, scope, kids);
+      kids.forEach(function (c) { el.appendChild(c); });
+      out.push(el);
+    }
+    return out;
+  }
+  window.DCLogic = class {
+    constructor(props) { this.props = props || {}; this.state = {}; }
+    setState(patch) { Object.assign(this.state, typeof patch === 'function' ? patch(this.state) : patch); window.__dcRender(); }
+    forceUpdate() { window.__dcRender(); }
+  };
+  window.__dcMount = function (Component, tplEl, root) {
+    var inst = new Component({});
+    window.__dcRender = function () {
+      var y = window.scrollY;
+      root.replaceChildren.apply(root, render(tplEl.content.childNodes, inst.renderVals(), []));
+      window.scrollTo(0, y);
+    };
+    window.__dcRender();
+  };
+})();
+</script>
+<script>
+var I18N = {
+  zh: {
+    langCode: 'zh-Hant-TW', title: 'AOI 檢測看板', source: '資料來源：Maker Ray AOI 檢測結果 ・ 線體 CD101–CD104 ・ 示意資料',
+    updated: '最後更新', filters: '篩選條件', line: '線體', shift: '班別', date: '日期', model: '機種',
+    all: '全部', day: '白班', night: '夜班', main: '主板', sub: '子板', dayS: '白', nightS: '夜',
+    allLines: '全部線體', allShifts: '全部班別', allModels: '全部機種', sep: ' ・ ', colon: '：',
+    kBoards: '生產板數', kNg: function (n) { return 'AOI NG 板 ' + n + ' 片'; },
+    kRate: '整體不良率（焊點）', kRateSub: function (a, b) { return '缺陷點 ' + a + ' / 檢測焊點 ' + b; },
+    kDpu: '整體 DPU', kDpuSub: function (a, b) { return '真缺陷 ' + a + ' 點 / ' + b + ' 板'; },
+    kFc: 'AOI 誤判率', kFcSub: function (a, b) { return '誤判 ' + a + ' 點 / AOI 報警 ' + b + ' 點'; },
+    kRv: '複判執行率', kRvSub: function (a, b, c) { return '已複判 ' + a + ' / NG 板 ' + b + '（未複判 ' + c + '）'; },
+    chTitle: '線別 / 日期 DPU 對比', xAxis: 'X 軸', byDate: '日期', byLine: '線別', stack: '瑕疵層別', stackNote: '淺色：白班 ・ 深色：夜班',
+    cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
+    cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
+    cmpNote: function (hi, lo, gap) { return '最高：' + hi + ' ・ 最低：' + lo + ' ・ 差距 ' + gap; },
+    dTitle: '缺陷類型 DPU', dNote: 'DPU = 該類缺陷點數 / 生產板數', pts: ' 點',
+    dNames: ['短路 / 錫橋', '無引腳', '引腳浮高', '缺件'],
+    tTitle: '每日 DPU 趨勢（白班 / 夜班）', dayLegend: '白班 08:00–20:00', nightLegend: '夜班 20:00–08:00',
+    tAll: '夜班 DPU 連續 7 天高於白班', tSome: function (n) { return '近 7 天有 ' + n + ' 天夜班 DPU 高於白班'; }, tTail: '；11/04 夜班尚未結束。',
+    ltTitle: '線體 × 缺陷類型',
+    lineHeads: ['線體', '生產板數', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', '整體 DPU', '不良率（焊點）', 'AOI 誤判率', '複判執行率'],
+    fxTitle: '載具版本 × DPU', boardsUnit: ' 板', fxNote: 'SP-A02 的 Pin High 占比最高，建議優先確認載具壓扣與磨耗狀況。',
+    rvTitle: '複判狀況', real: '真不良', fcL: 'AOI 誤判', unrev: '未複判 NG 板', pcs: ' 片', fcSrc: '誤判主要來源',
+    fcNames: ['Bridge（陰影誤判為錫橋）', 'Pin High（高度閾值過嚴）', 'No Pin（反光 / 助焊劑殘留）'],
+    bdTitle: '單板明細（AOI NG 板）', bdNote: function (n) { return '依上方篩選 ・ 顯示 ' + n + ' 筆'; },
+    imgLoad: '圖片載入', modeAuto: '預設載入', modeClick: '點擊取得',
+    bdHeads: ['板序號', '檢測時間', '線體', '班別', '機種', '板型', '載具版本', 'AOI 缺陷', '複判狀態', '複判結果', '複判人員', '不良圖片'],
+    reviewed: '已複判', pending: '未複判', isReal: '真不良', isFalse: '誤判', getImg: '取得圖片', viewImg: '檢視圖片',
+    imgAria: function (sn) { return '取得 ' + sn + ' 的不良圖片'; },
+    loading: function (sn) { return '向 Maker Ray AOI 主機取得 ' + sn + ' 的缺陷影像中…'; },
+    placeholder: function (d) { return '[AOI 缺陷影像：' + d + ']'; },
+    alt: function (sn, d) { return sn + ' ' + d + ' 缺陷影像（示意）'; },
+    caption: '紅框為 AOI 標記的缺陷位置（示意）',
+    pDefect: '缺陷類型', pLineShift: '線體 / 班別', pModelFx: '機種 / 載具', pLoc: '元件位置', locVal: '[位號] ・ X [ ] / Y [ ]', pResult: '複判結果',
+    noteAuto: '目前為「預設載入」：看板開啟時即向 AOI 取回所有 NG 板縮圖。',
+    noteClick: '目前為「點擊取得」：影像僅在點擊時向 AOI 請求，不隨看板預先載入。',
+    close: '關閉預覽'
+  },
+  en: {
+    langCode: 'en', title: 'AOI Inspection Dashboard', source: 'Source: Maker Ray AOI results · Lines CD101–CD104 · Sample data',
+    updated: 'Updated', filters: 'Filters', line: 'Line', shift: 'Shift', date: 'Date', model: 'Model',
+    all: 'All', day: 'Day', night: 'Night', main: 'Main', sub: 'Sub', dayS: 'D', nightS: 'N',
+    allLines: 'All lines', allShifts: 'All shifts', allModels: 'All models', sep: ' · ', colon: ': ',
+    kBoards: 'Boards produced', kNg: function (n) { return 'AOI NG boards: ' + n; },
+    kRate: 'Defect rate (joints)', kRateSub: function (a, b) { return a + ' defects / ' + b + ' joints'; },
+    kDpu: 'Overall DPU', kDpuSub: function (a, b) { return a + ' true defects / ' + b + ' boards'; },
+    kFc: 'AOI false-call rate', kFcSub: function (a, b) { return a + ' false calls / ' + b + ' AOI calls'; },
+    kRv: 'Review completion', kRvSub: function (a, b, c) { return a + ' reviewed / ' + b + ' NG boards (' + c + ' pending)'; },
+    chTitle: 'DPU by Date / Line', xAxis: 'X-axis', byDate: 'Date', byLine: 'Line', stack: 'Break down by defect', stackNote: 'Light: day shift · Dark: night shift',
+    cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
+    cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
+    cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
+    dTitle: 'DPU by Defect Type', dNote: 'DPU = defects of type / boards produced', pts: ' pts',
+    dNames: ['Solder bridge', 'No pin', 'Pin high', 'Missing part'],
+    tTitle: 'Daily DPU Trend (Day / Night)', dayLegend: 'Day 08:00–20:00', nightLegend: 'Night 20:00–08:00',
+    tAll: 'Night-shift DPU has been above day shift for 7 straight days', tSome: function (n) { return 'Night-shift DPU was above day shift on ' + n + ' of the last 7 days'; }, tTail: '; the 11/04 night shift is still running.',
+    ltTitle: 'Line × Defect Type',
+    lineHeads: ['Line', 'Boards', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', 'Total DPU', 'Defect rate (joints)', 'AOI false-call rate', 'Review completion'],
+    fxTitle: 'Solder Pallet Version × DPU', boardsUnit: ' boards', fxNote: 'SP-A02 has the highest Pin High share; check its hold-downs and pallet wear first.',
+    rvTitle: 'Review Status', real: 'True defects', fcL: 'AOI false calls', unrev: 'Unreviewed NG boards', pcs: ' pcs', fcSrc: 'Top false-call sources',
+    fcNames: ['Bridge (shadow read as bridge)', 'Pin High (height threshold too tight)', 'No Pin (glare / flux residue)'],
+    bdTitle: 'Board Detail (AOI NG Boards)', bdNote: function (n) { return 'Filtered as above · ' + n + ' rows'; },
+    imgLoad: 'Images', modeAuto: 'Auto-load', modeClick: 'On click',
+    bdHeads: ['Serial No.', 'Inspected', 'Line', 'Shift', 'Model', 'Board type', 'Solder Pallet', 'AOI defect', 'Review', 'Result', 'Reviewer', 'Image'],
+    reviewed: 'Reviewed', pending: 'Pending', isReal: 'True defect', isFalse: 'False call', getImg: 'Get image', viewImg: 'View image',
+    imgAria: function (sn) { return 'Get defect image for ' + sn; },
+    loading: function (sn) { return 'Fetching defect image for ' + sn + ' from Maker Ray AOI…'; },
+    placeholder: function (d) { return '[AOI defect image: ' + d + ']'; },
+    alt: function (sn, d) { return sn + ' ' + d + ' defect image (illustrative)'; },
+    caption: 'Red box marks the AOI-flagged defect location (illustrative)',
+    pDefect: 'Defect type', pLineShift: 'Line / Shift', pModelFx: 'Model / Solder Pallet', pLoc: 'Location', locVal: '[Ref] · X [ ] / Y [ ]', pResult: 'Review result',
+    noteAuto: 'Auto-load mode: thumbnails for all NG boards are fetched from the AOI when the dashboard opens.',
+    noteClick: 'On-click mode: images are requested from the AOI only when clicked, not preloaded.',
+    close: 'Close preview'
+  }
+};
+
+// ---- 示意資料：線體 × 班別 × 機種，每個組合都不同 ----
+var LINES = ['CD101', 'CD102', 'CD103', 'CD104'];
+var SHIFTS = ['D', 'N'];
+var MODELS = ['A100', 'B210'];
+var MODEL_CODE = { A100: 'MDL-A100', B210: 'MDL-B210' };
+var MODEL_TYPE = { A100: 'main', B210: 'sub' };
+var DCODES = ['Bridge', 'No Pin', 'Pin High', 'Missing'];
+var DCOLORS = ['#1E3A8A', '#3B82F6', '#C2410C', '#FDBA74'];
+var PINS = 210;
+
+// 線體 × 班別基準：b 板數、d 各類 DPU、fc 誤判率、ng NG 板比例、rv 複判執行率
+var BASE = {
+  D: {
+    CD101: { b: 640, d: [1.95, 0.98, 0.60, 0.37], fc: 0.18, ng: 0.95, rv: 0.985 },
+    CD102: { b: 610, d: [1.45, 0.82, 0.78, 0.32], fc: 0.26, ng: 0.94, rv: 0.962 },
+    CD103: { b: 500, d: [2.40, 1.25, 0.90, 0.62], fc: 0.17, ng: 0.97, rv: 0.951 },
+    CD104: { b: 570, d: [1.50, 0.80, 0.48, 0.30], fc: 0.22, ng: 0.92, rv: 0.970 }
+  },
+  N: {
+    CD101: { b: 600, d: [2.26, 1.13, 0.71, 0.44], fc: 0.21, ng: 0.96, rv: 0.966 },
+    CD102: { b: 570, d: [1.76, 0.99, 0.93, 0.39], fc: 0.30, ng: 0.95, rv: 0.931 },
+    CD103: { b: 480, d: [2.75, 1.42, 1.00, 0.70], fc: 0.20, ng: 0.98, rv: 0.920 },
+    CD104: { b: 530, d: [1.63, 0.87, 0.55, 0.33], fc: 0.26, ng: 0.94, rv: 0.939 }
+  }
+};
+// 機種特性：主板 Bridge / Pin High 偏高，子板 No Pin / 缺件偏高
+var MSHARE = { A100: 0.56, B210: 0.44 };
+var MFACT = { A100: [1.10, 0.90, 1.15, 0.82], B210: [0.88, 1.14, 0.84, 1.24] };
+var MFC = { A100: 0.94, B210: 1.09 };
+
+function rnd(seed) { var x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+
+var DATA = {};
+SHIFTS.forEach(function (sh, si) {
+  DATA[sh] = {};
+  LINES.forEach(function (l, li) {
+    DATA[sh][l] = {};
+    var base = BASE[sh][l];
+    MODELS.forEach(function (m, mi) {
+      var seed = si * 100 + li * 10 + mi;
+      var d = base.d.map(function (v, k) { return v * MFACT[m][k] * (0.88 + 0.24 * rnd(seed * 7 + k)); });
+      var tot = d[0] + d[1] + d[2] + d[3];
+      var target = tot;
+      if (tot < 3.1) target = 3.1 + 0.4 * rnd(seed + 31);
+      if (tot > 5.9) target = 5.5 + 0.35 * rnd(seed + 37);
+      d = d.map(function (v) { return v * target / tot; });
+      DATA[sh][l][m] = {
+        b: Math.round(base.b * MSHARE[m] * (0.93 + 0.14 * rnd(seed + 11))),
+        d: d,
+        fc: base.fc * MFC[m] * (0.9 + 0.2 * rnd(seed + 13)),
+        ng: Math.min(0.99, base.ng * (0.98 + 0.04 * rnd(seed + 17))),
+        rv: Math.min(0.995, base.rv * (0.975 + 0.04 * rnd(seed + 19)))
+      };
+    });
+  });
+});
+
+function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
+
+function agg(lines, shifts, models) {
+  var s = { b: 0, pts: [0, 0, 0, 0], calls: 0, ng: 0, rv: 0 };
+  shifts.forEach(function (sh) {
+    lines.forEach(function (l) {
+      models.forEach(function (m) {
+        var r = DATA[sh][l][m];
+        var real = 0;
+        r.d.forEach(function (v, i) { var c = Math.round(v * r.b); s.pts[i] += c; real += c; });
+        s.b += r.b;
+        s.calls += Math.round(real / (1 - r.fc));
+        var ng = Math.round(r.b * r.ng);
+        s.ng += ng;
+        s.rv += Math.round(ng * r.rv);
+      });
+    });
+  });
+  s.real = s.pts[0] + s.pts[1] + s.pts[2] + s.pts[3];
+  s.fcPts = s.calls - s.real;
+  return s;
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { line: 'ALL', shift: 'ALL', model: 'ALL', types: [true, true, true, true], view: 'date', stack: true,
+      imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
+  }
+  isAuto() {
+    if (this.state.autoImg !== null) return this.state.autoImg;
+    return this.props.autoLoadImages ?? true;
+  }
+  lang() { return this.state.lang || this.props.lang || 'zh'; }
+  fetchImg(sn) {
+    var self = this;
+    if (this.isAuto() || this.state.fetched[sn]) { this.setState({ imgSn: sn, imgLoading: false }); return; }
+    this.setState({ imgSn: sn, imgLoading: true });
+    setTimeout(function () {
+      var f = Object.assign({}, self.state.fetched); f[sn] = true;
+      self.setState({ imgLoading: false, fetched: f });
+    }, 900);
+  }
+  pill(on) {
+    var base = 'min-height: 36px; min-width: 44px; padding: 0 14px; border-radius: 4px; font: inherit; font-size: 13px; cursor: pointer; ';
+    return on ? base + 'background: #1F2937; color: #FFFFFF; border: 1px solid #1F2937; font-weight: 500'
+              : base + 'background: #FFFFFF; color: #1F2937; border: 1px solid #D1D5DB';
+  }
+  seg(on) {
+    return 'min-height: 32px; padding: 0 12px; border: 0; font: inherit; font-size: 12px; cursor: pointer; ' +
+      (on ? 'background: #1F2937; color: #FFFFFF; font-weight: 500' : 'background: #FFFFFF; color: #1F2937');
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var L = this.lang();
+    var t = I18N[L];
+    var shiftName = { D: t.day, N: t.night };
+    var typeName = { main: t.main, sub: t.sub };
+
+    var langs = [['zh', '中文'], ['en', 'EN']].map(function (x) {
+      return { label: x[1], on: L === x[0] ? 'true' : 'false', style: self.seg(L === x[0]), pick: function () { self.setState({ lang: x[0] }); } };
+    });
+    var lines = ['ALL'].concat(LINES).map(function (l) {
+      return { label: l === 'ALL' ? t.all : l, style: self.pill(st.line === l), pick: function () { self.setState({ line: l }); } };
+    });
+    var shifts = [['ALL', t.all], ['D', t.day], ['N', t.night]].map(function (x) {
+      return { label: x[1], style: self.pill(st.shift === x[0]), pick: function () { self.setState({ shift: x[0] }); } };
+    });
+    var models = [['ALL', t.all], ['A100', 'MDL-A100 (' + t.main + ')'], ['B210', 'MDL-B210 (' + t.sub + ')']].map(function (x) {
+      return { label: x[1], style: self.pill(st.model === x[0]), pick: function () { self.setState({ model: x[0] }); } };
+    });
+
+    var selShifts = st.shift === 'ALL' ? SHIFTS : [st.shift];
+    var selLines = st.line === 'ALL' ? LINES : [st.line];
+    var selModels = st.model === 'ALL' ? MODELS : [st.model];
+    var shiftLabel = st.shift === 'ALL' ? t.allShifts : shiftName[st.shift];
+    var modelLabel = st.model === 'ALL' ? t.allModels : MODEL_CODE[st.model];
+    var lineLabel = st.line === 'ALL' ? t.allLines : st.line;
+    var scope = lineLabel + t.sep + shiftLabel + t.sep + modelLabel;
+
+    // KPI
+    var s = agg(selLines, selShifts, selModels);
+    var big = "font-size: 30px; font-weight: 700; font-family: 'Roboto Mono', monospace; ";
+    var kpis = [
+      { label: t.kBoards, value: fmt(s.b), sub: t.kNg(fmt(s.ng)), style: big },
+      { label: t.kRate, value: (s.real / (s.b * PINS) * 100).toFixed(2) + '%', sub: t.kRateSub(fmt(s.real), fmt(s.b * PINS)), style: big },
+      { label: t.kDpu, value: (s.real / s.b).toFixed(2), sub: t.kDpuSub(fmt(s.real), fmt(s.b)), style: big },
+      { label: t.kFc, value: (s.fcPts / s.calls * 100).toFixed(1) + '%', sub: t.kFcSub(fmt(s.fcPts), fmt(s.calls)), style: big + 'color: #B45309' },
+      { label: t.kRv, value: (s.rv / s.ng * 100).toFixed(1) + '%', sub: t.kRvSub(fmt(s.rv), fmt(s.ng), fmt(s.ng - s.rv)), style: big }
+    ];
+
+    // 整合圖：X 軸 日期 / 線別 × 瑕疵層別
+    var seedBase = LINES.indexOf(st.line) * 13 + MODELS.indexOf(st.model) * 7 + 40;
+    var types = st.types;
+    var allOn = types.every(function (x) { return x; });
+    var nOn = types.filter(function (x) { return x; }).length;
+    var swatchBase = 'width: 10px; height: 10px; display: inline-block; ';
+    var checks = [{ label: t.allDefects, checked: allOn, swatch: swatchBase + 'display: none',
+      toggle: function () { self.setState({ types: allOn ? [false, false, false, false] : [true, true, true, true] }); } }]
+      .concat(DCODES.map(function (c, i) {
+        return { label: c, checked: types[i], swatch: swatchBase + 'background: ' + DCOLORS[i],
+          toggle: function () { var nt = types.slice(); nt[i] = !nt[i]; self.setState({ types: nt }); } };
+      }));
+    var isLine = st.view === 'line';
+    var stack = st.stack;
+    var two = selShifts.length > 1;
+    var dates = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'];
+    var dayF = { D: [1.03, 0.96, 1.12, 0.93, 0.90, 0.97, 0.88], N: [1.01, 0.95, 1.13, 0.90, 0.93, 0.87, 0.82] };
+    function sum(v) { return v[0] + v[1] + v[2] + v[3]; }
+    var raw;
+    if (isLine) {
+      raw = LINES.map(function (l) {
+        return { key: l, sel: st.line === l, bars: selShifts.map(function (sh) {
+          var a = agg([l], [sh], selModels);
+          return { sh: sh, vals: a.pts.map(function (c) { return c / a.b; }) };
+        }) };
+      });
+    } else {
+      var baseT = {};
+      SHIFTS.forEach(function (sh) { var a = agg(selLines, [sh], selModels); baseT[sh] = a.pts.map(function (c) { return c / a.b; }); });
+      raw = dates.map(function (dt, i) {
+        return { key: dt, sel: false, bars: selShifts.map(function (sh) {
+          var si = sh === 'D' ? 0 : 1;
+          var v = baseT[sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(seedBase + i * 7 + k * 3 + si * 50)); });
+          var tot = sum(v), tgt = Math.min(5.95, Math.max(3.0, tot));
+          return { sh: sh, vals: v.map(function (x) { return x * tgt / tot; }) };
+        }) };
+      });
+    }
+    var maxTot = 0, hi = null, lo = null, nightHigher = 0;
+    raw.forEach(function (g) {
+      g.bars.forEach(function (b) {
+        b.vals = b.vals.map(function (v, i) { return types[i] ? v : 0; });
+        b.total = sum(b.vals);
+        if (b.total > maxTot) maxTot = b.total;
+        var name = g.key + ' ' + shiftName[b.sh];
+        if (!hi || b.total > hi.v) hi = { n: name, v: b.total };
+        if (!lo || b.total < lo.v) lo = { n: name, v: b.total };
+      });
+      if (g.bars.length === 2 && g.bars[1].total > g.bars[0].total) nightHigher++;
+    });
+    var step = maxTot > 3 ? 1 : (maxTot > 1 ? 0.5 : 0.2);
+    var axisMax = Math.max(step, Math.ceil(maxTot * 1.08 / step) * step);
+    var bw = isLine ? 40 : (two ? 24 : 36);
+    var groups = raw.map(function (g) {
+      return {
+        label: g.key,
+        groupStyle: 'flex: 1; min-width: ' + (isLine ? 110 : 72) + 'px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 4px; ' + (g.sel ? 'background: #EFF6FF' : ''),
+        labelStyle: 'font-size: ' + (isLine ? 13 : 12) + 'px; padding-bottom: 4px; ' + (isLine ? '' : "font-family: 'Roboto Mono', monospace; ") + (g.sel ? 'font-weight: 700; color: #1D4ED8' : 'font-weight: 500'),
+        bars: g.bars.map(function (b) {
+          var light = two && b.sh === 'D';
+          var tip = g.key + ' ' + shiftName[b.sh] + ' DPU ' + b.total.toFixed(2);
+          return {
+            label: two ? (b.sh === 'D' ? t.dayS : t.nightS) : shiftName[b.sh],
+            labelStyle: 'width: ' + (two ? bw : bw + 20) + 'px; text-align: center',
+            stackStyle: 'width: ' + bw + 'px; display: flex; flex-direction: column-reverse',
+            total: b.total.toFixed(2), tip: tip,
+            segs: stack ? b.vals.map(function (v, i) {
+              return { tip: DCODES[i] + ' ' + v.toFixed(2),
+                style: 'width: 100%; background: ' + DCOLORS[i] + '; height: ' + (v / axisMax * 200).toFixed(1) + 'px' + (light ? '; opacity: 0.55' : '') };
+            }) : [{ tip: tip,
+                style: 'width: 100%; border-radius: 2px 2px 0 0; background: ' + (b.sh === 'D' ? '#93C5FD' : '#1E3A8A') + '; height: ' + (b.total / axisMax * 200).toFixed(1) + 'px' }]
+          };
+        })
+      };
+    });
+    var typesText = allOn ? t.allDefects : DCODES.filter(function (c, i) { return types[i]; }).join(' + ');
+    var note = '';
+    if (hi) {
+      note = (!isLine && two) ? (nightHigher === 7 ? t.tAll : t.tSome(nightHigher)) + t.tTail
+        : t.cmpNote(hi.n + ' ' + hi.v.toFixed(2), lo.n + ' ' + lo.v.toFixed(2), (hi.v - lo.v).toFixed(2));
+    }
+    var ch = {
+      checks: checks, groups: groups, empty: nOn === 0, has: nOn > 0,
+      stack: stack, toggleStack: function () { self.setState({ stack: !stack }); },
+      shiftLegend: !stack, stackNote: stack && two,
+      views: [[t.byDate, 'date'], [t.byLine, 'line']].map(function (v) {
+        var on = st.view === v[1];
+        return { label: v[0], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ view: v[1] }); } };
+      }),
+      axisTop: axisMax.toFixed(1), axisMid: (axisMax / 2).toFixed(1),
+      innerStyle: 'min-width: ' + (isLine ? 520 : 600) + 'px; display: flex; justify-content: space-around; border-left: 1px solid #D1D5DB',
+      sub: t.cmpSub(typesText, isLine ? shiftLabel + t.sep + modelLabel : scope),
+      note: note
+    };
+
+    // 缺陷類型
+    var maxPts = Math.max.apply(null, s.pts);
+    var defects = s.pts.map(function (c, i) {
+      return {
+        name: DCODES[i], local: t.dNames[i],
+        text: (c / s.b).toFixed(2) + ' ・ ' + fmt(c) + t.pts + ' ・ ' + Math.round(c / s.real * 100) + '%',
+        bar: 'height: 100%; width: ' + (c / maxPts * 100).toFixed(1) + '%; background: ' + DCOLORS[i]
+      };
+    });
+
+    // 線體表
+    var cell = 'padding: 10px 12px; border-bottom: 1px solid #F3F4F6; ';
+    var lineHeads = t.lineHeads.map(function (h, i) {
+      return { label: h, style: 'padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap; text-align: ' + (i === 0 ? 'left' : 'right') };
+    });
+    var lineRows = LINES.map(function (l) {
+      var a = agg([l], selShifts, selModels);
+      var rate = a.real / (a.b * PINS) * 100;
+      return {
+        line: l, boards: fmt(a.b),
+        bridge: (a.pts[0] / a.b).toFixed(2), nopin: (a.pts[1] / a.b).toFixed(2),
+        pinhigh: (a.pts[2] / a.b).toFixed(2), missing: (a.pts[3] / a.b).toFixed(2),
+        dpu: (a.real / a.b).toFixed(2), rate: rate.toFixed(2) + '%',
+        fc: (a.fcPts / a.calls * 100).toFixed(1) + '%', review: (a.rv / a.ng * 100).toFixed(1) + '%',
+        rateStyle: cell + (rate > 2.5 ? 'color: #B91C1C; font-weight: 700' : ''),
+        rowStyle: "text-align: right; font-family: 'Roboto Mono', monospace; " + (st.line === l ? 'background: #EFF6FF' : '')
+      };
+    });
+
+    // 載具版本
+    var overall = s.real / s.b;
+    var fxF = [1.24, 0.99, 0.83];
+    var fxShare = [0.19, 0.48, 0.33];
+    var fxVals = fxF.map(function (f, i) { return overall * f * (0.96 + 0.08 * rnd(seedBase + 60 + i + selShifts.length * 3)); });
+    var fxMax = Math.max.apply(null, fxVals);
+    var fixtures = ['SP-A02', 'SP-A03', 'SP-A04'].map(function (v, i) {
+      return { ver: v, text: fxVals[i].toFixed(2) + ' ・ ' + fmt(s.b * fxShare[i]) + t.boardsUnit,
+        bar: 'height: 100%; background: #475569; width: ' + (fxVals[i] / fxMax * 100).toFixed(1) + '%' };
+    });
+
+    // 複判
+    var mid = "font-size: 20px; font-weight: 700; font-family: 'Roboto Mono', monospace; ";
+    var rvBoxes = [
+      { label: t.real, value: fmt(s.real) + t.pts, style: mid },
+      { label: t.fcL, value: fmt(s.fcPts) + t.pts, style: mid + 'color: #B45309' },
+      { label: t.unrev, value: fmt(s.ng - s.rv) + t.pcs, style: mid + 'color: #B91C1C' }
+    ];
+    var p0 = 0.40 + 0.1 * rnd(seedBase + 80 + selShifts.length), p1 = 0.27 + 0.08 * rnd(seedBase + 90 + selShifts.length);
+    var f0 = Math.round(s.fcPts * p0), f1 = Math.round(s.fcPts * p1), f2 = s.fcPts - f0 - f1;
+    var fcTop = [f0, f1, f2].map(function (v, i) {
+      return { name: t.fcNames[i], val: fmt(v) + t.pts + ' ・ ' + Math.round(v / s.fcPts * 100) + '%' };
+    });
+
+    // 單板明細
+    var auto = this.isAuto();
+    var modes = [[t.modeAuto, true], [t.modeClick, false]].map(function (m) {
+      var on = auto === m[1];
+      return { label: m[0], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ autoImg: m[1], imgLoading: false }); } };
+    });
+    var badge = 'display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; ';
+    var allBoards = [
+      ['B2611040312', '11/04 06:52', 'CD103', 'N', 'A100', 'SP-A02', 'Bridge', 1, 'real', 'A. Somchai'],
+      ['B2611040298', '11/04 06:31', 'CD101', 'N', 'A100', 'SP-A03', 'Pin High', 1, 'false', 'K. Nattapong'],
+      ['B2611040277', '11/04 05:58', 'CD102', 'N', 'B210', 'SP-A03', 'No Pin', 0, '', ''],
+      ['B2611040251', '11/04 05:12', 'CD103', 'N', 'B210', 'SP-A02', 'Missing', 1, 'real', 'A. Somchai'],
+      ['B2611040233', '11/04 04:40', 'CD104', 'N', 'B210', 'SP-A04', 'No Pin', 1, 'real', 'P. Wanida'],
+      ['B2611040190', '11/04 03:05', 'CD102', 'N', 'A100', 'SP-A03', 'Bridge', 1, 'false', 'K. Nattapong'],
+      ['B2611040147', '11/04 01:38', 'CD104', 'N', 'A100', 'SP-A02', 'Pin High', 1, 'real', 'P. Wanida'],
+      ['B2611030968', '11/03 18:44', 'CD101', 'D', 'A100', 'SP-A04', 'Bridge', 1, 'real', '林小芬'],
+      ['B2611030921', '11/03 17:20', 'CD103', 'D', 'A100', 'SP-A03', 'Pin High', 1, 'real', '陳志明'],
+      ['B2611030876', '11/03 15:47', 'CD104', 'D', 'B210', 'SP-A04', 'Missing', 1, 'false', '林小芬'],
+      ['B2611030803', '11/03 13:09', 'CD102', 'D', 'B210', 'SP-A02', 'No Pin', 0, '', ''],
+      ['B2611030755', '11/03 11:26', 'CD101', 'D', 'B210', 'SP-A03', 'No Pin', 1, 'real', '陳志明'],
+      ['B2611030702', '11/03 09:15', 'CD103', 'D', 'A100', 'SP-A02', 'Bridge', 1, 'real', '林小芬'],
+      ['B2611030664', '11/03 08:32', 'CD104', 'D', 'A100', 'SP-A03', 'Bridge', 1, 'false', '陳志明']
+    ];
+    function resultOf(code) { return code === 'real' ? t.isReal : (code === 'false' ? t.isFalse : '—'); }
+    var boards = allBoards.filter(function (b) {
+      return (st.line === 'ALL' || b[2] === st.line) && (st.shift === 'ALL' || b[3] === st.shift) && (st.model === 'ALL' || b[4] === st.model);
+    }).map(function (b) {
+      var done = b[7] === 1;
+      return {
+        sn: b[0], time: b[1], line: b[2], shift: shiftName[b[3]], model: MODEL_CODE[b[4]], type: typeName[MODEL_TYPE[b[4]]], fixture: b[5], defect: b[6],
+        review: done ? t.reviewed : t.pending,
+        reviewStyle: done ? badge + 'background: #F3F4F6; color: #374151' : badge + 'background: #B91C1C; color: #FFFFFF; font-weight: 500',
+        result: resultOf(b[8]),
+        resultStyle: b[8] === 'real' ? badge + 'background: #FEE2E2; color: #991B1B' : (b[8] === 'false' ? badge + 'background: #FEF3C7; color: #92400E' : 'color: #6B7280'),
+        op: b[9] || '—',
+        auto: auto, manual: !auto,
+        thumbStyle: 'position: relative; width: 56px; height: 36px; padding: 0; border-radius: 3px; cursor: pointer; background: #D1D5DB; ' +
+          (st.imgSn === b[0] ? 'border: 2px solid #1F2937' : 'border: 1px solid #9CA3AF'),
+        getImg: function () { self.fetchImg(b[0]); },
+        imgAria: t.imgAria(b[0]),
+        imgLabel: st.fetched[b[0]] ? t.viewImg : t.getImg,
+        imgBtnStyle: 'min-height: 32px; padding: 0 10px; border-radius: 4px; font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; ' +
+          (st.imgSn === b[0] ? 'background: #1F2937; color: #FFFFFF; border: 1px solid #1F2937'
+            : (st.fetched[b[0]] ? 'background: #FFFFFF; color: #1D4ED8; border: 1px solid #93C5FD' : 'background: #FFFFFF; color: #1F2937; border: 1px solid #D1D5DB'))
+      };
+    });
+
+    var cur = null;
+    allBoards.forEach(function (b) { if (b[0] === st.imgSn) cur = b; });
+    var img = cur ? {
+      sn: cur[0], loadingText: t.loading(cur[0]), placeholder: t.placeholder(cur[6]), alt: t.alt(cur[0], cur[6]),
+      rows: [
+        { k: t.pDefect, v: cur[6] },
+        { k: t.pLineShift, v: cur[2] + t.sep + shiftName[cur[3]] },
+        { k: t.pModelFx, v: MODEL_CODE[cur[4]] + t.sep + cur[5] },
+        { k: t.pLoc, v: t.locVal },
+        { k: t.pResult, v: cur[8] ? resultOf(cur[8]) : t.pending }
+      ]
+    } : { sn: '', loadingText: '', placeholder: '', alt: '', rows: [] };
+
+    return {
+      t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope,
+      kpis: kpis, ch: ch, defects: defects,
+      tableScope: shiftLabel + t.sep + modelLabel,
+      lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
+      bdNote: t.bdNote(boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
+      imgNote: auto ? t.noteAuto : t.noteClick,
+      hasImg: !!cur, imgLoading: !!cur && st.imgLoading, imgReady: !!cur && !st.imgLoading, img: img,
+      closeImg: function () { self.setState({ imgSn: null }); }
+    };
+  }
+}
+
+window.__dcMount(Component, document.getElementById('tpl'), document.getElementById('app'));
+</script>
+</body>
+</html>
