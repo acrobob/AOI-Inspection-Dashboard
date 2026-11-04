@@ -106,6 +106,11 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 16px; font-size: 12px; color: #374151; min-height: 16px">
+<template data-sc="if" value="{{ch.lineLegendOn}}" hint-placeholder-val="{{false}}">
+<template data-sc="for" list="{{ch.lineLegend}}" as="ll" hint-placeholder-count="4">
+<span style="display: flex; align-items: center; gap: 6px"><span style="{{ll.swatch}}"></span>{{ll.label}}</span>
+</template>
+</template>
 <template data-sc="if" value="{{ch.shiftLegend}}" hint-placeholder-val="{{false}}">
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #93C5FD; display: inline-block"></span>{{t.dayLegend}}</span>
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #1E3A8A; display: inline-block"></span>{{t.nightLegend}}</span>
@@ -127,9 +132,13 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <template data-sc="for" list="{{ch.groups}}" as="g" hint-placeholder-count="7">
 <div style="{{g.groupStyle}}">
 <div style="height: 222px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 8px; border-bottom: 1px solid #D1D5DB">
-<template data-sc="for" list="{{g.bars}}" as="bar" hint-placeholder-count="2">
+<template data-sc="for" list="{{g.subs}}" as="sb" hint-placeholder-count="1">
+<div style="display: flex; align-items: flex-end; gap: 3px">
+<template data-sc="for" list="{{sb.bars}}" as="bar" hint-placeholder-count="2">
 <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+<template data-sc="if" value="{{bar.showTotal}}" hint-placeholder-val="{{true}}">
 <span style="font-size: 11px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{bar.total}}</span>
+</template>
 <div title="{{bar.tip}}" style="{{bar.stackStyle}}">
 <template data-sc="for" list="{{bar.segs}}" as="sg" hint-placeholder-count="4">
 <div title="{{sg.tip}}" style="{{sg.style}}"></div>
@@ -138,9 +147,20 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </template>
 </div>
+</template>
+</div>
 <div style="display: flex; justify-content: center; gap: 8px; font-size: 11px; color: #4B5563">
-<template data-sc="for" list="{{g.bars}}" as="bar" hint-placeholder-count="2">
+<template data-sc="for" list="{{g.subs}}" as="sb" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+<div style="display: flex; gap: 3px">
+<template data-sc="for" list="{{sb.bars}}" as="bar" hint-placeholder-count="2">
 <span style="{{bar.labelStyle}}">{{bar.label}}</span>
+</template>
+</div>
+<template data-sc="if" value="{{sb.hasLabel}}" hint-placeholder-val="{{false}}">
+<span style="{{sb.labelStyle}}">{{sb.label}}</span>
+</template>
+</div>
 </template>
 </div>
 <span style="{{g.labelStyle}}">{{g.label}}</span>
@@ -650,59 +670,84 @@ class Component extends DCLogic {
     var dates = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'];
     var dayF = { D: [1.03, 0.96, 1.12, 0.93, 0.90, 0.97, 0.88], N: [1.01, 0.95, 1.13, 0.90, 0.93, 0.87, 0.82] };
     function sum(v) { return v[0] + v[1] + v[2] + v[3]; }
+    var LCOLORS = { CD101: '#1E3A8A', CD102: '#0F766E', CD103: '#C2410C', CD104: '#7C3AED' };
     var raw;
     if (isLine) {
       raw = chSel.map(function (l) {
-        return { key: l, sel: st.line === l, bars: selShifts.map(function (sh) {
+        return { key: l, sel: st.line === l, subs: [{ line: l, bars: selShifts.map(function (sh) {
           var a = agg([l], [sh], selModels);
           return { sh: sh, vals: a.pts.map(function (c) { return c / a.b; }) };
-        }) };
+        }) }] };
       });
     } else {
       var baseT = {};
-      SHIFTS.forEach(function (sh) { if (!chSel.length) return; var a = agg(chSel, [sh], selModels); baseT[sh] = a.pts.map(function (c) { return c / a.b; }); });
-      raw = !chSel.length ? [] : dates.map(function (dt, i) {
-        return { key: dt, sel: false, bars: selShifts.map(function (sh) {
-          var si = sh === 'D' ? 0 : 1;
-          var v = baseT[sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(chSeed + i * 7 + k * 3 + si * 50)); });
-          var tot = sum(v), tgt = Math.min(5.95, Math.max(3.0, tot));
-          return { sh: sh, vals: v.map(function (x) { return x * tgt / tot; }) };
+      chSel.forEach(function (l) {
+        baseT[l] = {};
+        SHIFTS.forEach(function (sh) { var a = agg([l], [sh], selModels); baseT[l][sh] = a.pts.map(function (c) { return c / a.b; }); });
+      });
+      raw = dates.map(function (dt, i) {
+        return { key: dt, sel: false, subs: chSel.map(function (l) {
+          var li = LINES.indexOf(l);
+          return { line: l, bars: selShifts.map(function (sh) {
+            var si = sh === 'D' ? 0 : 1;
+            var v = baseT[l][sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(chSeed + li * 131 + i * 7 + k * 3 + si * 50)); });
+            var tot = sum(v), r2 = rnd(chSeed + li * 17 + i * 5 + si * 29);
+            var tgt = tot > 5.8 ? 5.45 + 0.4 * r2 : (tot < 3.15 ? 3.12 + 0.35 * r2 : tot);
+            return { sh: sh, vals: v.map(function (x) { return x * tgt / tot; }) };
+          }) };
         }) };
       });
     }
     var maxTot = 0, hi = null, lo = null, nightHigher = 0;
     raw.forEach(function (g) {
-      g.bars.forEach(function (b) {
-        b.vals = b.vals.map(function (v, i) { return types[i] ? v : 0; });
-        b.total = sum(b.vals);
-        if (b.total > maxTot) maxTot = b.total;
-        var name = g.key + ' ' + shiftName[b.sh];
-        if (!hi || b.total > hi.v) hi = { n: name, v: b.total };
-        if (!lo || b.total < lo.v) lo = { n: name, v: b.total };
+      g.subs.forEach(function (sb) {
+        sb.bars.forEach(function (b) {
+          b.vals = b.vals.map(function (v, i) { return types[i] ? v : 0; });
+          b.total = sum(b.vals);
+          if (b.total > maxTot) maxTot = b.total;
+          var name = (isLine ? g.key : g.key + ' ' + sb.line) + ' ' + shiftName[b.sh];
+          if (!hi || b.total > hi.v) hi = { n: name, v: b.total };
+          if (!lo || b.total < lo.v) lo = { n: name, v: b.total };
+        });
+        if (sb.bars.length === 2 && sb.bars[1].total > sb.bars[0].total) nightHigher++;
       });
-      if (g.bars.length === 2 && g.bars[1].total > g.bars[0].total) nightHigher++;
     });
     var step = maxTot > 3 ? 1 : (maxTot > 1 ? 0.5 : 0.2);
     var axisMax = Math.max(step, Math.ceil(maxTot * 1.08 / step) * step);
-    var bw = isLine ? 40 : (two ? 24 : 36);
+    var multi = !isLine && chSel.length > 1;
+    var nb = (isLine ? 1 : chSel.length) * selShifts.length;
+    var bw = isLine ? 40 : (nb <= 2 ? (two ? 24 : 36) : (nb <= 4 ? 18 : 12));
+    var wide = bw >= 18;
+    var subW = selShifts.length * bw + (selShifts.length - 1) * 3;
+    var groupMin = (isLine ? 110 : Math.max(72, (isLine ? 1 : chSel.length) * subW + ((isLine ? 1 : chSel.length) - 1) * 8 + 12));
+    var lineColorMode = !stack && multi;
     var groups = raw.map(function (g) {
       return {
         label: g.key,
-        groupStyle: 'flex: 1; min-width: ' + (isLine ? 110 : 72) + 'px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 4px; ' + (g.sel ? 'background: #EFF6FF' : ''),
+        groupStyle: 'flex: 1; min-width: ' + groupMin + 'px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 4px; ' + (g.sel ? 'background: #EFF6FF' : ''),
         labelStyle: 'font-size: ' + (isLine ? 13 : 12) + 'px; padding-bottom: 4px; ' + (isLine ? '' : "font-family: 'Roboto Mono', monospace; ") + (g.sel ? 'font-weight: 700; color: #1D4ED8' : 'font-weight: 500'),
-        bars: g.bars.map(function (b) {
-          var light = two && b.sh === 'D';
-          var tip = g.key + ' ' + shiftName[b.sh] + ' DPU ' + b.total.toFixed(2);
+        subs: g.subs.map(function (sb) {
           return {
-            label: two ? (b.sh === 'D' ? t.dayS : t.nightS) : shiftName[b.sh],
-            labelStyle: 'width: ' + (two ? bw : bw + 20) + 'px; text-align: center',
-            stackStyle: 'width: ' + bw + 'px; display: flex; flex-direction: column-reverse',
-            total: b.total.toFixed(2), tip: tip,
-            segs: stack ? b.vals.map(function (v, i) {
-              return { tip: DCODES[i] + ' ' + v.toFixed(2),
-                style: 'width: 100%; background: ' + DCOLORS[i] + '; height: ' + (v / axisMax * 200).toFixed(1) + 'px' + (light ? '; opacity: 0.55' : '') };
-            }) : [{ tip: tip,
-                style: 'width: 100%; border-radius: 2px 2px 0 0; background: ' + (b.sh === 'D' ? '#93C5FD' : '#1E3A8A') + '; height: ' + (b.total / axisMax * 200).toFixed(1) + 'px' }]
+            hasLabel: multi,
+            label: wide ? sb.line : sb.line.slice(2),
+            labelStyle: 'width: ' + subW + 'px; display: flex; justify-content: center; white-space: nowrap; font-family: \'Roboto Mono\', monospace; color: ' + (lineColorMode ? LCOLORS[sb.line] : '#374151') + '; font-weight: 500',
+            bars: sb.bars.map(function (b) {
+              var light = two && b.sh === 'D';
+              var tip = (isLine ? g.key : g.key + ' ' + sb.line) + ' ' + shiftName[b.sh] + ' DPU ' + b.total.toFixed(2);
+              var solid = lineColorMode ? LCOLORS[sb.line] : (b.sh === 'D' ? '#93C5FD' : '#1E3A8A');
+              return {
+                showTotal: wide,
+                label: two ? (wide ? (b.sh === 'D' ? t.dayS : t.nightS) : '') : (multi ? '' : shiftName[b.sh]),
+                labelStyle: 'width: ' + bw + 'px; display: flex; justify-content: center; white-space: nowrap',
+                stackStyle: 'width: ' + bw + 'px; display: flex; flex-direction: column-reverse',
+                total: b.total.toFixed(2), tip: tip,
+                segs: stack ? b.vals.map(function (v, i) {
+                  return { tip: DCODES[i] + ' ' + v.toFixed(2),
+                    style: 'width: 100%; background: ' + DCOLORS[i] + '; height: ' + (v / axisMax * 200).toFixed(1) + 'px' + (light ? '; opacity: 0.55' : '') };
+                }) : [{ tip: tip,
+                    style: 'width: 100%; border-radius: 2px 2px 0 0; background: ' + solid + '; height: ' + (b.total / axisMax * 200).toFixed(1) + 'px' + (lineColorMode && light ? '; opacity: 0.5' : '') }]
+              };
+            })
           };
         })
       };
@@ -710,20 +755,22 @@ class Component extends DCLogic {
     var typesText = allOn ? t.allDefects : DCODES.filter(function (c, i) { return types[i]; }).join(' + ');
     var note = '';
     if (hi) {
-      note = (!isLine && two) ? (nightHigher === 7 ? t.tAll : t.tSome(nightHigher)) + t.tTail
+      note = (!isLine && two && chSel.length === 1) ? (nightHigher === 7 ? t.tAll : t.tSome(nightHigher)) + t.tTail
         : t.cmpNote(hi.n + ' ' + hi.v.toFixed(2), lo.n + ' ' + lo.v.toFixed(2), (hi.v - lo.v).toFixed(2));
     }
     var ch = {
       checks: checks, groups: groups, empty: nOn === 0 || !chSel.length, has: nOn > 0 && chSel.length > 0,
       emptyText: !chSel.length ? t.lineEmpty : t.cmpEmpty, lineBtns: lineBtns,
       stack: stack, toggleStack: function () { self.setState({ stack: !stack }); },
-      shiftLegend: !stack, stackNote: stack && two,
+      shiftLegend: !stack && !lineColorMode, stackNote: (stack || lineColorMode) && two,
+      lineLegendOn: lineColorMode,
+      lineLegend: chSel.map(function (l) { return { label: l, swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + LCOLORS[l] }; }),
       views: [[t.byDate, 'date'], [t.byLine, 'line']].map(function (v) {
         var on = st.view === v[1];
         return { label: v[0], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ view: v[1] }); } };
       }),
       axisTop: axisMax.toFixed(1), axisMid: (axisMax / 2).toFixed(1),
-      innerStyle: 'min-width: ' + (isLine ? 520 : 600) + 'px; display: flex; justify-content: space-around; border-left: 1px solid #D1D5DB',
+      innerStyle: 'min-width: ' + (isLine ? 520 : Math.max(600, groupMin * 7)) + 'px; display: flex; justify-content: space-around; border-left: 1px solid #D1D5DB',
       sub: t.cmpSub(typesText, chLineLabel + t.sep + shiftLabel + t.sep + modelLabel),
       note: note
     };
