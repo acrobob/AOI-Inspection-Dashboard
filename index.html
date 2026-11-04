@@ -14,7 +14,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <body>
 <div id="app"></div>
 <template id="tpl">
-<div lang="{{t.langCode}}" style="font-family: 'Noto Sans TC', system-ui, sans-serif; color: #1F2937; background: #F5F6F8; min-height: 100vh; padding: 24px 16px 48px; box-sizing: border-box">
+<div lang="{{t.langCode}}" style="font-family: 'Noto Sans TC', 'Noto Sans Thai', system-ui, sans-serif; color: #1F2937; background: #F5F6F8; min-height: 100vh; padding: 24px 16px 48px; box-sizing: border-box">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
 
 <header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #D1D5DB">
@@ -496,6 +496,43 @@ var I18N = {
     noteAuto: 'Auto-load mode: thumbnails for all NG boards are fetched from the AOI when the dashboard opens.',
     noteClick: 'On-click mode: images are requested from the AOI only when clicked, not preloaded.',
     close: 'Close preview'
+  },
+  th: {
+    langCode: 'th', title: 'แดชบอร์ดตรวจสอบ AOI', source: 'แหล่งข้อมูล: ผลตรวจ Maker Ray AOI · ไลน์ CD101–CD104 · ข้อมูลตัวอย่าง',
+    updated: 'อัปเดตล่าสุด', filters: 'ตัวกรอง', line: 'ไลน์', shift: 'กะ', date: 'วันที่', model: 'รุ่น',
+    all: 'ทั้งหมด', day: 'กะเช้า', night: 'กะดึก', main: 'บอร์ดหลัก', sub: 'บอร์ดย่อย', dayS: 'ช', nightS: 'ด',
+    allLines: 'ทุกไลน์', allShifts: 'ทุกกะ', allModels: 'ทุกรุ่น', sep: ' · ', colon: ': ',
+    kBoards: 'จำนวนบอร์ดที่ผลิต', kNg: function (n) { return 'บอร์ด AOI NG ' + n + ' แผ่น'; },
+    kRate: 'อัตราของเสีย (จุดบัดกรี)', kRateSub: function (a, b) { return 'จุดเสีย ' + a + ' / จุดบัดกรีที่ตรวจ ' + b; },
+    kDpu: 'DPU รวม', kDpuSub: function (a, b) { return 'ของเสียจริง ' + a + ' จุด / ' + b + ' บอร์ด'; },
+    kFc: 'อัตราการแจ้งผิดของ AOI', kFcSub: function (a, b) { return 'แจ้งผิด ' + a + ' จุด / AOI แจ้งเตือน ' + b + ' จุด'; },
+    kRv: 'อัตราการตรวจซ้ำ', kRvSub: function (a, b, c) { return 'ตรวจซ้ำแล้ว ' + a + ' / บอร์ด NG ' + b + ' (ค้าง ' + c + ')'; },
+    chTitle: 'เปรียบเทียบ DPU ตามวันที่ / ไลน์', lineSel: 'ไลน์', lineEmpty: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์', selectAll: 'เลือกทั้งหมด', nLines: function (n) { return 'เลือก ' + n + ' ไลน์'; }, xAxis: 'แกน X', byDate: 'วันที่', byLine: 'ไลน์', stack: 'แยกตามประเภทของเสีย', stackNote: 'สีอ่อน: กะเช้า · สีเข้ม: กะดึก',
+    cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
+    cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
+    cmpNote: function (hi, lo, gap) { return 'สูงสุด: ' + hi + ' · ต่ำสุด: ' + lo + ' · ส่วนต่าง ' + gap; },
+    dTitle: 'DPU ตามประเภทของเสีย', dNote: 'DPU = จำนวนจุดเสียประเภทนั้น / จำนวนบอร์ดที่ผลิต', pts: ' จุด',
+    dNames: ['บัดกรีเชื่อมติดกัน', 'ไม่มีขา', 'ขาลอย', 'ชิ้นส่วนหาย'],
+    tTitle: 'แนวโน้ม DPU รายวัน (กะเช้า / กะดึก)', dayLegend: 'กะเช้า 08:00–20:00', nightLegend: 'กะดึก 20:00–08:00',
+    tAll: 'DPU กะดึกสูงกว่ากะเช้าติดต่อกัน 7 วัน', tSome: function (n) { return 'ใน 7 วันล่าสุด DPU กะดึกสูงกว่ากะเช้า ' + n + ' วัน'; }, tTail: ' · กะดึกวันที่ 11/04 ยังไม่สิ้นสุด',
+    ltTitle: 'ไลน์ × ประเภทของเสีย',
+    lineHeads: ['ไลน์', 'จำนวนบอร์ด', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', 'DPU รวม', 'อัตราของเสีย (จุดบัดกรี)', 'อัตราแจ้งผิด AOI', 'อัตราการตรวจซ้ำ'],
+    fxTitle: 'เวอร์ชัน Solder Pallet × DPU', boardsUnit: ' บอร์ด', fxNote: 'SP-A02 มีสัดส่วน Pin High สูงสุด ควรตรวจสอบตัวกดยึดและการสึกหรอของพาเลทก่อน',
+    rvTitle: 'สถานะการตรวจซ้ำ', real: 'ของเสียจริง', fcL: 'AOI แจ้งผิด', unrev: 'บอร์ด NG ที่ยังไม่ตรวจซ้ำ', pcs: ' แผ่น', fcSrc: 'สาเหตุหลักของการแจ้งผิด',
+    fcNames: ['Bridge (เงาถูกอ่านเป็นบัดกรีเชื่อม)', 'Pin High (เกณฑ์ความสูงเข้มเกินไป)', 'No Pin (แสงสะท้อน / คราบฟลักซ์)'],
+    bdTitle: 'รายละเอียดรายบอร์ด (บอร์ด AOI NG)', bdNote: function (n) { return 'กรองตามด้านบน · ' + n + ' รายการ'; },
+    imgLoad: 'รูปภาพ', modeAuto: 'โหลดอัตโนมัติ', modeClick: 'คลิกเพื่อโหลด',
+    bdHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์', 'กะ', 'รุ่น', 'ประเภทบอร์ด', 'Solder Pallet', 'ของเสีย AOI', 'สถานะตรวจซ้ำ', 'ผลตรวจซ้ำ', 'ผู้ตรวจซ้ำ', 'รูปของเสีย'],
+    reviewed: 'ตรวจซ้ำแล้ว', pending: 'ยังไม่ตรวจซ้ำ', isReal: 'ของเสียจริง', isFalse: 'แจ้งผิด', getImg: 'ดึงรูป', viewImg: 'ดูรูป',
+    imgAria: function (sn) { return 'ดึงรูปของเสียของ ' + sn; },
+    loading: function (sn) { return 'กำลังดึงรูปของเสียของ ' + sn + ' จาก Maker Ray AOI…'; },
+    placeholder: function (d) { return '[รูปของเสีย AOI: ' + d + ']'; },
+    alt: function (sn, d) { return 'รูปของเสีย ' + sn + ' ' + d + ' (ตัวอย่าง)'; },
+    caption: 'กรอบสีแดงคือตำแหน่งของเสียที่ AOI ระบุ (ตัวอย่าง)',
+    pDefect: 'ประเภทของเสีย', pLineShift: 'ไลน์ / กะ', pModelFx: 'รุ่น / Solder Pallet', pLoc: 'ตำแหน่ง', locVal: '[Ref] · X [ ] / Y [ ]', pResult: 'ผลตรวจซ้ำ',
+    noteAuto: 'โหมดโหลดอัตโนมัติ: ดึงภาพย่อของบอร์ด NG ทั้งหมดจาก AOI เมื่อเปิดแดชบอร์ด',
+    noteClick: 'โหมดคลิกเพื่อโหลด: ขอรูปจาก AOI เฉพาะเมื่อคลิก ไม่โหลดล่วงหน้า',
+    close: 'ปิดตัวอย่าง'
   }
 };
 
@@ -589,7 +626,7 @@ class Component extends DCLogic {
     if (this.state.autoImg !== null) return this.state.autoImg;
     return this.props.autoLoadImages ?? true;
   }
-  lang() { return this.state.lang || this.props.lang || 'zh'; }
+  lang() { return this.state.lang || this.props.lang || 'en'; }
   fetchImg(sn) {
     var self = this;
     if (this.isAuto() || this.state.fetched[sn]) { this.setState({ imgSn: sn, imgLoading: false }); return; }
@@ -616,7 +653,7 @@ class Component extends DCLogic {
     var shiftName = { D: t.day, N: t.night };
     var typeName = { main: t.main, sub: t.sub };
 
-    var langs = [['zh', '中文'], ['en', 'EN']].map(function (x) {
+    var langs = [['en', 'EN'], ['th', 'ไทย'], ['zh', '中文']].map(function (x) {
       return { label: x[1], on: L === x[0] ? 'true' : 'false', style: self.seg(L === x[0]), pick: function () { self.setState({ lang: x[0] }); } };
     });
     var lines = ['ALL'].concat(LINES).map(function (l) {
