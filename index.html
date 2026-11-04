@@ -133,7 +133,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <div style="{{g.groupStyle}}">
 <div style="height: 222px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 8px; border-bottom: 1px solid #D1D5DB">
 <template data-sc="for" list="{{g.subs}}" as="sb" hint-placeholder-count="1">
-<div style="display: flex; align-items: flex-end; gap: 3px">
+<div style="{{sb.slotStyle}}">
 <template data-sc="for" list="{{sb.bars}}" as="bar" hint-placeholder-count="2">
 <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
 <template data-sc="if" value="{{bar.showTotal}}" hint-placeholder-val="{{true}}">
@@ -151,7 +151,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 <div style="display: flex; justify-content: center; gap: 8px; font-size: 11px; color: #4B5563">
 <template data-sc="for" list="{{g.subs}}" as="sb" hint-placeholder-count="1">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+<div style="{{sb.labelSlotStyle}}">
 <div style="display: flex; gap: 3px">
 <template data-sc="for" list="{{sb.bars}}" as="bar" hint-placeholder-count="2">
 <span style="{{bar.labelStyle}}">{{bar.label}}</span>
@@ -572,7 +572,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { line: 'ALL', shift: 'ALL', model: 'ALL', types: [true, true, true, true], view: 'date', stack: true, chLines: [true, true, true, true],
+    this.state = { line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true],
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -716,10 +716,14 @@ class Component extends DCLogic {
     var axisMax = Math.max(step, Math.ceil(maxTot * 1.08 / step) * step);
     var multi = !isLine && chSel.length > 1;
     var nb = (isLine ? 1 : chSel.length) * selShifts.length;
-    var bw = isLine ? 40 : (nb <= 2 ? (two ? 24 : 36) : (nb <= 4 ? 18 : 12));
-    var wide = bw >= 18;
+    // 版面尺寸：每條線一個固定寬度欄位，線名永遠放得下，數值只在間距足夠時顯示
+    var bw = isLine ? 40 : (nb <= 2 ? (two ? 26 : 36) : (nb <= 4 ? 26 : (nb <= 6 ? 16 : 12)));
     var subW = selShifts.length * bw + (selShifts.length - 1) * 3;
-    var groupMin = (isLine ? 110 : Math.max(72, (isLine ? 1 : chSel.length) * subW + ((isLine ? 1 : chSel.length) - 1) * 8 + 12));
+    var slotW = isLine ? subW : Math.max(subW, 36);
+    var pitch = two ? bw + 3 : slotW + 8;
+    var showTotals = pitch >= 29;
+    var nSub = isLine ? 1 : chSel.length;
+    var groupMin = isLine ? 110 : Math.max(72, nSub * slotW + (nSub - 1) * 8 + 8);
     var lineColorMode = !stack && multi;
     var groups = raw.map(function (g) {
       return {
@@ -729,15 +733,17 @@ class Component extends DCLogic {
         subs: g.subs.map(function (sb) {
           return {
             hasLabel: multi,
-            label: wide ? sb.line : sb.line.slice(2),
-            labelStyle: 'width: ' + subW + 'px; display: flex; justify-content: center; white-space: nowrap; font-family: \'Roboto Mono\', monospace; color: ' + (lineColorMode ? LCOLORS[sb.line] : '#374151') + '; font-weight: 500',
+            label: sb.line,
+            slotStyle: 'width: ' + slotW + 'px; display: flex; align-items: flex-end; justify-content: center; gap: 3px',
+            labelSlotStyle: 'width: ' + slotW + 'px; display: flex; flex-direction: column; align-items: center; gap: 2px',
+            labelStyle: 'width: ' + slotW + 'px; display: flex; justify-content: center; white-space: nowrap; font-family: \'Roboto Mono\', monospace; color: ' + (lineColorMode ? LCOLORS[sb.line] : '#374151') + '; font-weight: 500',
             bars: sb.bars.map(function (b) {
               var light = two && b.sh === 'D';
               var tip = (isLine ? g.key : g.key + ' ' + sb.line) + ' ' + shiftName[b.sh] + ' DPU ' + b.total.toFixed(2);
               var solid = lineColorMode ? LCOLORS[sb.line] : (b.sh === 'D' ? '#93C5FD' : '#1E3A8A');
               return {
-                showTotal: wide,
-                label: two ? (wide ? (b.sh === 'D' ? t.dayS : t.nightS) : '') : (multi ? '' : shiftName[b.sh]),
+                showTotal: showTotals,
+                label: two ? (b.sh === 'D' ? t.dayS : t.nightS) : (multi ? '' : shiftName[b.sh]),
                 labelStyle: 'width: ' + bw + 'px; display: flex; justify-content: center; white-space: nowrap',
                 stackStyle: 'width: ' + bw + 'px; display: flex; flex-direction: column-reverse',
                 total: b.total.toFixed(2), tip: tip,
