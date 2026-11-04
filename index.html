@@ -75,6 +75,14 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <span style="font-size: 12px; color: #4B5563">{{ch.sub}}</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
+<div role="group" aria-label="{{t.lineSel}}" style="display: flex; align-items: center; gap: 6px; padding-right: 12px; border-right: 1px solid #E5E7EB">
+<span style="font-size: 12px; color: #4B5563">{{t.lineSel}}</span>
+<div style="display: flex; flex-wrap: wrap; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{ch.lineBtns}}" as="lb" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{lb.on}}" onClick="{{lb.pick}}" style="{{lb.style}}">{{lb.label}}</button>
+</template>
+</div>
+</div>
 <div role="group" aria-label="{{t.xAxis}}" style="display: flex; align-items: center; gap: 6px">
 <span style="font-size: 12px; color: #4B5563">{{t.xAxis}}</span>
 <div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
@@ -107,7 +115,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </template>
 </div>
 <template data-sc="if" value="{{ch.empty}}" hint-placeholder-val="{{false}}">
-<div style="height: 260px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563; border: 1px dashed #D1D5DB; border-radius: 4px">{{t.cmpEmpty}}</div>
+<div style="height: 260px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563; border: 1px dashed #D1D5DB; border-radius: 4px">{{ch.emptyText}}</div>
 </template>
 <template data-sc="if" value="{{ch.has}}" hint-placeholder-val="{{true}}">
 <div style="display: flex; gap: 8px">
@@ -395,7 +403,7 @@ var I18N = {
     kDpu: '整體 DPU', kDpuSub: function (a, b) { return '真缺陷 ' + a + ' 點 / ' + b + ' 板'; },
     kFc: 'AOI 誤判率', kFcSub: function (a, b) { return '誤判 ' + a + ' 點 / AOI 報警 ' + b + ' 點'; },
     kRv: '複判執行率', kRvSub: function (a, b, c) { return '已複判 ' + a + ' / NG 板 ' + b + '（未複判 ' + c + '）'; },
-    chTitle: '線別 / 日期 DPU 對比', xAxis: 'X 軸', byDate: '日期', byLine: '線別', stack: '瑕疵層別', stackNote: '淺色：白班 ・ 深色：夜班',
+    chTitle: '線別 / 日期 DPU 對比', lineSel: '線別', lineEmpty: '請至少選擇一條線別', xAxis: 'X 軸', byDate: '日期', byLine: '線別', stack: '瑕疵層別', stackNote: '淺色：白班 ・ 深色：夜班',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
     cmpNote: function (hi, lo, gap) { return '最高：' + hi + ' ・ 最低：' + lo + ' ・ 差距 ' + gap; },
@@ -432,7 +440,7 @@ var I18N = {
     kDpu: 'Overall DPU', kDpuSub: function (a, b) { return a + ' true defects / ' + b + ' boards'; },
     kFc: 'AOI false-call rate', kFcSub: function (a, b) { return a + ' false calls / ' + b + ' AOI calls'; },
     kRv: 'Review completion', kRvSub: function (a, b, c) { return a + ' reviewed / ' + b + ' NG boards (' + c + ' pending)'; },
-    chTitle: 'DPU by Date / Line', xAxis: 'X-axis', byDate: 'Date', byLine: 'Line', stack: 'Break down by defect', stackNote: 'Light: day shift · Dark: night shift',
+    chTitle: 'DPU by Date / Line', lineSel: 'Lines', lineEmpty: 'Select at least one line', xAxis: 'X-axis', byDate: 'Date', byLine: 'Line', stack: 'Break down by defect', stackNote: 'Light: day shift · Dark: night shift',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
@@ -544,7 +552,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { line: 'ALL', shift: 'ALL', model: 'ALL', types: [true, true, true, true], view: 'date', stack: true,
+    this.state = { line: 'ALL', shift: 'ALL', model: 'ALL', types: [true, true, true, true], view: 'date', stack: true, chLines: [true, true, true, true],
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -582,7 +590,8 @@ class Component extends DCLogic {
       return { label: x[1], on: L === x[0] ? 'true' : 'false', style: self.seg(L === x[0]), pick: function () { self.setState({ lang: x[0] }); } };
     });
     var lines = ['ALL'].concat(LINES).map(function (l) {
-      return { label: l === 'ALL' ? t.all : l, style: self.pill(st.line === l), pick: function () { self.setState({ line: l }); } };
+      return { label: l === 'ALL' ? t.all : l, style: self.pill(st.line === l), pick: function () {
+        self.setState({ line: l, chLines: LINES.map(function (x) { return l === 'ALL' || x === l; }) }); } };
     });
     var shifts = [['ALL', t.all], ['D', t.day], ['N', t.night]].map(function (x) {
       return { label: x[1], style: self.pill(st.shift === x[0]), pick: function () { self.setState({ shift: x[0] }); } };
@@ -622,6 +631,19 @@ class Component extends DCLogic {
         return { label: c, checked: types[i], swatch: swatchBase + 'background: ' + DCOLORS[i],
           toggle: function () { var nt = types.slice(); nt[i] = !nt[i]; self.setState({ types: nt }); } };
       }));
+    var chMask = st.chLines;
+    var chAll = chMask.every(function (x) { return x; });
+    var chSel = LINES.filter(function (l, i) { return chMask[i]; });
+    var lineBtns = [{ label: t.all, on: chAll, pick: function () { self.setState({ chLines: [true, true, true, true] }); } }]
+      .concat(LINES.map(function (l, i) {
+        return { label: l, on: chMask[i] && !chAll, pick: function () {
+          var nm = chAll ? LINES.map(function (x, j) { return j === i; }) : chMask.slice();
+          if (!chAll) nm[i] = !nm[i];
+          self.setState({ chLines: nm });
+        } };
+      })).map(function (b) { var on = b.on; b.style = self.seg(on); b.on = on ? 'true' : 'false'; return b; });
+    var chSeed = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 3 : 0); }, 0) + MODELS.indexOf(st.model) * 7 + 40;
+    var chLineLabel = chAll ? t.allLines : chSel.join(' + ');
     var isLine = st.view === 'line';
     var stack = st.stack;
     var two = selShifts.length > 1;
@@ -630,7 +652,7 @@ class Component extends DCLogic {
     function sum(v) { return v[0] + v[1] + v[2] + v[3]; }
     var raw;
     if (isLine) {
-      raw = LINES.map(function (l) {
+      raw = chSel.map(function (l) {
         return { key: l, sel: st.line === l, bars: selShifts.map(function (sh) {
           var a = agg([l], [sh], selModels);
           return { sh: sh, vals: a.pts.map(function (c) { return c / a.b; }) };
@@ -638,11 +660,11 @@ class Component extends DCLogic {
       });
     } else {
       var baseT = {};
-      SHIFTS.forEach(function (sh) { var a = agg(selLines, [sh], selModels); baseT[sh] = a.pts.map(function (c) { return c / a.b; }); });
-      raw = dates.map(function (dt, i) {
+      SHIFTS.forEach(function (sh) { if (!chSel.length) return; var a = agg(chSel, [sh], selModels); baseT[sh] = a.pts.map(function (c) { return c / a.b; }); });
+      raw = !chSel.length ? [] : dates.map(function (dt, i) {
         return { key: dt, sel: false, bars: selShifts.map(function (sh) {
           var si = sh === 'D' ? 0 : 1;
-          var v = baseT[sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(seedBase + i * 7 + k * 3 + si * 50)); });
+          var v = baseT[sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(chSeed + i * 7 + k * 3 + si * 50)); });
           var tot = sum(v), tgt = Math.min(5.95, Math.max(3.0, tot));
           return { sh: sh, vals: v.map(function (x) { return x * tgt / tot; }) };
         }) };
@@ -692,7 +714,8 @@ class Component extends DCLogic {
         : t.cmpNote(hi.n + ' ' + hi.v.toFixed(2), lo.n + ' ' + lo.v.toFixed(2), (hi.v - lo.v).toFixed(2));
     }
     var ch = {
-      checks: checks, groups: groups, empty: nOn === 0, has: nOn > 0,
+      checks: checks, groups: groups, empty: nOn === 0 || !chSel.length, has: nOn > 0 && chSel.length > 0,
+      emptyText: !chSel.length ? t.lineEmpty : t.cmpEmpty, lineBtns: lineBtns,
       stack: stack, toggleStack: function () { self.setState({ stack: !stack }); },
       shiftLegend: !stack, stackNote: stack && two,
       views: [[t.byDate, 'date'], [t.byLine, 'line']].map(function (v) {
@@ -701,7 +724,7 @@ class Component extends DCLogic {
       }),
       axisTop: axisMax.toFixed(1), axisMid: (axisMax / 2).toFixed(1),
       innerStyle: 'min-width: ' + (isLine ? 520 : 600) + 'px; display: flex; justify-content: space-around; border-left: 1px solid #D1D5DB',
-      sub: t.cmpSub(typesText, isLine ? shiftLabel + t.sep + modelLabel : scope),
+      sub: t.cmpSub(typesText, chLineLabel + t.sep + shiftLabel + t.sep + modelLabel),
       note: note
     };
 
