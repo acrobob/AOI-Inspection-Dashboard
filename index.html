@@ -235,6 +235,129 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </section>
 </div>
 
+<section aria-label="{{t.cpTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.cpTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{cp.sub}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
+<div role="group" aria-label="{{t.cpResult}}" style="display: flex; align-items: center; gap: 6px; padding-right: 12px; border-right: 1px solid #E5E7EB">
+<span style="font-size: 12px; color: #4B5563">{{t.cpResult}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{cp.results}}" as="v" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</template>
+</div>
+</div>
+<div role="group" aria-label="{{t.cpPanel}}" style="display: flex; align-items: center; gap: 6px; padding-right: 12px; border-right: 1px solid #E5E7EB">
+<span style="font-size: 12px; color: #4B5563">{{t.cpPanel}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{cp.panels}}" as="v" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</template>
+</div>
+</div>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px">
+<legend style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{t.cmpPick}}</legend>
+<template data-sc="for" list="{{cp.checks}}" as="c" hint-placeholder-count="6">
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 13px; cursor: pointer">
+<input type="checkbox" checked="{{c.checked}}" onChange="{{c.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
+<span style="{{c.swatch}}"></span>{{c.label}}
+</label>
+</template>
+</fieldset>
+</div>
+</div>
+<template data-sc="if" value="{{cp.empty}}" hint-placeholder-val="{{false}}">
+<div style="height: 200px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563; border: 1px dashed #D1D5DB; border-radius: 4px">{{t.cpEmpty}}</div>
+</template>
+<template data-sc="if" value="{{cp.has}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<div style="display: grid; grid-template-columns: 28px 132px minmax(0, 1fr) 64px 56px; gap: 10px; padding: 0 8px 6px; font-size: 12px; color: #374151; border-bottom: 1px solid #E5E7EB">
+<span>#</span><span>{{t.cpDes}}</span><span>{{t.cpDist}}</span><span style="text-align: right">{{t.cpCount}}</span><span style="text-align: right">{{t.cpCum}}</span>
+</div>
+<template data-sc="for" list="{{cp.rows}}" as="r" hint-placeholder-count="10">
+<button type="button" aria-pressed="{{r.on}}" onClick="{{r.pick}}" style="{{r.style}}">
+<span style="font-size: 12px; color: #4B5563; font-family: 'Roboto Mono', monospace">{{r.rank}}</span>
+<span style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-family: 'Roboto Mono', monospace; font-weight: 500; font-size: 13px">{{r.des}}</span>
+<span style="font-size: 11px; color: #4B5563">{{r.ctype}}</span>
+</span>
+<span style="height: 14px; background: #F3F4F6; border-radius: 2px; overflow: hidden; display: flex">
+<template data-sc="for" list="{{r.segs}}" as="sg" hint-placeholder-count="2">
+<span title="{{sg.tip}}" style="{{sg.style}}"></span>
+</template>
+</span>
+<span style="text-align: right; font-family: 'Roboto Mono', monospace; font-size: 13px">{{r.count}}</span>
+<span style="text-align: right; font-family: 'Roboto Mono', monospace; font-size: 12px; color: #4B5563">{{r.cum}}</span>
+</button>
+</template>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 8px 8px 0; font-size: 12px; color: #374151">
+<span style="color: #4B5563">{{t.cpPrefix}}</span>
+<template data-sc="for" list="{{cp.prefixes}}" as="pf" hint-placeholder-count="6">
+<span style="white-space: nowrap"><span style="font-family: 'Roboto Mono', monospace; font-weight: 500">{{pf.p}}</span> {{pf.v}}</span>
+</template>
+</div>
+<p style="margin: 4px 8px 0; font-size: 12px; color: #4B5563">{{cp.note}}</p>
+</div>
+<div style="flex: 1 1 460px; min-width: 0; border: 1px solid #E5E7EB; border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #FAFAFA">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{cp.d.title}}</h3>
+<span style="font-size: 12px; color: #4B5563">{{t.cpCompType}}{{t.colon}}<span style="font-family: 'Roboto Mono', monospace">{{cp.d.ctype}}</span></span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<template data-sc="for" list="{{cp.d.boxes}}" as="x" hint-placeholder-count="4">
+<div style="flex: 1 1 90px; border: 1px solid #E5E7EB; background: #FFFFFF; border-radius: 4px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 11px; color: #4B5563">{{x.label}}</span>
+<span style="{{x.style}}">{{x.value}}</span>
+</div>
+</template>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<template data-sc="for" list="{{cp.d.split}}" as="sp" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: 96px minmax(0, 1fr) 150px; align-items: center; gap: 8px; font-size: 12px">
+<span style="color: #4B5563">{{sp.label}}</span>
+<span style="height: 10px; background: #F3F4F6; border-radius: 2px; overflow: hidden; display: flex">
+<template data-sc="for" list="{{sp.segs}}" as="sg" hint-placeholder-count="2">
+<span title="{{sg.tip}}" style="{{sg.style}}"></span>
+</template>
+</span>
+<span style="text-align: right; font-family: 'Roboto Mono', monospace; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{sp.text}}</span>
+</div>
+</template>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 560px; border-collapse: collapse; font-size: 12px; background: #FFFFFF">
+<caption style="text-align: left; font-size: 12px; color: #4B5563; padding-bottom: 6px">{{cp.d.recentNote}}</caption>
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: left">
+<template data-sc="for" list="{{t.cpHeads}}" as="h" hint-placeholder-count="7">
+<th style="padding: 7px 8px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{cp.d.recent}}" as="rr" hint-placeholder-count="6">
+<tr>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace; white-space: nowrap">{{rr.sn}}</td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace; white-space: nowrap">{{rr.time}}</td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; white-space: nowrap">{{rr.where}}</td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace; white-space: nowrap">{{rr.des}}</td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; white-space: nowrap">{{rr.type}}</td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6"><span style="{{rr.resStyle}}">{{rr.res}}</span></td>
+<td style="padding: 7px 8px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace; text-align: right">{{rr.h}}</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</template>
+</section>
+
 <section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
@@ -434,6 +557,14 @@ var I18N = {
     kFc: 'AOI 誤判率', kFcSub: function (a, b) { return '誤判 ' + a + ' 點 / AOI 報警 ' + b + ' 點'; },
     kRv: '複判執行率', kRvSub: function (a, b, c) { return '已複判 ' + a + ' / NG 板 ' + b + '（未複判 ' + c + '）'; },
     chTitle: '線別 / 日期 DPU 對比', lineSel: '線別', lineEmpty: '請至少選擇一條線別', selectAll: '全選', nLines: function (n) { return '已選 ' + n + ' 條'; }, xAxis: 'X 軸', byDate: '日期', byLine: '線別', stack: '瑕疵層別', stackNote: '淺色：白班 ・ 深色：夜班',
+    cpTitle: '瑕疵元件與位置', cpSub: function (res, n) { return '依上方篩選 ・ ' + res + ' ・ 前 ' + n + ' 名位號（AOI Whole Board Component Infos）'; },
+    cpResult: '判定', cpPanel: '拼板位置', cpAllRes: '全部報警', cpDes: '位號', cpDist: '缺陷分布', cpCount: '點數', cpCum: '累計',
+    cpPrefix: '依位號前綴：', cpCompType: '元件類型', cpEmpty: '目前篩選條件下沒有資料',
+    cpNote: function (pct, list) { return '前 3 名位號佔 ' + pct + '%（' + list + '），建議優先檢視其程式參數與載具壓扣。'; },
+    cpDetail: function (d) { return '位號 ' + d; }, cpCalls: 'AOI 報警', cpHeight: '量測高度（均值）', cpByType: '缺陷類型', cpByPanel: '拼板 #1 / #2',
+    cpRecent: function (n, total) { return '最近 ' + n + ' 筆 ・ 共 ' + total + ' 筆'; },
+    cpHeads: ['板序號', '檢測時間', '線體 / 班別', '位號', 'AOI 缺陷', '判定', '量測高度'],
+    isName: '錫量不足',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
     cmpNote: function (hi, lo, gap) { return '最高：' + hi + ' ・ 最低：' + lo + ' ・ 差距 ' + gap; },
@@ -442,10 +573,10 @@ var I18N = {
     tTitle: '每日 DPU 趨勢（白班 / 夜班）', dayLegend: '白班 08:00–20:00', nightLegend: '夜班 20:00–08:00',
     tAll: '夜班 DPU 連續 7 天高於白班', tSome: function (n) { return '近 7 天有 ' + n + ' 天夜班 DPU 高於白班'; }, tTail: '；11/04 夜班尚未結束。',
     ltTitle: '線體 × 缺陷類型',
-    lineHeads: ['線體', '生產板數', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', '整體 DPU', '不良率（焊點）', 'AOI 誤判率', '複判執行率'],
-    fxTitle: '載具版本 × DPU', boardsUnit: ' 板', fxNote: 'SP-A02 的 Pin High 占比最高，建議優先確認載具壓扣與磨耗狀況。',
+    lineHeads: ['線體', '生產板數', 'Bridge DPU', 'No Pin DPU', 'Pin Height DPU', 'Missing DPU', '整體 DPU', '不良率（焊點）', 'AOI 誤判率', '複判執行率'],
+    fxTitle: '載具版本 × DPU', boardsUnit: ' 板', fxNote: 'SP-A02 的 Pin Height 占比最高，建議優先確認載具壓扣與磨耗狀況。',
     rvTitle: '複判狀況', real: '真不良', fcL: 'AOI 誤判', unrev: '未複判 NG 板', pcs: ' 片', fcSrc: '誤判主要來源',
-    fcNames: ['Bridge（陰影誤判為錫橋）', 'Pin High（高度閾值過嚴）', 'No Pin（反光 / 助焊劑殘留）'],
+    fcNames: ['Bridge（陰影誤判為錫橋）', 'Pin Height（高度閾值過嚴）', 'Insufficient Solder（錫量閾值過嚴）', 'No Pin（反光 / 助焊劑殘留）'],
     bdTitle: '單板明細（AOI NG 板）', bdNote: function (n) { return '依上方篩選 ・ 顯示 ' + n + ' 筆'; },
     imgLoad: '圖片載入', modeAuto: '預設載入', modeClick: '點擊取得',
     bdHeads: ['板序號', '檢測時間', '線體', '班別', '機種', '板型', '載具版本', 'AOI 缺陷', '複判狀態', '複判結果', '複判人員', '不良圖片'],
@@ -471,6 +602,14 @@ var I18N = {
     kFc: 'AOI false-call rate', kFcSub: function (a, b) { return a + ' false calls / ' + b + ' AOI calls'; },
     kRv: 'Review completion', kRvSub: function (a, b, c) { return a + ' reviewed / ' + b + ' NG boards (' + c + ' pending)'; },
     chTitle: 'DPU by Date / Line', lineSel: 'Lines', lineEmpty: 'Select at least one line', selectAll: 'Select all', nLines: function (n) { return n + ' lines'; }, xAxis: 'X-axis', byDate: 'Date', byLine: 'Line', stack: 'Break down by defect', stackNote: 'Light: day shift · Dark: night shift',
+    cpTitle: 'Defect Components & Locations', cpSub: function (res, n) { return 'Filtered as above · ' + res + ' · top ' + n + ' designators (AOI Whole Board Component Infos)'; },
+    cpResult: 'Result', cpPanel: 'Panel position', cpAllRes: 'All AOI calls', cpDes: 'Designator', cpDist: 'Defect mix', cpCount: 'Calls', cpCum: 'Cum.',
+    cpPrefix: 'By designator prefix:', cpCompType: 'Component type', cpEmpty: 'No data for the current filters',
+    cpNote: function (pct, list) { return 'Top 3 designators account for ' + pct + '% (' + list + '); review their program parameters and pallet hold-downs first.'; },
+    cpDetail: function (d) { return 'Designator ' + d; }, cpCalls: 'AOI calls', cpHeight: 'Measured height (avg)', cpByType: 'Defect type', cpByPanel: 'Panel #1 / #2',
+    cpRecent: function (n, total) { return 'Latest ' + n + ' of ' + total; },
+    cpHeads: ['Serial No.', 'Inspected', 'Line / Shift', 'Designator', 'AOI defect', 'Result', 'Height'],
+    isName: 'Insufficient solder',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
@@ -479,10 +618,10 @@ var I18N = {
     tTitle: 'Daily DPU Trend (Day / Night)', dayLegend: 'Day 08:00–20:00', nightLegend: 'Night 20:00–08:00',
     tAll: 'Night-shift DPU has been above day shift for 7 straight days', tSome: function (n) { return 'Night-shift DPU was above day shift on ' + n + ' of the last 7 days'; }, tTail: '; the 11/04 night shift is still running.',
     ltTitle: 'Line × Defect Type',
-    lineHeads: ['Line', 'Boards', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', 'Total DPU', 'Defect rate (joints)', 'AOI false-call rate', 'Review completion'],
-    fxTitle: 'Solder Pallet Version × DPU', boardsUnit: ' boards', fxNote: 'SP-A02 has the highest Pin High share; check its hold-downs and pallet wear first.',
+    lineHeads: ['Line', 'Boards', 'Bridge DPU', 'No Pin DPU', 'Pin Height DPU', 'Missing DPU', 'Total DPU', 'Defect rate (joints)', 'AOI false-call rate', 'Review completion'],
+    fxTitle: 'Solder Pallet Version × DPU', boardsUnit: ' boards', fxNote: 'SP-A02 has the highest Pin Height share; check its hold-downs and pallet wear first.',
     rvTitle: 'Review Status', real: 'True defects', fcL: 'AOI false calls', unrev: 'Unreviewed NG boards', pcs: ' pcs', fcSrc: 'Top false-call sources',
-    fcNames: ['Bridge (shadow read as bridge)', 'Pin High (height threshold too tight)', 'No Pin (glare / flux residue)'],
+    fcNames: ['Bridge (shadow read as bridge)', 'Pin Height (height threshold too tight)', 'Insufficient Solder (volume threshold too tight)', 'No Pin (glare / flux residue)'],
     bdTitle: 'Board Detail (AOI NG Boards)', bdNote: function (n) { return 'Filtered as above · ' + n + ' rows'; },
     imgLoad: 'Images', modeAuto: 'Auto-load', modeClick: 'On click',
     bdHeads: ['Serial No.', 'Inspected', 'Line', 'Shift', 'Model', 'Board type', 'Solder Pallet', 'AOI defect', 'Review', 'Result', 'Reviewer', 'Image'],
@@ -508,6 +647,14 @@ var I18N = {
     kFc: 'อัตราการแจ้งผิดของ AOI', kFcSub: function (a, b) { return 'แจ้งผิด ' + a + ' จุด / AOI แจ้งเตือน ' + b + ' จุด'; },
     kRv: 'อัตราการตรวจซ้ำ', kRvSub: function (a, b, c) { return 'ตรวจซ้ำแล้ว ' + a + ' / บอร์ด NG ' + b + ' (ค้าง ' + c + ')'; },
     chTitle: 'เปรียบเทียบ DPU ตามวันที่ / ไลน์', lineSel: 'ไลน์', lineEmpty: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์', selectAll: 'เลือกทั้งหมด', nLines: function (n) { return 'เลือก ' + n + ' ไลน์'; }, xAxis: 'แกน X', byDate: 'วันที่', byLine: 'ไลน์', stack: 'แยกตามประเภทของเสีย', stackNote: 'สีอ่อน: กะเช้า · สีเข้ม: กะดึก',
+    cpTitle: 'ชิ้นส่วนและตำแหน่งที่พบของเสีย', cpSub: function (res, n) { return 'กรองตามด้านบน · ' + res + ' · ' + n + ' Designator สูงสุด (AOI Whole Board Component Infos)'; },
+    cpResult: 'ผลตัดสิน', cpPanel: 'ตำแหน่งในแผง', cpAllRes: 'AOI แจ้งทั้งหมด', cpDes: 'Designator', cpDist: 'สัดส่วนของเสีย', cpCount: 'จุด', cpCum: 'สะสม',
+    cpPrefix: 'ตามคำนำหน้า Designator:', cpCompType: 'ประเภทชิ้นส่วน', cpEmpty: 'ไม่มีข้อมูลตามตัวกรองปัจจุบัน',
+    cpNote: function (pct, list) { return '3 Designator แรกคิดเป็น ' + pct + '% (' + list + ') ควรตรวจพารามิเตอร์โปรแกรมและตัวกดยึดพาเลทก่อน'; },
+    cpDetail: function (d) { return 'Designator ' + d; }, cpCalls: 'AOI แจ้ง', cpHeight: 'ความสูงที่วัด (เฉลี่ย)', cpByType: 'ประเภทของเสีย', cpByPanel: 'แผง #1 / #2',
+    cpRecent: function (n, total) { return 'ล่าสุด ' + n + ' จาก ' + total + ' รายการ'; },
+    cpHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์ / กะ', 'Designator', 'ของเสีย AOI', 'ผลตัดสิน', 'ความสูง'],
+    isName: 'บัดกรีไม่พอ',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'สูงสุด: ' + hi + ' · ต่ำสุด: ' + lo + ' · ส่วนต่าง ' + gap; },
@@ -516,10 +663,10 @@ var I18N = {
     tTitle: 'แนวโน้ม DPU รายวัน (กะเช้า / กะดึก)', dayLegend: 'กะเช้า 08:00–20:00', nightLegend: 'กะดึก 20:00–08:00',
     tAll: 'DPU กะดึกสูงกว่ากะเช้าติดต่อกัน 7 วัน', tSome: function (n) { return 'ใน 7 วันล่าสุด DPU กะดึกสูงกว่ากะเช้า ' + n + ' วัน'; }, tTail: ' · กะดึกวันที่ 11/04 ยังไม่สิ้นสุด',
     ltTitle: 'ไลน์ × ประเภทของเสีย',
-    lineHeads: ['ไลน์', 'จำนวนบอร์ด', 'Bridge DPU', 'No Pin DPU', 'Pin High DPU', 'Missing DPU', 'DPU รวม', 'อัตราของเสีย (จุดบัดกรี)', 'อัตราแจ้งผิด AOI', 'อัตราการตรวจซ้ำ'],
-    fxTitle: 'เวอร์ชัน Solder Pallet × DPU', boardsUnit: ' บอร์ด', fxNote: 'SP-A02 มีสัดส่วน Pin High สูงสุด ควรตรวจสอบตัวกดยึดและการสึกหรอของพาเลทก่อน',
+    lineHeads: ['ไลน์', 'จำนวนบอร์ด', 'Bridge DPU', 'No Pin DPU', 'Pin Height DPU', 'Missing DPU', 'DPU รวม', 'อัตราของเสีย (จุดบัดกรี)', 'อัตราแจ้งผิด AOI', 'อัตราการตรวจซ้ำ'],
+    fxTitle: 'เวอร์ชัน Solder Pallet × DPU', boardsUnit: ' บอร์ด', fxNote: 'SP-A02 มีสัดส่วน Pin Height สูงสุด ควรตรวจสอบตัวกดยึดและการสึกหรอของพาเลทก่อน',
     rvTitle: 'สถานะการตรวจซ้ำ', real: 'ของเสียจริง', fcL: 'AOI แจ้งผิด', unrev: 'บอร์ด NG ที่ยังไม่ตรวจซ้ำ', pcs: ' แผ่น', fcSrc: 'สาเหตุหลักของการแจ้งผิด',
-    fcNames: ['Bridge (เงาถูกอ่านเป็นบัดกรีเชื่อม)', 'Pin High (เกณฑ์ความสูงเข้มเกินไป)', 'No Pin (แสงสะท้อน / คราบฟลักซ์)'],
+    fcNames: ['Bridge (เงาถูกอ่านเป็นบัดกรีเชื่อม)', 'Pin Height (เกณฑ์ความสูงเข้มเกินไป)', 'Insufficient Solder (เกณฑ์ปริมาณบัดกรีเข้มเกินไป)', 'No Pin (แสงสะท้อน / คราบฟลักซ์)'],
     bdTitle: 'รายละเอียดรายบอร์ด (บอร์ด AOI NG)', bdNote: function (n) { return 'กรองตามด้านบน · ' + n + ' รายการ'; },
     imgLoad: 'รูปภาพ', modeAuto: 'โหลดอัตโนมัติ', modeClick: 'คลิกเพื่อโหลด',
     bdHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์', 'กะ', 'รุ่น', 'ประเภทบอร์ด', 'Solder Pallet', 'ของเสีย AOI', 'สถานะตรวจซ้ำ', 'ผลตรวจซ้ำ', 'ผู้ตรวจซ้ำ', 'รูปของเสีย'],
@@ -542,8 +689,74 @@ var SHIFTS = ['D', 'N'];
 var MODELS = ['A100', 'B210'];
 var MODEL_CODE = { A100: 'MDL-A100', B210: 'MDL-B210' };
 var MODEL_TYPE = { A100: 'main', B210: 'sub' };
-var DCODES = ['Bridge', 'No Pin', 'Pin High', 'Missing'];
+var DCODES = ['Bridge', 'No Pin', 'Pin Height', 'Missing'];
 var DCOLORS = ['#1E3A8A', '#3B82F6', '#C2410C', '#FDBA74'];
+
+// ---- 瑕疵元件（AOI「Whole Board Component Infos」格式）----
+// 位號池、元件類型、平均量測高度與誤判權重取自 AOI 匯出樣本（74 筆 FalseCall）；真不良權重為示意
+var CP_TYPES = ['Bridge', 'No Pin', 'Pin Height', 'Missing', 'Insufficient Solder'];
+var CP_COLORS = ['#1E3A8A', '#3B82F6', '#C2410C', '#FDBA74', '#0E7490'];
+var CP_DES = {"C100":["UserType",206],"C102":["UserType",3583],"C500":["UserType",513],"CT300":["UserType",1842],"CX103.1":["SolderJoint",115],"D201":["UserType",1540],"D202":["UserType",1463],"D204":["UserType",1539],"D205":["UserType",1749],"L300.3":["SolderJoint",0],"Q300":["UserType",1783],"Q301":["UserType",1806],"Q302":["UserType",2050],"Q303":["UserType",1830],"R223":["UserType",444],"X11":["UserType",981],"X12":["UserType",2164],"X13":["UserType",1759],"X19":["UserType",924],"X2100":["UserType",1227],"X2101":["UserType",1238],"X2102":["UserType",1202],"X2103":["UserType",1298],"X2104":["UserType",1299],"X2105":["UserType",713],"X2107":["UserType",546],"X2111":["UserType",498],"X2112":["UserType",714],"X2113B":["UserType",437],"X2114":["UserType",588],"X2118":["UserType",806],"X2119":["UserType",1271],"X216":["UserType",118],"X3000":["UserType",2194],"X3001":["UserType",726],"X3100":["UserType",7053],"X3101":["UserType",765],"X4001":["UserType",0],"X4005":["UserType",0],"X504":["UserType",761]};
+var W_FC = [{"X2100":7,"X2102":3,"X2101":1,"X504":3,"X2111":1,"X3001":4,"X2114":2,"X2113B":1,"X3101":2,"R223":1,"X2105":1,"X2104":1,"X19":1,"X2103":1,"D205":1,"Q300":2,"D204":1,"D202":1,"X11":1,"X2118":2,"Q303":3,"X2119":1,"D201":1,"X2107":1,"X3000":2,"Q301":1,"Q302":1,"X13":1,"X2112":1,"C500":1},{"C100":1,"X13":1,"X12":2,"CX103.1":1,"X216":1},{"CT300":1,"C102":1,"X13":2,"X12":3,"X3100":1,"X11":1},{},{"X504":1,"L300.3":1,"X4001":3,"X3000":1,"X4005":3}];
+
+W_FC.push(W_FC.pop()); // index 4 = Insufficient Solder; index 3 (Missing) empty for false calls
+var W_REAL = [
+  { X2100: 6, X2102: 5, X2101: 4, X3001: 3, X3000: 3, X504: 3, Q303: 2, Q300: 2, X2114: 2, X2118: 2, X12: 1, D205: 1 },
+  { X12: 5, X13: 4, X216: 3, X11: 2, 'CX103.1': 2, X19: 1, C100: 1 },
+  { X12: 5, X3100: 4, X13: 4, X11: 2, CT300: 2, C102: 1 },
+  { C100: 4, C500: 3, R223: 3, C102: 2, D201: 1, D202: 1, 'L300.3': 1 },
+  {}
+];
+var FC_SPLIT = [0.68, 0.08, 0.12, 0, 0.12];
+function hashStr(k) { var h = 0; for (var i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) % 9973; return h; }
+function distribute(total, weights, seed) {
+  var keys = Object.keys(weights); if (!keys.length || total <= 0) return {};
+  var w = keys.map(function (k) { return weights[k] * (0.6 + 0.8 * rnd(seed + hashStr(k))); });
+  var sw = w.reduce(function (a, b) { return a + b; }, 0);
+  var raw = w.map(function (x) { return total * x / sw; });
+  var out = {}, used = 0;
+  keys.forEach(function (k, i) { out[k] = Math.floor(raw[i]); used += out[k]; });
+  keys.map(function (k, i) { return [k, raw[i] - Math.floor(raw[i])]; }).sort(function (a, b) { return b[1] - a[1]; })
+    .slice(0, total - used).forEach(function (e) { out[e[0]]++; });
+  return out;
+}
+function splitTotal(total, ratios) {
+  var raw = ratios.map(function (r) { return total * r; }), out = raw.map(Math.floor);
+  var left = total - out.reduce(function (a, b) { return a + b; }, 0);
+  raw.map(function (x, i) { return [i, x - Math.floor(x)]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, left).forEach(function (e) { out[e[0]]++; });
+  return out;
+}
+var CP_CACHE = {};
+// 單一組合（班別 × 線體 × 機種）的位號計數：{ des: { R: [5], F: [5], R2: [5], F2: [5] } }
+function cpCombo(sh, l, m) {
+  var key = sh + l + m; if (CP_CACHE[key]) return CP_CACHE[key];
+  var a = agg([l], [sh], [m]);
+  var seed = SHIFTS.indexOf(sh) * 1000 + LINES.indexOf(l) * 100 + MODELS.indexOf(m) * 10;
+  var out = {};
+  function add(res, ti, counts) {
+    Object.keys(counts).forEach(function (d) {
+      var c = counts[d]; if (!c) return;
+      if (!out[d]) out[d] = { R: [0, 0, 0, 0, 0], F: [0, 0, 0, 0, 0], R2: [0, 0, 0, 0, 0], F2: [0, 0, 0, 0, 0] };
+      var r2 = 0.55 + 0.25 * rnd(seed + 7 + hashStr(d));
+      out[d][res][ti] += c; out[d][res + '2'][ti] += Math.round(c * r2);
+    });
+  }
+  for (var i = 0; i < 4; i++) add('R', i, distribute(a.pts[i], W_REAL[i], seed + i * 37));
+  var fcBy = splitTotal(a.fcPts, FC_SPLIT);
+  for (var j = 0; j < 5; j++) add('F', j, distribute(fcBy[j], W_FC[j], seed + 500 + j * 41));
+  CP_CACHE[key] = out; return out;
+}
+function cpAgg(lines, shifts, models) {
+  var tot = {};
+  shifts.forEach(function (sh) { lines.forEach(function (l) { models.forEach(function (m) {
+    var c = cpCombo(sh, l, m);
+    Object.keys(c).forEach(function (d) {
+      if (!tot[d]) tot[d] = { R: [0, 0, 0, 0, 0], F: [0, 0, 0, 0, 0], R2: [0, 0, 0, 0, 0], F2: [0, 0, 0, 0, 0] };
+      ['R', 'F', 'R2', 'F2'].forEach(function (k) { for (var i = 0; i < 5; i++) tot[d][k][i] += c[d][k][i]; });
+    });
+  }); }); });
+  return tot;
+}
 var PINS = 210;
 
 // 線體 × 班別基準：b 板數、d 各類 DPU、fc 誤判率、ng NG 板比例、rv 複判執行率
@@ -561,7 +774,7 @@ var BASE = {
     CD104: { b: 530, d: [1.63, 0.87, 0.55, 0.33], fc: 0.26, ng: 0.94, rv: 0.939 }
   }
 };
-// 機種特性：主板 Bridge / Pin High 偏高，子板 No Pin / 缺件偏高
+// 機種特性：主板 Bridge / Pin Height 偏高，子板 No Pin / 缺件偏高
 var MSHARE = { A100: 0.56, B210: 0.44 };
 var MFACT = { A100: [1.10, 0.90, 1.15, 0.82], B210: [0.88, 1.14, 0.84, 1.24] };
 var MFC = { A100: 0.94, B210: 1.09 };
@@ -619,7 +832,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -879,11 +1092,136 @@ class Component extends DCLogic {
       { label: t.fcL, value: fmt(s.fcPts) + t.pts, style: mid + 'color: #B45309' },
       { label: t.unrev, value: fmt(s.ng - s.rv) + t.pcs, style: mid + 'color: #B91C1C' }
     ];
-    var p0 = 0.40 + 0.1 * rnd(seedBase + 80 + selShifts.length), p1 = 0.27 + 0.08 * rnd(seedBase + 90 + selShifts.length);
-    var f0 = Math.round(s.fcPts * p0), f1 = Math.round(s.fcPts * p1), f2 = s.fcPts - f0 - f1;
-    var fcTop = [f0, f1, f2].map(function (v, i) {
-      return { name: t.fcNames[i], val: fmt(v) + t.pts + ' ・ ' + Math.round(v / s.fcPts * 100) + '%' };
+    var cpAll = cpAgg(selLines, selShifts, selModels);
+    var fcByType = [0, 0, 0, 0, 0];
+    Object.keys(cpAll).forEach(function (d) { for (var i = 0; i < 5; i++) fcByType[i] += cpAll[d].F[i]; });
+    var fcTop = [0, 2, 4, 1].map(function (ti, i) {
+      var v = fcByType[ti];
+      return { name: t.fcNames[i], val: fmt(v) + t.pts + ' ・ ' + Math.round(v / Math.max(1, s.fcPts) * 100) + '%' };
     });
+
+    // 瑕疵元件與位置
+    var cpTypeName = function (i) { return i === 4 ? 'Insufficient Solder' : CP_TYPES[i]; };
+    var cpMask = st.cpTypes;
+    var cpResKeys = st.cpRes === 'ALL' ? ['R', 'F'] : [st.cpRes];
+    function cpVal(rec, res, i) {
+      var full = rec[res][i], two = rec[res + '2'][i];
+      return st.cpPanel === 'ALL' ? full : (st.cpPanel === '2' ? two : full - two);
+    }
+    var cpList = Object.keys(cpAll).map(function (d) {
+      var byType = [0, 0, 0, 0, 0];
+      cpResKeys.forEach(function (res) { for (var i = 0; i < 5; i++) if (cpMask[i]) byType[i] += cpVal(cpAll[d], res, i); });
+      return { d: d, byType: byType, total: byType.reduce(function (a, b) { return a + b; }, 0) };
+    }).filter(function (x) { return x.total > 0; }).sort(function (a, b) { return b.total - a.total || (a.d < b.d ? -1 : 1); });
+    var cpGrand = cpList.reduce(function (a, x) { return a + x.total; }, 0);
+    var cpTop = cpList.slice(0, 10);
+    var cpMax = cpTop.length ? cpTop[0].total : 1;
+    var cpSel = cpList.some(function (x) { return x.d === st.cpSel; }) ? st.cpSel : (cpTop[0] ? cpTop[0].d : null);
+    var cum = 0;
+    var cpRows = cpTop.map(function (x, k) {
+      cum += x.total;
+      var on = x.d === cpSel;
+      return {
+        rank: k + 1, des: x.d, ctype: CP_DES[x.d] ? CP_DES[x.d][0] : '', count: fmt(x.total), cum: Math.round(cum / cpGrand * 100) + '%',
+        on: on ? 'true' : 'false',
+        pick: function () { self.setState({ cpSel: x.d }); },
+        style: 'display: grid; grid-template-columns: 28px 132px minmax(0, 1fr) 64px 56px; gap: 10px; align-items: center; width: 100%; text-align: left; min-height: 44px; padding: 4px 8px; border: 0; border-radius: 4px; font: inherit; color: #1F2937; cursor: pointer; ' +
+          (on ? 'background: #EFF6FF; box-shadow: inset 2px 0 0 #1D4ED8' : 'background: transparent'),
+        segs: x.byType.map(function (v, i) {
+          return { tip: cpTypeName(i) + ' ' + fmt(v), style: 'display: block; height: 100%; background: ' + CP_COLORS[i] + '; width: ' + (v / cpMax * 100).toFixed(2) + '%' };
+        }).filter(function (sg, i) { return x.byType[i] > 0; })
+      };
+    });
+    var pfx = {};
+    cpList.forEach(function (x) { var p = (x.d.match(/^[A-Za-z]+/) || ['?'])[0]; pfx[p] = (pfx[p] || 0) + x.total; });
+    var prefixes = Object.keys(pfx).sort(function (a, b) { return pfx[b] - pfx[a]; }).map(function (p) {
+      return { p: p, v: fmt(pfx[p]) + ' (' + Math.round(pfx[p] / cpGrand * 100) + '%)' };
+    });
+    var top3 = cpTop.slice(0, 3);
+    var cpNote = top3.length ? t.cpNote(Math.round(top3.reduce(function (a, x) { return a + x.total; }, 0) / cpGrand * 100), top3.map(function (x) { return x.d; }).join(', ')) : '';
+    var resLabels = { ALL: t.cpAllRes, R: t.isReal, F: t.isFalse };
+    var badgeB = 'display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; ';
+    var cpD = { title: '', ctype: '', boxes: [], split: [], recent: [], recentNote: '' };
+    if (cpSel) {
+      var rec = cpAll[cpSel];
+      var sumMask = function (res) { var v = 0; for (var i = 0; i < 5; i++) if (cpMask[i]) v += cpVal(rec, res, i); return v; };
+      var rTot = sumMask('R'), fTot = sumMask('F'), calls = rTot + fTot;
+      var hAvg = CP_DES[cpSel] ? CP_DES[cpSel][1] : 0;
+      var mbox = "font-size: 18px; font-weight: 700; font-family: 'Roboto Mono', monospace; ";
+      var typeTot = [0, 0, 0, 0, 0], p1 = 0, p2 = 0;
+      cpResKeys.forEach(function (res) { for (var i = 0; i < 5; i++) if (cpMask[i]) {
+        var full = rec[res][i], two = rec[res + '2'][i];
+        typeTot[i] += cpVal(rec, res, i); p2 += two; p1 += full - two; } });
+      var tt = Math.max(1, typeTot.reduce(function (a, b) { return a + b; }, 0));
+      var pt = Math.max(1, p1 + p2);
+      // 最近紀錄：依各組合的點數加權抽樣（固定種子）
+      var pool = [];
+      selShifts.forEach(function (sh) { selLines.forEach(function (l) { selModels.forEach(function (m) {
+        var c = cpCombo(sh, l, m)[cpSel]; if (!c) return;
+        cpResKeys.forEach(function (res) { for (var i = 0; i < 5; i++) if (cpMask[i]) {
+          var full = c[res][i], two = c[res + '2'][i];
+          if (st.cpPanel !== '1' && two > 0) pool.push({ sh: sh, l: l, m: m, res: res, i: i, pn: 2, w: two });
+          if (st.cpPanel !== '2' && full - two > 0) pool.push({ sh: sh, l: l, m: m, res: res, i: i, pn: 1, w: full - two });
+        } });
+      }); }); });
+      var pw = pool.reduce(function (a, e) { return a + e.w; }, 0);
+      var picks = [];
+      for (var k = 0; k < Math.min(6, pw); k++) {
+        var r0 = rnd(hashStr(cpSel) + k * 17 + 3) * pw, e = pool[0];
+        for (var q = 0; q < pool.length; q++) { r0 -= pool[q].w; if (r0 < 0) { e = pool[q]; break; } }
+        var day = Math.floor(rnd(hashStr(cpSel) + k * 29 + 5) * 7);
+        var hr = e.sh === 'D' ? 8 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 12) : (20 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 11)) % 24;
+        var dd = day + (e.sh === 'N' && hr < 8 ? 1 : 0); if (dd > 6) { dd = 6; }
+        var mi = Math.floor(rnd(k * 7 + 11 + hashStr(cpSel)) * 60);
+        var dateLbl = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'][dd];
+        var hgt = e.i === 4 ? 0 : Math.round((hAvg || 650) * (0.85 + 0.3 * rnd(k * 19 + hashStr(cpSel))));
+        picks.push({ sort: dd * 10000 + hr * 100 + mi,
+          sn: 'B26' + dateLbl.replace('/', '') + String(1000 + Math.floor(rnd(k * 23 + hashStr(cpSel)) * 8999)),
+          time: dateLbl + ' ' + (hr < 10 ? '0' : '') + hr + ':' + (mi < 10 ? '0' : '') + mi,
+          where: e.l + t.sep + shiftName[e.sh], des: cpSel + (e.pn === 2 ? '(2)' : ''), type: cpTypeName(e.i),
+          res: e.res === 'R' ? t.isReal : t.isFalse,
+          resStyle: e.res === 'R' ? badgeB + 'background: #FEE2E2; color: #991B1B' : badgeB + 'background: #FEF3C7; color: #92400E',
+          h: fmt(hgt) });
+      }
+      picks.sort(function (a, b) { return b.sort - a.sort; });
+      cpD = {
+        title: t.cpDetail(cpSel), ctype: CP_DES[cpSel] ? CP_DES[cpSel][0] : '—',
+        boxes: [
+          { label: t.cpCalls, value: fmt(calls), style: mbox },
+          { label: t.isReal, value: fmt(rTot), style: mbox + 'color: #991B1B' },
+          { label: t.isFalse, value: fmt(fTot), style: mbox + 'color: #92400E' },
+          { label: t.kFc, value: calls ? (fTot / calls * 100).toFixed(1) + '%' : '—', style: mbox + 'color: #B45309' },
+          { label: t.cpHeight, value: hAvg ? fmt(hAvg) : '0', style: mbox }
+        ],
+        split: [
+          { label: t.cpByType, text: (function () { var bi = typeTot.indexOf(Math.max.apply(null, typeTot)); return cpTypeName(bi) + ' ' + Math.round(typeTot[bi] / tt * 100) + '%'; })(),
+            segs: typeTot.map(function (v, i) { return { tip: cpTypeName(i) + ' ' + fmt(v), style: 'display: block; height: 100%; background: ' + CP_COLORS[i] + '; width: ' + (v / tt * 100).toFixed(2) + '%' }; }) },
+          { label: t.cpByPanel, text: fmt(p1) + ' / ' + fmt(p2),
+            segs: [{ tip: '#1 ' + fmt(p1), style: 'display: block; height: 100%; background: #94A3B8; width: ' + (p1 / pt * 100).toFixed(2) + '%' },
+                   { tip: '#2 ' + fmt(p2), style: 'display: block; height: 100%; background: #475569; width: ' + (p2 / pt * 100).toFixed(2) + '%' }] }
+        ],
+        recent: picks, recentNote: t.cpRecent(picks.length, fmt(pw))
+      };
+    }
+    var cp = {
+      sub: t.cpSub(resLabels[st.cpRes], cpTop.length),
+      results: [['ALL', t.cpAllRes], ['R', t.isReal], ['F', t.isFalse]].map(function (v) {
+        var on = st.cpRes === v[0];
+        return { label: v[1], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ cpRes: v[0] }); } };
+      }),
+      panels: [['ALL', t.all], ['1', '#1'], ['2', '#2']].map(function (v) {
+        var on = st.cpPanel === v[0];
+        return { label: v[1], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ cpPanel: v[0] }); } };
+      }),
+      checks: [{ label: t.allDefects, checked: cpMask.every(Boolean), swatch: 'display: none',
+        toggle: function () { var on = cpMask.every(Boolean); self.setState({ cpTypes: [!on, !on, !on, !on, !on] }); } }]
+        .concat(CP_TYPES.map(function (c, i) {
+          return { label: cpTypeName(i), checked: cpMask[i], swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + CP_COLORS[i],
+            toggle: function () { var nt = cpMask.slice(); nt[i] = !nt[i]; self.setState({ cpTypes: nt }); } };
+        })),
+      empty: !cpTop.length, has: cpTop.length > 0,
+      rows: cpRows, prefixes: prefixes, note: cpNote, d: cpD
+    };
 
     // 單板明細
     var auto = this.isAuto();
@@ -894,14 +1232,14 @@ class Component extends DCLogic {
     var badge = 'display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; ';
     var allBoards = [
       ['B2611040312', '11/04 06:52', 'CD103', 'N', 'A100', 'SP-A02', 'Bridge', 1, 'real', 'A. Somchai'],
-      ['B2611040298', '11/04 06:31', 'CD101', 'N', 'A100', 'SP-A03', 'Pin High', 1, 'false', 'K. Nattapong'],
+      ['B2611040298', '11/04 06:31', 'CD101', 'N', 'A100', 'SP-A03', 'Pin Height', 1, 'false', 'K. Nattapong'],
       ['B2611040277', '11/04 05:58', 'CD102', 'N', 'B210', 'SP-A03', 'No Pin', 0, '', ''],
       ['B2611040251', '11/04 05:12', 'CD103', 'N', 'B210', 'SP-A02', 'Missing', 1, 'real', 'A. Somchai'],
       ['B2611040233', '11/04 04:40', 'CD104', 'N', 'B210', 'SP-A04', 'No Pin', 1, 'real', 'P. Wanida'],
       ['B2611040190', '11/04 03:05', 'CD102', 'N', 'A100', 'SP-A03', 'Bridge', 1, 'false', 'K. Nattapong'],
-      ['B2611040147', '11/04 01:38', 'CD104', 'N', 'A100', 'SP-A02', 'Pin High', 1, 'real', 'P. Wanida'],
+      ['B2611040147', '11/04 01:38', 'CD104', 'N', 'A100', 'SP-A02', 'Pin Height', 1, 'real', 'P. Wanida'],
       ['B2611030968', '11/03 18:44', 'CD101', 'D', 'A100', 'SP-A04', 'Bridge', 1, 'real', '林小芬'],
-      ['B2611030921', '11/03 17:20', 'CD103', 'D', 'A100', 'SP-A03', 'Pin High', 1, 'real', '陳志明'],
+      ['B2611030921', '11/03 17:20', 'CD103', 'D', 'A100', 'SP-A03', 'Pin Height', 1, 'real', '陳志明'],
       ['B2611030876', '11/03 15:47', 'CD104', 'D', 'B210', 'SP-A04', 'Missing', 1, 'false', '林小芬'],
       ['B2611030803', '11/03 13:09', 'CD102', 'D', 'B210', 'SP-A02', 'No Pin', 0, '', ''],
       ['B2611030755', '11/03 11:26', 'CD101', 'D', 'B210', 'SP-A03', 'No Pin', 1, 'real', '陳志明'],
@@ -947,7 +1285,7 @@ class Component extends DCLogic {
 
     return {
       t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope,
-      kpis: kpis, ch: ch, defects: defects,
+      kpis: kpis, ch: ch, cp: cp, defects: defects,
       tableScope: shiftLabel + t.sep + modelLabel,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
       bdNote: t.bdNote(boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
