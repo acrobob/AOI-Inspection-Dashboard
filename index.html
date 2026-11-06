@@ -33,11 +33,29 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </header>
 
 <section aria-label="{{t.filters}}" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 12px 16px">
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
-<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.line}}</span>
-<template data-sc="for" list="{{lines}}" as="p" hint-placeholder-count="5">
-<button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+<div role="group" aria-label="{{t.prodUnit}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding-right: 16px; border-right: 1px solid #E5E7EB">
+<span style="font-size: 13px; color: #374151; font-weight: 500">{{t.prodUnit}}</span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4B5563">{{t.plant}}
+<select value="{{pu.plant}}" onChange="{{pu.plantChange}}" style="min-height: 36px; padding: 0 30px 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; appearance: none; -webkit-appearance: none; background: #FFFFFF url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%234B5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;) no-repeat right 10px center">
+<template data-sc="for" list="{{pu.plants}}" as="o" hint-placeholder-count="1">
+<option value="{{o.v}}">{{o.v}}</option>
 </template>
+</select>
+</label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4B5563">{{t.bu}}
+<select value="{{pu.bu}}" onChange="{{pu.buChange}}" style="min-height: 36px; padding: 0 30px 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; appearance: none; -webkit-appearance: none; background: #FFFFFF url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%234B5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;) no-repeat right 10px center">
+<template data-sc="for" list="{{pu.bus}}" as="o" hint-placeholder-count="1">
+<option value="{{o.v}}">{{o.v}}</option>
+</template>
+</select>
+</label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4B5563">{{t.line}}
+<select value="{{pu.line}}" onChange="{{pu.lineChange}}" style="min-height: 36px; padding: 0 30px 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; appearance: none; -webkit-appearance: none; background: #FFFFFF url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%234B5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;) no-repeat right 10px center; min-width: 112px">
+<template data-sc="for" list="{{pu.lines}}" as="o" hint-placeholder-count="5">
+<option value="{{o.v}}">{{o.label}}</option>
+</template>
+</select>
+</label>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
 <span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.shift}}</span>
@@ -68,6 +86,14 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </template>
 </section>
 
+<div role="tablist" aria-label="{{t.tabsLabel}}" style="display: flex; flex-wrap: wrap; gap: 4px 24px; border-bottom: 1px solid #D1D5DB; padding: 0 4px">
+<template data-sc="for" list="{{tabs.items}}" as="tb" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}<template data-sc="if" value="{{tb.hasCount}}" hint-placeholder-val="{{false}}"><span style="{{tb.countStyle}}">{{tb.count}}</span></template></button>
+</template>
+</div>
+
+<template data-sc="if" value="{{tabs.ov}}" hint-placeholder-val="{{true}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <section aria-label="{{t.chTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-direction: column; align-items: stretch; gap: 10px">
 <div style="display: flex; flex-direction: column; gap: 2px">
@@ -216,118 +242,11 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </table>
 </div>
 </section>
+</div>
+</template>
 
-<div style="display: flex; flex-wrap: wrap; gap: 16px">
-<section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
-<template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
-<div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
-<span style="width: 72px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{f.ver}}</span>
-<div style="flex: 1; height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden"><div style="{{f.bar}}"></div></div>
-<span style="width: 160px; text-align: right; font-family: 'Roboto Mono', monospace; color: #374151">{{f.text}}</span>
-</div>
-</template>
-<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.fxNote}}</p>
-</section>
-
-<section aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.rvTitle}}</h2>
-<div style="display: flex; flex-wrap: wrap; gap: 12px">
-<template data-sc="for" list="{{rvBoxes}}" as="x" hint-placeholder-count="3">
-<div style="flex: 1 1 120px; border: 1px solid #E5E7EB; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 12px; color: #4B5563">{{x.label}}</span>
-<span style="{{x.style}}">{{x.value}}</span>
-</div>
-</template>
-</div>
-<div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px">
-<span style="color: #374151">{{t.fcSrc}}</span>
-<template data-sc="for" list="{{fcTop}}" as="c" hint-placeholder-count="3">
-<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #F3F4F6; padding-bottom: 6px">
-<span>{{c.name}}</span><span style="font-family: 'Roboto Mono', monospace; white-space: nowrap">{{c.val}}</span>
-</div>
-</template>
-</div>
-</section>
-</div>
-
-<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
-<span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
-<div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
-<span style="font-size: 12px; color: #4B5563">{{t.imgLoad}}</span>
-<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
-<template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="2">
-<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
-</template>
-</div>
-</div>
-</div>
-</div>
-<div style="overflow-x: auto">
-<table style="width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px">
-<thead>
-<tr style="background: #F9FAFB; color: #374151; text-align: left">
-<template data-sc="for" list="{{bdHeads}}" as="h" hint-placeholder-count="12">
-<th style="padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
-</template>
-</tr>
-</thead>
-<tbody>
-<template data-sc="for" list="{{boards}}" as="b" hint-placeholder-count="10">
-<tr>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.sn}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.time}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.line}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.shift}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.model}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.type}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.fixture}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.defect}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.reviewStyle}}">{{b.review}}</span></td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.resultStyle}}">{{b.result}}</span></td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.op}}</td>
-<td style="padding: 6px 12px; border-bottom: 1px solid #F3F4F6">
-<template data-sc="if" value="{{b.auto}}" hint-placeholder-val="{{true}}">
-<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.thumbStyle}}"><span style="position: absolute; left: 50%; top: 28%; width: 14px; height: 10px; border: 1.5px solid #B91C1C"></span></button>
-</template>
-<template data-sc="if" value="{{b.manual}}" hint-placeholder-val="{{false}}">
-<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.imgBtnStyle}}">{{b.imgLabel}}</button>
-</template>
-</td>
-</tr>
-</template>
-</tbody>
-</table>
-</div>
-<template data-sc="if" value="{{hasImg}}" hint-placeholder-val="{{false}}">
-<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; background: #FAFAFA">
-<template data-sc="if" value="{{imgLoading}}" hint-placeholder-val="{{false}}">
-<div style="flex: 1 1 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563">{{img.loadingText}}</div>
-</template>
-<template data-sc="if" value="{{imgReady}}" hint-placeholder-val="{{false}}">
-<figure style="flex: 1 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px">
-<div role="img" aria-label="{{img.alt}}" style="position: relative; height: 260px; border: 1px dashed #9CA3AF; border-radius: 4px; background: #E5E7EB; display: flex; align-items: center; justify-content: center">
-<span style="font-size: 13px; color: #374151">{{img.placeholder}}</span>
-<div style="position: absolute; left: 58%; top: 34%; width: 54px; height: 40px; border: 2px solid #B91C1C"></div>
-</div>
-<figcaption style="font-size: 12px; color: #4B5563">{{t.caption}}</figcaption>
-</figure>
-<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
-<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{img.sn}}</h3>
-<template data-sc="for" list="{{img.rows}}" as="ir" hint-placeholder-count="5">
-<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px"><span style="color: #4B5563">{{ir.k}}</span><span style="font-family: 'Roboto Mono', 'Noto Sans TC', monospace">{{ir.v}}</span></div>
-</template>
-<p style="margin: 0; font-size: 12px; color: #4B5563">{{imgNote}}</p>
-<button type="button" onClick="{{closeImg}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; cursor: pointer">{{t.close}}</button>
-</div>
-</template>
-</div>
-</template>
-</section>
-
+<template data-sc="if" value="{{tabs.df}}" hint-placeholder-val="{{false}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
 <section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
@@ -470,6 +389,127 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </template>
 </section>
+</div>
+</template>
+
+<template data-sc="if" value="{{tabs.pr}}" hint-placeholder-val="{{false}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
+<template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+<span style="width: 72px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{f.ver}}</span>
+<div style="flex: 1; height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden"><div style="{{f.bar}}"></div></div>
+<span style="width: 160px; text-align: right; font-family: 'Roboto Mono', monospace; color: #374151">{{f.text}}</span>
+</div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.fxNote}}</p>
+</section>
+
+<section aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.rvTitle}}</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<template data-sc="for" list="{{rvBoxes}}" as="x" hint-placeholder-count="3">
+<div style="flex: 1 1 120px; border: 1px solid #E5E7EB; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; color: #4B5563">{{x.label}}</span>
+<span style="{{x.style}}">{{x.value}}</span>
+</div>
+</template>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<span style="color: #374151">{{t.fcSrc}}</span>
+<template data-sc="for" list="{{fcTop}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #F3F4F6; padding-bottom: 6px">
+<span>{{c.name}}</span><span style="font-family: 'Roboto Mono', monospace; white-space: nowrap">{{c.val}}</span>
+</div>
+</template>
+</div>
+</section>
+</div>
+</div>
+</template>
+
+<template data-sc="if" value="{{tabs.bd}}" hint-placeholder-val="{{false}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
+<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
+<div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.imgLoad}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</template>
+</div>
+</div>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: left">
+<template data-sc="for" list="{{bdHeads}}" as="h" hint-placeholder-count="12">
+<th style="padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{boards}}" as="b" hint-placeholder-count="10">
+<tr>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.sn}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.time}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.line}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.shift}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.model}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.type}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.fixture}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.defect}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.reviewStyle}}">{{b.review}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.resultStyle}}">{{b.result}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.op}}</td>
+<td style="padding: 6px 12px; border-bottom: 1px solid #F3F4F6">
+<template data-sc="if" value="{{b.auto}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.thumbStyle}}"><span style="position: absolute; left: 50%; top: 28%; width: 14px; height: 10px; border: 1.5px solid #B91C1C"></span></button>
+</template>
+<template data-sc="if" value="{{b.manual}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.imgBtnStyle}}">{{b.imgLabel}}</button>
+</template>
+</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+<template data-sc="if" value="{{hasImg}}" hint-placeholder-val="{{false}}">
+<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; background: #FAFAFA">
+<template data-sc="if" value="{{imgLoading}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1 1 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563">{{img.loadingText}}</div>
+</template>
+<template data-sc="if" value="{{imgReady}}" hint-placeholder-val="{{false}}">
+<figure style="flex: 1 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px">
+<div role="img" aria-label="{{img.alt}}" style="position: relative; height: 260px; border: 1px dashed #9CA3AF; border-radius: 4px; background: #E5E7EB; display: flex; align-items: center; justify-content: center">
+<span style="font-size: 13px; color: #374151">{{img.placeholder}}</span>
+<div style="position: absolute; left: 58%; top: 34%; width: 54px; height: 40px; border: 2px solid #B91C1C"></div>
+</div>
+<figcaption style="font-size: 12px; color: #4B5563">{{t.caption}}</figcaption>
+</figure>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{img.sn}}</h3>
+<template data-sc="for" list="{{img.rows}}" as="ir" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px"><span style="color: #4B5563">{{ir.k}}</span><span style="font-family: 'Roboto Mono', 'Noto Sans TC', monospace">{{ir.v}}</span></div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{imgNote}}</p>
+<button type="button" onClick="{{closeImg}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; cursor: pointer">{{t.close}}</button>
+</div>
+</template>
+</div>
+</template>
+</section>
+</div>
+</template>
 
 </div>
 </div>
@@ -509,6 +549,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
         }
         continue;
       }
+      var selectValue;
       var el = n.namespaceURI === 'http://www.w3.org/2000/svg' ? document.createElementNS(n.namespaceURI, n.localName) : document.createElement(n.localName);
       for (var k = 0; k < n.attributes.length; k++) {
         var a = n.attributes[k], name = a.name;
@@ -520,12 +561,14 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
         }
         var v = value(a.value, scope);
         if (name === 'checked') { el.checked = !!v; continue; }
+        if (name === 'value' && n.localName === 'select') { selectValue = v; continue; }
         if (v === false || v == null) continue;
         el.setAttribute(name, v === true ? '' : String(v));
       }
       var kids = [];
       render(n.childNodes, scope, kids);
       kids.forEach(function (c) { el.appendChild(c); });
+      if (selectValue !== undefined) el.value = selectValue;
       out.push(el);
     }
     return out;
@@ -549,7 +592,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <script>
 var I18N = {
   zh: {
-    langCode: 'zh-Hant-TW', title: 'AOI 檢測看板', source: '資料來源：Maker Ray AOI 檢測結果 ・ 線體 CD101–CD104 ・ 示意資料',
+    langCode: 'zh-Hant-TW', title: 'AOI 檢測看板', source: '資料來源：Maker Ray AOI 檢測結果 ・ BP9P2 / CDBU1 ・ 線體 CD101–CD104 ・ 示意資料',
     updated: '最後更新', filters: '篩選條件', line: '線體', shift: '班別', date: '日期', model: '機種',
     all: '全部', day: '白班', night: '夜班', main: '主板', sub: '子板', dayS: '白', nightS: '夜',
     allLines: '全部線體', allShifts: '全部班別', allModels: '全部機種', sep: ' ・ ', colon: '：',
@@ -567,6 +610,7 @@ var I18N = {
     cpRecent: function (n, total) { return '最近 ' + n + ' 筆 ・ 共 ' + total + ' 筆'; },
     cpHeads: ['板序號', '檢測時間', '線體 / 班別', '位號', 'AOI 缺陷', '判定', '量測高度'],
     isName: '錫量不足',
+    prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
     cmpNote: function (hi, lo, gap) { return '最高：' + hi + ' ・ 最低：' + lo + ' ・ 差距 ' + gap; },
@@ -594,7 +638,7 @@ var I18N = {
     close: '關閉預覽'
   },
   en: {
-    langCode: 'en', title: 'AOI Inspection Dashboard', source: 'Source: Maker Ray AOI results · Lines CD101–CD104 · Sample data',
+    langCode: 'en', title: 'AOI Inspection Dashboard', source: 'Source: Maker Ray AOI results · BP9P2 / CDBU1 · Lines CD101–CD104 · Sample data',
     updated: 'Updated', filters: 'Filters', line: 'Line', shift: 'Shift', date: 'Date', model: 'Model',
     all: 'All', day: 'Day', night: 'Night', main: 'Main', sub: 'Sub', dayS: 'D', nightS: 'N',
     allLines: 'All lines', allShifts: 'All shifts', allModels: 'All models', sep: ' · ', colon: ': ',
@@ -612,6 +656,7 @@ var I18N = {
     cpRecent: function (n, total) { return 'Latest ' + n + ' of ' + total; },
     cpHeads: ['Serial No.', 'Inspected', 'Line / Shift', 'Designator', 'AOI defect', 'Result', 'Height'],
     isName: 'Insufficient solder',
+    prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
@@ -639,7 +684,7 @@ var I18N = {
     close: 'Close preview'
   },
   th: {
-    langCode: 'th', title: 'แดชบอร์ดตรวจสอบ AOI', source: 'แหล่งข้อมูล: ผลตรวจ Maker Ray AOI · ไลน์ CD101–CD104 · ข้อมูลตัวอย่าง',
+    langCode: 'th', title: 'แดชบอร์ดตรวจสอบ AOI', source: 'แหล่งข้อมูล: ผลตรวจ Maker Ray AOI · BP9P2 / CDBU1 · ไลน์ CD101–CD104 · ข้อมูลตัวอย่าง',
     updated: 'อัปเดตล่าสุด', filters: 'ตัวกรอง', line: 'ไลน์', shift: 'กะ', date: 'วันที่', model: 'รุ่น',
     all: 'ทั้งหมด', day: 'กะเช้า', night: 'กะดึก', main: 'บอร์ดหลัก', sub: 'บอร์ดย่อย', dayS: 'ช', nightS: 'ด',
     allLines: 'ทุกไลน์', allShifts: 'ทุกกะ', allModels: 'ทุกรุ่น', sep: ' · ', colon: ': ',
@@ -657,6 +702,7 @@ var I18N = {
     cpRecent: function (n, total) { return 'ล่าสุด ' + n + ' จาก ' + total + ' รายการ'; },
     cpHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์ / กะ', 'Designator', 'ของเสีย AOI', 'ผลตัดสิน', 'ความสูง'],
     isName: 'บัดกรีไม่พอ',
+    prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'สูงสุด: ' + hi + ' · ต่ำสุด: ' + lo + ' · ส่วนต่าง ' + gap; },
@@ -834,7 +880,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -888,7 +934,17 @@ class Component extends DCLogic {
     var shiftLabel = st.shift === 'ALL' ? t.allShifts : shiftName[st.shift];
     var modelLabel = st.model === 'ALL' ? t.allModels : MODEL_CODE[st.model];
     var lineLabel = st.line === 'ALL' ? t.allLines : st.line;
-    var scope = lineLabel + t.sep + shiftLabel + t.sep + modelLabel;
+    var scope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel;
+    var pickLine = function (l) { self.setState({ line: l, chLines: LINES.map(function (x) { return l === 'ALL' || x === l; }) }); };
+    var pu = {
+      plant: st.plant, bu: st.bu, line: st.line,
+      plants: ['BP9P2'].map(function (v) { return { v: v, sel: st.plant === v }; }),
+      bus: ['CDBU1'].map(function (v) { return { v: v, sel: st.bu === v }; }),
+      lines: ['ALL'].concat(LINES).map(function (l) { return { v: l, label: l === 'ALL' ? t.allLines : l, sel: st.line === l }; }),
+      plantChange: function (e) { self.setState({ plant: e.target.value }); },
+      buChange: function (e) { self.setState({ bu: e.target.value }); },
+      lineChange: function (e) { pickLine(e.target.value); }
+    };
 
     // KPI
     var s = agg(selLines, selShifts, selModels);
@@ -1286,7 +1342,21 @@ class Component extends DCLogic {
     } : { sn: '', loadingText: '', placeholder: '', alt: '', rows: [] };
 
     return {
-      t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope,
+      t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope, pu: pu,
+      tabs: (function () {
+        var defs = [['ov', t.tabOv, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
+        var cur = defs.filter(function (d) { return d[0] === st.tab; })[0];
+        return {
+          ov: st.tab === 'ov', df: st.tab === 'df', pr: st.tab === 'pr', bd: st.tab === 'bd', cur: cur ? cur[1] : '',
+          items: defs.map(function (d) {
+            var on = st.tab === d[0];
+            return { label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
+              countStyle: "margin-left: 6px; padding: 0 6px; border-radius: 9px; font-size: 11px; font-family: 'Roboto Mono', monospace; " + (on ? 'background: #1F2937; color: #FFFFFF' : 'background: #F3F4F6; color: #374151'),
+              pick: function () { self.setState({ tab: d[0], ddOpen: false }); },
+              style: 'min-height: 44px; padding: 0 4px; margin-bottom: -1px; border: 0; border-bottom: 2px solid ' + (on ? '#1F2937' : 'transparent') + '; background: transparent; font: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; ' + (on ? 'color: #1F2937; font-weight: 700' : 'color: #4B5563; font-weight: 500') };
+          })
+        };
+      })(),
       kpis: kpis, ch: ch, cp: cp, defects: defects,
       tableScope: shiftLabel + t.sep + modelLabel,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
