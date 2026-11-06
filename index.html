@@ -183,25 +183,41 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </template>
 </section>
 
-<div style="display: flex; flex-wrap: wrap; gap: 16px">
-<section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.dTitle}}</h2>
-<span style="font-size: 12px; color: #4B5563">{{t.dNote}}</span>
+<section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{tableScope}}</span>
 </div>
-<template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
-<div style="display: flex; flex-direction: column; gap: 6px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; font-size: 13px">
-<span style="font-weight: 500">{{d.name}} <span style="color: #4B5563; font-weight: 400">{{d.local}}</span></span>
-<span style="font-family: 'Roboto Mono', monospace">{{d.text}}</span>
-</div>
-<div style="height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden">
-<div style="{{d.bar}}"></div>
-</div>
-</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 960px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: right">
+<template data-sc="for" list="{{lineHeads}}" as="h" hint-placeholder-count="10">
+<th style="{{h.style}}">{{h.label}}</th>
 </template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{lineRows}}" as="r" hint-placeholder-count="4">
+<tr style="{{r.rowStyle}}">
+<td style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Noto Sans TC', sans-serif; font-weight: 500">{{r.line}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.boards}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.bridge}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.nopin}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.pinhigh}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.missing}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-weight: 500">{{r.dpu}}</td>
+<td style="{{r.rateStyle}}">{{r.rate}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.fc}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.review}}</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
 </section>
 
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
 <section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
 <template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
@@ -232,6 +248,103 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </template>
 </div>
+</section>
+</div>
+
+<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
+<div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.imgLoad}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</template>
+</div>
+</div>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: left">
+<template data-sc="for" list="{{bdHeads}}" as="h" hint-placeholder-count="12">
+<th style="padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{boards}}" as="b" hint-placeholder-count="10">
+<tr>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.sn}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.time}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.line}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.shift}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.model}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.type}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.fixture}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.defect}}</td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.reviewStyle}}">{{b.review}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.resultStyle}}">{{b.result}}</span></td>
+<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.op}}</td>
+<td style="padding: 6px 12px; border-bottom: 1px solid #F3F4F6">
+<template data-sc="if" value="{{b.auto}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.thumbStyle}}"><span style="position: absolute; left: 50%; top: 28%; width: 14px; height: 10px; border: 1.5px solid #B91C1C"></span></button>
+</template>
+<template data-sc="if" value="{{b.manual}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.imgBtnStyle}}">{{b.imgLabel}}</button>
+</template>
+</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+<template data-sc="if" value="{{hasImg}}" hint-placeholder-val="{{false}}">
+<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; background: #FAFAFA">
+<template data-sc="if" value="{{imgLoading}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1 1 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563">{{img.loadingText}}</div>
+</template>
+<template data-sc="if" value="{{imgReady}}" hint-placeholder-val="{{false}}">
+<figure style="flex: 1 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px">
+<div role="img" aria-label="{{img.alt}}" style="position: relative; height: 260px; border: 1px dashed #9CA3AF; border-radius: 4px; background: #E5E7EB; display: flex; align-items: center; justify-content: center">
+<span style="font-size: 13px; color: #374151">{{img.placeholder}}</span>
+<div style="position: absolute; left: 58%; top: 34%; width: 54px; height: 40px; border: 2px solid #B91C1C"></div>
+</div>
+<figcaption style="font-size: 12px; color: #4B5563">{{t.caption}}</figcaption>
+</figure>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{img.sn}}</h3>
+<template data-sc="for" list="{{img.rows}}" as="ir" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px"><span style="color: #4B5563">{{ir.k}}</span><span style="font-family: 'Roboto Mono', 'Noto Sans TC', monospace">{{ir.v}}</span></div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{imgNote}}</p>
+<button type="button" onClick="{{closeImg}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; cursor: pointer">{{t.close}}</button>
+</div>
+</template>
+</div>
+</template>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.dTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{t.dNote}}</span>
+</div>
+<template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; font-size: 13px">
+<span style="font-weight: 500">{{d.name}} <span style="color: #4B5563; font-weight: 400">{{d.local}}</span></span>
+<span style="font-family: 'Roboto Mono', monospace">{{d.text}}</span>
+</div>
+<div style="height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden">
+<div style="{{d.bar}}"></div>
+</div>
+</div>
+</template>
 </section>
 </div>
 
@@ -354,117 +467,6 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </table>
 </div>
 </div>
-</div>
-</template>
-</section>
-
-<section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
-<span style="font-size: 12px; color: #4B5563">{{tableScope}}</span>
-</div>
-<div style="overflow-x: auto">
-<table style="width: 100%; min-width: 960px; border-collapse: collapse; font-size: 13px">
-<thead>
-<tr style="background: #F9FAFB; color: #374151; text-align: right">
-<template data-sc="for" list="{{lineHeads}}" as="h" hint-placeholder-count="10">
-<th style="{{h.style}}">{{h.label}}</th>
-</template>
-</tr>
-</thead>
-<tbody>
-<template data-sc="for" list="{{lineRows}}" as="r" hint-placeholder-count="4">
-<tr style="{{r.rowStyle}}">
-<td style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Noto Sans TC', sans-serif; font-weight: 500">{{r.line}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.boards}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.bridge}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.nopin}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.pinhigh}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.missing}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-weight: 500">{{r.dpu}}</td>
-<td style="{{r.rateStyle}}">{{r.rate}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.fc}}</td>
-<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.review}}</td>
-</tr>
-</template>
-</tbody>
-</table>
-</div>
-</section>
-
-<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
-<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
-<span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
-<div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
-<span style="font-size: 12px; color: #4B5563">{{t.imgLoad}}</span>
-<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
-<template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="2">
-<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
-</template>
-</div>
-</div>
-</div>
-</div>
-<div style="overflow-x: auto">
-<table style="width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px">
-<thead>
-<tr style="background: #F9FAFB; color: #374151; text-align: left">
-<template data-sc="for" list="{{bdHeads}}" as="h" hint-placeholder-count="12">
-<th style="padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap">{{h}}</th>
-</template>
-</tr>
-</thead>
-<tbody>
-<template data-sc="for" list="{{boards}}" as="b" hint-placeholder-count="10">
-<tr>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.sn}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.time}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.line}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.shift}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.model}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.type}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Roboto Mono', monospace">{{b.fixture}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.defect}}</td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.reviewStyle}}">{{b.review}}</span></td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6"><span style="{{b.resultStyle}}">{{b.result}}</span></td>
-<td style="padding: 9px 12px; border-bottom: 1px solid #F3F4F6">{{b.op}}</td>
-<td style="padding: 6px 12px; border-bottom: 1px solid #F3F4F6">
-<template data-sc="if" value="{{b.auto}}" hint-placeholder-val="{{true}}">
-<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.thumbStyle}}"><span style="position: absolute; left: 50%; top: 28%; width: 14px; height: 10px; border: 1.5px solid #B91C1C"></span></button>
-</template>
-<template data-sc="if" value="{{b.manual}}" hint-placeholder-val="{{false}}">
-<button type="button" onClick="{{b.getImg}}" aria-label="{{b.imgAria}}" style="{{b.imgBtnStyle}}">{{b.imgLabel}}</button>
-</template>
-</td>
-</tr>
-</template>
-</tbody>
-</table>
-</div>
-<template data-sc="if" value="{{hasImg}}" hint-placeholder-val="{{false}}">
-<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; background: #FAFAFA">
-<template data-sc="if" value="{{imgLoading}}" hint-placeholder-val="{{false}}">
-<div style="flex: 1 1 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4B5563">{{img.loadingText}}</div>
-</template>
-<template data-sc="if" value="{{imgReady}}" hint-placeholder-val="{{false}}">
-<figure style="flex: 1 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px">
-<div role="img" aria-label="{{img.alt}}" style="position: relative; height: 260px; border: 1px dashed #9CA3AF; border-radius: 4px; background: #E5E7EB; display: flex; align-items: center; justify-content: center">
-<span style="font-size: 13px; color: #374151">{{img.placeholder}}</span>
-<div style="position: absolute; left: 58%; top: 34%; width: 54px; height: 40px; border: 2px solid #B91C1C"></div>
-</div>
-<figcaption style="font-size: 12px; color: #4B5563">{{t.caption}}</figcaption>
-</figure>
-<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
-<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{img.sn}}</h3>
-<template data-sc="for" list="{{img.rows}}" as="ir" hint-placeholder-count="5">
-<div style="display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px"><span style="color: #4B5563">{{ir.k}}</span><span style="font-family: 'Roboto Mono', 'Noto Sans TC', monospace">{{ir.v}}</span></div>
-</template>
-<p style="margin: 0; font-size: 12px; color: #4B5563">{{imgNote}}</p>
-<button type="button" onClick="{{closeImg}}" style="align-self: flex-start; min-height: 36px; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; cursor: pointer">{{t.close}}</button>
-</div>
-</template>
 </div>
 </template>
 </section>
@@ -1298,5 +1300,6 @@ class Component extends DCLogic {
 
 window.__dcMount(Component, document.getElementById('tpl'), document.getElementById('app'));
 </script>
+<script data-goatcounter="https://acrobob.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
