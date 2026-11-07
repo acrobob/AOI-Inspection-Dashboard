@@ -49,21 +49,32 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </template>
 </select>
 </label>
-<label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4B5563">{{t.line}}
-<select value="{{pu.line}}" onChange="{{pu.lineChange}}" style="min-height: 36px; padding: 0 30px 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; appearance: none; -webkit-appearance: none; background: #FFFFFF url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%234B5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;) no-repeat right 10px center; min-width: 112px">
-<template data-sc="for" list="{{pu.lines}}" as="o" hint-placeholder-count="5">
-<option value="{{o.v}}">{{o.label}}</option>
-</template>
-</select>
+<div style="position: relative; display: flex; align-items: center; gap: 6px">
+<label for="ch-line-btn" style="font-size: 13px; color: #4B5563">{{t.line}}</label>
+<button id="ch-line-btn" type="button" aria-haspopup="true" aria-expanded="{{ch.ddOpenAttr}}" onClick="{{ch.ddToggle}}" style="min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px">{{ch.ddLabel}}</span>
+<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<template data-sc="if" value="{{ch.ddOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{ch.ddClose}}" style="position: fixed; inset: 0; z-index: 20"></div>
+<div role="group" aria-label="{{t.lineSel}}" style="position: absolute; top: calc(100% + 4px); left: 34px; z-index: 21; min-width: 190px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 6px 0">
+<template data-sc="for" list="{{ch.ddItems}}" as="it" hint-placeholder-count="5">
+<label style="{{it.rowStyle}}">
+<input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
+<span style="{{it.swatch}}"></span>{{it.label}}
 </label>
+</template>
 </div>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+</template>
+</div>
+</div>
+<div role="group" aria-label="{{t.shift}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
 <span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.shift}}</span>
 <template data-sc="for" list="{{shifts}}" as="p" hint-placeholder-count="3">
 <button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
 </template>
 </div>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<div role="group" aria-label="{{t.model}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
 <span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.model}}</span>
 <template data-sc="for" list="{{models}}" as="p" hint-placeholder-count="3">
 <button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
@@ -101,24 +112,6 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <span style="font-size: 12px; color: #4B5563">{{ch.sub}}</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
-<div style="position: relative; display: flex; align-items: center; gap: 6px; padding-right: 12px; border-right: 1px solid #E5E7EB">
-<label for="ch-line-btn" style="font-size: 12px; color: #4B5563">{{t.lineSel}}</label>
-<button id="ch-line-btn" type="button" aria-haspopup="true" aria-expanded="{{ch.ddOpenAttr}}" onClick="{{ch.ddToggle}}" style="min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px">
-<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px">{{ch.ddLabel}}</span>
-<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-</button>
-<template data-sc="if" value="{{ch.ddOpen}}" hint-placeholder-val="{{false}}">
-<div onClick="{{ch.ddClose}}" style="position: fixed; inset: 0; z-index: 20"></div>
-<div role="group" aria-label="{{t.lineSel}}" style="position: absolute; top: calc(100% + 4px); left: 30px; z-index: 21; min-width: 190px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 6px 0">
-<template data-sc="for" list="{{ch.ddItems}}" as="it" hint-placeholder-count="5">
-<label style="{{it.rowStyle}}">
-<input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
-<span style="{{it.swatch}}"></span>{{it.label}}
-</label>
-</template>
-</div>
-</template>
-</div>
 <div role="group" aria-label="{{t.xAxis}}" style="display: flex; align-items: center; gap: 6px">
 <span style="font-size: 12px; color: #4B5563">{{t.xAxis}}</span>
 <div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
@@ -880,7 +873,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, line: 'ALL', shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -917,10 +910,11 @@ class Component extends DCLogic {
     var langs = [['en', 'EN'], ['th', 'ไทย'], ['zh', '中文']].map(function (x) {
       return { label: x[1], on: L === x[0] ? 'true' : 'false', style: self.seg(L === x[0]), pick: function () { self.setState({ lang: x[0] }); } };
     });
-    var lines = ['ALL'].concat(LINES).map(function (l) {
-      return { label: l === 'ALL' ? t.all : l, style: self.pill(st.line === l), pick: function () {
-        self.setState({ line: l, chLines: LINES.map(function (x) { return l === 'ALL' || x === l; }) }); } };
-    });
+    // 線別（多選，篩選列）：至少保留一條
+    var chMask = st.chLines;
+    var chAll = chMask.every(function (x) { return x; });
+    var chSel = LINES.filter(function (l, i) { return chMask[i]; });
+    var lines = [];
     var shifts = [['ALL', t.all], ['D', t.day], ['N', t.night]].map(function (x) {
       return { label: x[1], style: self.pill(st.shift === x[0]), pick: function () { self.setState({ shift: x[0] }); } };
     });
@@ -929,21 +923,18 @@ class Component extends DCLogic {
     });
 
     var selShifts = st.shift === 'ALL' ? SHIFTS : [st.shift];
-    var selLines = st.line === 'ALL' ? LINES : [st.line];
+    var selLines = chSel;
     var selModels = st.model === 'ALL' ? MODELS : [st.model];
     var shiftLabel = st.shift === 'ALL' ? t.allShifts : shiftName[st.shift];
     var modelLabel = st.model === 'ALL' ? t.allModels : MODEL_CODE[st.model];
-    var lineLabel = st.line === 'ALL' ? t.allLines : st.line;
+    var lineLabel = chAll ? t.allLines : chSel.join(' + ');
     var scope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel;
-    var pickLine = function (l) { self.setState({ line: l, chLines: LINES.map(function (x) { return l === 'ALL' || x === l; }) }); };
     var pu = {
-      plant: st.plant, bu: st.bu, line: st.line,
+      plant: st.plant, bu: st.bu,
       plants: ['BP9P2'].map(function (v) { return { v: v, sel: st.plant === v }; }),
       bus: ['CDBU1'].map(function (v) { return { v: v, sel: st.bu === v }; }),
-      lines: ['ALL'].concat(LINES).map(function (l) { return { v: l, label: l === 'ALL' ? t.allLines : l, sel: st.line === l }; }),
       plantChange: function (e) { self.setState({ plant: e.target.value }); },
-      buChange: function (e) { self.setState({ bu: e.target.value }); },
-      lineChange: function (e) { pickLine(e.target.value); }
+      buChange: function (e) { self.setState({ bu: e.target.value }); }
     };
 
     // KPI
@@ -958,7 +949,7 @@ class Component extends DCLogic {
     ];
 
     // 整合圖：X 軸 日期 / 線別 × 瑕疵層別
-    var seedBase = LINES.indexOf(st.line) * 13 + MODELS.indexOf(st.model) * 7 + 40;
+    var seedBase = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 13 : 0); }, 0) + MODELS.indexOf(st.model) * 7 + 40;
     var types = st.types;
     var allOn = types.every(function (x) { return x; });
     var nOn = types.filter(function (x) { return x; }).length;
@@ -969,16 +960,13 @@ class Component extends DCLogic {
         return { label: c, checked: types[i], swatch: swatchBase + 'background: ' + DCOLORS[i],
           toggle: function () { var nt = types.slice(); nt[i] = !nt[i]; self.setState({ types: nt }); } };
       }));
-    var chMask = st.chLines;
-    var chAll = chMask.every(function (x) { return x; });
-    var chSel = LINES.filter(function (l, i) { return chMask[i]; });
     var LCOL = { CD101: '#1E3A8A', CD102: '#0F766E', CD103: '#C2410C', CD104: '#7C3AED' };
     var rowBase = 'display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; font-size: 13px; cursor: pointer; ';
     var ddItems = [{ label: t.selectAll, checked: chAll, swatch: 'display: none', rowStyle: rowBase + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
-      toggle: function () { self.setState({ chLines: chAll ? [false, false, false, false] : [true, true, true, true] }); } }]
+      toggle: function () { self.setState({ chLines: [true, true, true, true] }); } }]
       .concat(LINES.map(function (l, i) {
         return { label: l, checked: chMask[i], rowStyle: rowBase, swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + LCOL[l],
-          toggle: function () { var nm = chMask.slice(); nm[i] = !nm[i]; self.setState({ chLines: nm }); } };
+          toggle: function () { var nm = chMask.slice(); nm[i] = !nm[i]; if (nm.some(Boolean)) self.setState({ chLines: nm }); } };
       }));
     var ddLabel = chAll ? t.allLines : (chSel.length === 0 ? '—' : (chSel.length <= 2 ? chSel.join(', ') : t.nLines(chSel.length)));
     var chSeed = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 3 : 0); }, 0) + MODELS.indexOf(st.model) * 7 + 40;
@@ -993,7 +981,7 @@ class Component extends DCLogic {
     var raw;
     if (isLine) {
       raw = chSel.map(function (l) {
-        return { key: l, sel: st.line === l, subs: [{ line: l, bars: selShifts.map(function (sh) {
+        return { key: l, sel: false, subs: [{ line: l, bars: selShifts.map(function (sh) {
           var a = agg([l], [sh], selModels);
           return { sh: sh, vals: a.pts.map(function (c) { return c / a.b; }) };
         }) }] };
@@ -1128,7 +1116,7 @@ class Component extends DCLogic {
         dpu: (a.real / a.b).toFixed(2), rate: rate.toFixed(2) + '%',
         fc: (a.fcPts / a.calls * 100).toFixed(1) + '%', review: (a.rv / a.ng * 100).toFixed(1) + '%',
         rateStyle: cell + (rate > 2.5 ? 'color: #B91C1C; font-weight: 700' : ''),
-        rowStyle: "text-align: right; font-family: 'Roboto Mono', monospace; " + (st.line === l ? 'background: #EFF6FF' : '')
+        rowStyle: "text-align: right; font-family: 'Roboto Mono', monospace; " + (!chAll && chMask[LINES.indexOf(l)] ? 'background: #EFF6FF' : '')
       };
     });
 
@@ -1306,7 +1294,7 @@ class Component extends DCLogic {
     ];
     function resultOf(code) { return code === 'real' ? t.isReal : (code === 'false' ? t.isFalse : '—'); }
     var boards = allBoards.filter(function (b) {
-      return (st.line === 'ALL' || b[2] === st.line) && (st.shift === 'ALL' || b[3] === st.shift) && (st.model === 'ALL' || b[4] === st.model);
+      return chMask[LINES.indexOf(b[2])] && (st.shift === 'ALL' || b[3] === st.shift) && (st.model === 'ALL' || b[4] === st.model);
     }).map(function (b) {
       var done = b[7] === 1;
       return {
