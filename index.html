@@ -281,7 +281,17 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 <span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
 </div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px">
 <span style="font-size: 12px; color: #4B5563">{{t.dNote}} ・ {{t.dCols}}</span>
+<div role="group" aria-label="{{t.dTopLabel}}" data-noshot="1" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.dTopLabel}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{dTopBtns}}" as="v" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</template>
+</div>
+</div>
+</div>
 </div>
 <template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
 <div style="display: flex; flex-direction: column; gap: 6px">
@@ -669,7 +679,7 @@ var I18N = {
     prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
     noneSel: '未選擇', lineEmptyHint: '請至少選擇一條線別；關閉選單會恢復先前的選擇。', modelEmptyHint: '請至少選擇一個機種；關閉選單會恢復先前的選擇。',
     snapLabel: '截圖此區塊', snapOk: '已截圖，已複製到剪貼簿，可直接貼上', snapDl: '已截圖；瀏覽器不允許複製，已改為下載', snapFail: '截圖失敗，請改用系統截圖', dCols: '數值：DPU ・ 點數 ・ 占比',
-    dCtx: function (des, pct, vs) { return '主要位號 ' + des + '（' + pct + '%）' + (vs ? ' ・ 較近 7 天平均 ' + vs : ''); },
+    dTopLabel: '主要位號', dCtx: function (n, list, vs) { return '前 ' + n + ' 大位號：' + list + (vs ? ' ・ 較近 7 天平均 ' + vs : ''); },
     ltNote: '列出全部線體以便比較；藍底 = 已選線體；紅字 = 焊點不良率 > 2.5%',
     fxHeadPallet: '載具', fxHeadVals: 'DPU ・ 板數',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + '，高於整體 ' + avg + ' 約 ' + pct + '%，建議優先確認其壓扣與磨耗狀況。'; },
@@ -723,7 +733,7 @@ var I18N = {
     prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
     noneSel: 'None selected', lineEmptyHint: 'Select at least one line. Closing the menu restores the previous selection.', modelEmptyHint: 'Select at least one model. Closing the menu restores the previous selection.',
     snapLabel: 'Screenshot this panel', snapOk: 'Screenshot copied to clipboard — paste it anywhere', snapDl: 'Screenshot taken; clipboard not allowed here, so it was downloaded', snapFail: 'Screenshot failed — use your system screenshot', dCols: 'Values: DPU · defects · share',
-    dCtx: function (des, pct, vs) { return 'Top designator ' + des + ' (' + pct + '%)' + (vs ? ' · vs 7-day avg ' + vs : ''); },
+    dTopLabel: 'Top designators', dCtx: function (n, list, vs) { return 'Top ' + n + ' designators: ' + list + (vs ? ' · vs 7-day avg ' + vs : ''); },
     ltNote: 'All lines listed for comparison; blue rows = selected lines; red = defect rate (joints) > 2.5%',
     fxHeadPallet: 'Pallet', fxHeadVals: 'DPU · boards',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' is ' + pct + '% above the overall ' + avg + '; check its hold-downs and wear first.'; },
@@ -777,7 +787,7 @@ var I18N = {
     prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
     noneSel: 'ยังไม่ได้เลือก', lineEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์ การปิดเมนูจะคืนค่าการเลือกเดิม', modelEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งรุ่น การปิดเมนูจะคืนค่าการเลือกเดิม',
     snapLabel: 'จับภาพส่วนนี้', snapOk: 'จับภาพแล้ว คัดลอกไปยังคลิปบอร์ดแล้ว วางได้ทันที', snapDl: 'จับภาพแล้ว แต่เบราว์เซอร์ไม่อนุญาตให้คัดลอก จึงดาวน์โหลดแทน', snapFail: 'จับภาพไม่สำเร็จ โปรดใช้การจับภาพหน้าจอของระบบ', dCols: 'ค่า: DPU · จุด · สัดส่วน',
-    dCtx: function (des, pct, vs) { return 'Designator หลัก ' + des + ' (' + pct + '%)' + (vs ? ' · เทียบค่าเฉลี่ย 7 วัน ' + vs : ''); },
+    dTopLabel: 'Designator หลัก', dCtx: function (n, list, vs) { return n + ' Designator หลัก: ' + list + (vs ? ' · เทียบค่าเฉลี่ย 7 วัน ' + vs : ''); },
     ltNote: 'แสดงทุกไลน์เพื่อเปรียบเทียบ; แถวสีฟ้า = ไลน์ที่เลือก; ตัวแดง = อัตราของเสีย (จุดบัดกรี) > 2.5%',
     fxHeadPallet: 'พาเลท', fxHeadVals: 'DPU · บอร์ด',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' สูงกว่าค่ารวม ' + avg + ' ประมาณ ' + pct + '% ควรตรวจตัวกดยึดและการสึกหรอก่อน'; },
@@ -972,7 +982,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { toast: null, dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { dTopN: 3, toast: null, dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   snap(key) {
@@ -1256,12 +1266,14 @@ class Component extends DCLogic {
     var avg7 = null;
     if (st.dateSel >= 0) { DATE_SEL = -1; var a7 = agg(selLines, selShifts, selModels); DATE_SEL = st.dateSel; avg7 = a7.pts.map(function (c) { return c / a7.b; }); }
     var defects = s.pts.map(function (c, i) {
-      var best = null, bestV = 0, totV = 0;
-      Object.keys(cpForTop).forEach(function (d) { var v = cpForTop[d].R[i]; totV += v; if (v > bestV) { bestV = v; best = d; } });
+      var totV = 0, ranked = [];
+      Object.keys(cpForTop).forEach(function (d) { var v = cpForTop[d].R[i]; totV += v; if (v > 0) ranked.push([d, v]); });
+      ranked.sort(function (a, b) { return b[1] - a[1]; });
+      var topN = ranked.slice(0, st.dTopN);
       var vs = null;
       if (avg7) { var dlt = c / s.b - avg7[i]; vs = (dlt >= 0 ? '+' : '−') + Math.abs(dlt).toFixed(2); }
       return {
-        ctx: best ? t.dCtx(best, Math.round(bestV / Math.max(1, totV) * 100), vs) : '',
+        ctx: topN.length ? t.dCtx(topN.length, topN.map(function (x) { return x[0] + ' ' + Math.round(x[1] / Math.max(1, totV) * 100) + '%'; }).join(t.sep), vs) : '',
         name: DCODES[i], local: t.dNames[i],
         text: (c / s.b).toFixed(2) + ' ・ ' + fmt(c) + t.pts + ' ・ ' + Math.round(c / s.real * 100) + '%',
         bar: 'height: 100%; width: ' + (c / maxPts * 100).toFixed(1) + '%; background: ' + DCOLORS[i]
@@ -1525,6 +1537,7 @@ class Component extends DCLogic {
         };
       })(),
       kpis: kpis, ch: ch, cp: cp, defects: defects, fxNote: fxNote,
+      dTopBtns: [3, 5].map(function (n) { var on = st.dTopN === n; return { label: 'Top ' + n, on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ dTopN: n }); } }; }),
       toast: { show: !!st.toast, text: st.toast || '' },
       snap: ['ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
       pScope: pScope,
