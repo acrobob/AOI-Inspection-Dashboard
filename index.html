@@ -228,7 +228,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
-<span style="font-size: 12px; color: #4B5563">{{tableScope}}</span>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
 </div>
 <div style="overflow-x: auto">
 <table style="width: 100%; min-width: 960px; border-collapse: collapse; font-size: 13px">
@@ -265,8 +265,11 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
 <section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.dTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{t.dNote}}</span>
 </div>
 <template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
@@ -412,7 +415,10 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
 <section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
 <template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
 <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
 <span style="width: 72px; font-family: 'Roboto Mono', monospace; font-weight: 500">{{f.ver}}</span>
@@ -424,7 +430,10 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </section>
 
 <section aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.rvTitle}}</h2>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
 <template data-sc="for" list="{{rvBoxes}}" as="x" hint-placeholder-count="3">
 <div style="flex: 1 1 120px; border: 1px solid #E5E7EB; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
@@ -618,7 +627,7 @@ var I18N = {
     kFc: 'AOI 誤判率', kFcSub: function (a, b) { return '誤判 ' + a + ' 點 / AOI 報警 ' + b + ' 點'; },
     kRv: '複判執行率', kRvSub: function (a, b, c) { return '已複判 ' + a + ' / NG 板 ' + b + '（未複判 ' + c + '）'; },
     chTitle: '線別 / 日期 DPU 對比', lineSel: '線別', lineEmpty: '請至少選擇一條線別', selectAll: '全選', nLines: function (n) { return '已選 ' + n + ' 條'; }, xAxis: 'X 軸', byDate: '日期', byLine: '線別', stack: '瑕疵層別', stackNote: '淺色：白班 ・ 深色：夜班',
-    cpTitle: '瑕疵元件與位置', cpSub: function (res, n) { return '依上方篩選 ・ ' + res + ' ・ 前 ' + n + ' 名位號（AOI Whole Board Component Infos）'; },
+    cpTitle: '瑕疵元件與位置', cpSub: function (scope, res, n) { return scope + ' ・ ' + res + ' ・ 前 ' + n + ' 名位號（AOI Whole Board Component Infos）'; },
     cpResult: '判定', cpPanel: '拼板位置', cpAllRes: '全部報警', cpDes: '位號', cpDist: '缺陷分布', cpCount: '點數', cpCum: '累計',
     cpPrefix: '依位號前綴：', cpCompType: '元件類型', cpEmpty: '目前篩選條件下沒有資料',
     cpNote: function (pct, list) { return '前 3 名位號佔 ' + pct + '%（' + list + '），建議優先檢視其程式參數與載具壓扣。'; },
@@ -641,7 +650,7 @@ var I18N = {
     fxTitle: '載具版本 × DPU', boardsUnit: ' 板', fxNote: 'SP-A02 的 Pin Height 占比最高，建議優先確認載具壓扣與磨耗狀況。',
     rvTitle: '複判狀況', real: '真不良', fcL: 'AOI 誤判', unrev: '未複判 NG 板', pcs: ' 片', fcSrc: '誤判主要來源',
     fcNames: ['Bridge（陰影誤判為錫橋）', 'Pin Height（高度閾值過嚴）', 'Insufficient Solder（錫量閾值過嚴）', 'No Pin（反光 / 助焊劑殘留）'],
-    bdTitle: '單板明細（AOI NG 板）', bdNote: function (n) { return '依上方篩選 ・ 顯示 ' + n + ' 筆'; },
+    bdTitle: '單板明細（AOI NG 板）', bdNote: function (scope, n) { return scope + ' ・ ' + n + ' 筆'; },
     imgLoad: '圖片載入', modeAuto: '預設載入', modeClick: '點擊取得',
     bdHeads: ['板序號', '檢測時間', '線體', '班別', '機種', '板型', '載具版本', 'AOI 缺陷', '複判狀態', '複判結果', '複判人員', '不良圖片'],
     reviewed: '已複判', pending: '未複判', isReal: '真不良', isFalse: '誤判', getImg: '取得圖片', viewImg: '檢視圖片',
@@ -666,7 +675,7 @@ var I18N = {
     kFc: 'AOI false-call rate', kFcSub: function (a, b) { return a + ' false calls / ' + b + ' AOI calls'; },
     kRv: 'Review completion', kRvSub: function (a, b, c) { return a + ' reviewed / ' + b + ' NG boards (' + c + ' pending)'; },
     chTitle: 'DPU by Date / Line', lineSel: 'Lines', lineEmpty: 'Select at least one line', selectAll: 'Select all', nLines: function (n) { return n + ' lines'; }, xAxis: 'X-axis', byDate: 'Date', byLine: 'Line', stack: 'Break down by defect', stackNote: 'Light: day shift · Dark: night shift',
-    cpTitle: 'Defect Components & Locations', cpSub: function (res, n) { return 'Filtered as above · ' + res + ' · top ' + n + ' designators (AOI Whole Board Component Infos)'; },
+    cpTitle: 'Defect Components & Locations', cpSub: function (scope, res, n) { return scope + ' · ' + res + ' · top ' + n + ' designators (AOI Whole Board Component Infos)'; },
     cpResult: 'Result', cpPanel: 'Panel position', cpAllRes: 'All AOI calls', cpDes: 'Designator', cpDist: 'Defect mix', cpCount: 'Calls', cpCum: 'Cum.',
     cpPrefix: 'By designator prefix:', cpCompType: 'Component type', cpEmpty: 'No data for the current filters',
     cpNote: function (pct, list) { return 'Top 3 designators account for ' + pct + '% (' + list + '); review their program parameters and pallet hold-downs first.'; },
@@ -689,7 +698,7 @@ var I18N = {
     fxTitle: 'Solder Pallet Version × DPU', boardsUnit: ' boards', fxNote: 'SP-A02 has the highest Pin Height share; check its hold-downs and pallet wear first.',
     rvTitle: 'Review Status', real: 'True defects', fcL: 'AOI false calls', unrev: 'Unreviewed NG boards', pcs: ' pcs', fcSrc: 'Top false-call sources',
     fcNames: ['Bridge (shadow read as bridge)', 'Pin Height (height threshold too tight)', 'Insufficient Solder (volume threshold too tight)', 'No Pin (glare / flux residue)'],
-    bdTitle: 'Board Detail (AOI NG Boards)', bdNote: function (n) { return 'Filtered as above · ' + n + ' rows'; },
+    bdTitle: 'Board Detail (AOI NG Boards)', bdNote: function (scope, n) { return scope + ' · ' + n + ' rows'; },
     imgLoad: 'Images', modeAuto: 'Auto-load', modeClick: 'On click',
     bdHeads: ['Serial No.', 'Inspected', 'Line', 'Shift', 'Model', 'Board type', 'Solder Pallet', 'AOI defect', 'Review', 'Result', 'Reviewer', 'Image'],
     reviewed: 'Reviewed', pending: 'Pending', isReal: 'True defect', isFalse: 'False call', getImg: 'Get image', viewImg: 'View image',
@@ -714,7 +723,7 @@ var I18N = {
     kFc: 'อัตราการแจ้งผิดของ AOI', kFcSub: function (a, b) { return 'แจ้งผิด ' + a + ' จุด / AOI แจ้งเตือน ' + b + ' จุด'; },
     kRv: 'อัตราการตรวจซ้ำ', kRvSub: function (a, b, c) { return 'ตรวจซ้ำแล้ว ' + a + ' / บอร์ด NG ' + b + ' (ค้าง ' + c + ')'; },
     chTitle: 'เปรียบเทียบ DPU ตามวันที่ / ไลน์', lineSel: 'ไลน์', lineEmpty: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์', selectAll: 'เลือกทั้งหมด', nLines: function (n) { return 'เลือก ' + n + ' ไลน์'; }, xAxis: 'แกน X', byDate: 'วันที่', byLine: 'ไลน์', stack: 'แยกตามประเภทของเสีย', stackNote: 'สีอ่อน: กะเช้า · สีเข้ม: กะดึก',
-    cpTitle: 'ชิ้นส่วนและตำแหน่งที่พบของเสีย', cpSub: function (res, n) { return 'กรองตามด้านบน · ' + res + ' · ' + n + ' Designator สูงสุด (AOI Whole Board Component Infos)'; },
+    cpTitle: 'ชิ้นส่วนและตำแหน่งที่พบของเสีย', cpSub: function (scope, res, n) { return scope + ' · ' + res + ' · ' + n + ' Designator สูงสุด (AOI Whole Board Component Infos)'; },
     cpResult: 'ผลตัดสิน', cpPanel: 'ตำแหน่งในแผง', cpAllRes: 'AOI แจ้งทั้งหมด', cpDes: 'Designator', cpDist: 'สัดส่วนของเสีย', cpCount: 'จุด', cpCum: 'สะสม',
     cpPrefix: 'ตามคำนำหน้า Designator:', cpCompType: 'ประเภทชิ้นส่วน', cpEmpty: 'ไม่มีข้อมูลตามตัวกรองปัจจุบัน',
     cpNote: function (pct, list) { return '3 Designator แรกคิดเป็น ' + pct + '% (' + list + ') ควรตรวจพารามิเตอร์โปรแกรมและตัวกดยึดพาเลทก่อน'; },
@@ -737,7 +746,7 @@ var I18N = {
     fxTitle: 'เวอร์ชัน Solder Pallet × DPU', boardsUnit: ' บอร์ด', fxNote: 'SP-A02 มีสัดส่วน Pin Height สูงสุด ควรตรวจสอบตัวกดยึดและการสึกหรอของพาเลทก่อน',
     rvTitle: 'สถานะการตรวจซ้ำ', real: 'ของเสียจริง', fcL: 'AOI แจ้งผิด', unrev: 'บอร์ด NG ที่ยังไม่ตรวจซ้ำ', pcs: ' แผ่น', fcSrc: 'สาเหตุหลักของการแจ้งผิด',
     fcNames: ['Bridge (เงาถูกอ่านเป็นบัดกรีเชื่อม)', 'Pin Height (เกณฑ์ความสูงเข้มเกินไป)', 'Insufficient Solder (เกณฑ์ปริมาณบัดกรีเข้มเกินไป)', 'No Pin (แสงสะท้อน / คราบฟลักซ์)'],
-    bdTitle: 'รายละเอียดรายบอร์ด (บอร์ด AOI NG)', bdNote: function (n) { return 'กรองตามด้านบน · ' + n + ' รายการ'; },
+    bdTitle: 'รายละเอียดรายบอร์ด (บอร์ด AOI NG)', bdNote: function (scope, n) { return scope + ' · ' + n + ' รายการ'; },
     imgLoad: 'รูปภาพ', modeAuto: 'โหลดอัตโนมัติ', modeClick: 'คลิกเพื่อโหลด',
     bdHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์', 'กะ', 'รุ่น', 'ประเภทบอร์ด', 'Solder Pallet', 'ของเสีย AOI', 'สถานะตรวจซ้ำ', 'ผลตรวจซ้ำ', 'ผู้ตรวจซ้ำ', 'รูปของเสีย'],
     reviewed: 'ตรวจซ้ำแล้ว', pending: 'ยังไม่ตรวจซ้ำ', isReal: 'ของเสียจริง', isFalse: 'แจ้งผิด', getImg: 'ดึงรูป', viewImg: 'ดูรูป',
@@ -1001,6 +1010,7 @@ class Component extends DCLogic {
     var shiftLabel = st.shift === 'ALL' ? t.allShifts : shiftName[st.shift];
     var modelLabel = modAll ? t.allModels : selModels.map(function (m) { return MODEL_CODE[m]; }).join(' + ');
     var lineLabel = chAll ? t.allLines : chSel.join(' + ');
+    var pScope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel + t.sep + (st.dateSel >= 0 ? DATES[st.dateSel] : '10/29–11/04');
     var scope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel + (st.dateSel >= 0 ? t.sep + DATES[st.dateSel] : '');
     var pu = {
       plant: st.plant, bu: st.bu,
@@ -1165,7 +1175,7 @@ class Component extends DCLogic {
       }),
       axisTop: axisMax.toFixed(1), axisMid: (axisMax / 2).toFixed(1),
       innerStyle: 'min-width: ' + (isLine ? 520 : Math.max(single ? 320 : 600, groupMin * dates.length)) + 'px; display: flex; border-left: 1px solid #D1D5DB',
-      sub: t.cmpSub(typesText, chLineLabel + t.sep + shiftLabel + t.sep + modelLabel),
+      sub: t.cmpSub(typesText, pScope),
       note: note
     };
 
@@ -1328,7 +1338,7 @@ class Component extends DCLogic {
       };
     }
     var cp = {
-      sub: t.cpSub(resLabels[st.cpRes], cpTop.length),
+      sub: t.cpSub(pScope, resLabels[st.cpRes], cpTop.length),
       results: [['ALL', t.cpAllRes], ['R', t.isReal], ['F', t.isFalse]].map(function (v) {
         var on = st.cpRes === v[0];
         return { label: v[1], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ cpRes: v[0] }); } };
@@ -1434,9 +1444,9 @@ class Component extends DCLogic {
         };
       })(),
       kpis: kpis, ch: ch, cp: cp, defects: defects,
-      tableScope: shiftLabel + t.sep + modelLabel,
+      pScope: pScope,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
-      bdNote: t.bdNote(boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
+      bdNote: t.bdNote(pScope, boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
       imgNote: auto ? t.noteAuto : t.noteClick,
       hasImg: !!cur, imgLoading: !!cur && st.imgLoading, imgReady: !!cur && !st.imgLoading, img: img,
       closeImg: function () { self.setState({ imgSn: null }); }
