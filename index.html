@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AOI 檢測看板 / AOI Inspection Dashboard</title>
+<title>AOI Inspection Dashboard</title>
+<script src="html-to-image.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
@@ -128,10 +129,13 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 
 <template data-sc="if" value="{{tabs.ov}}" hint-placeholder-val="{{true}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
-<section aria-label="{{t.chTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-ch" aria-label="{{t.chTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-direction: column; align-items: stretch; gap: 10px">
 <div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.chTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.ch}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{ch.sub}}</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
@@ -225,9 +229,12 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </template>
 </section>
 
-<section aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-lt" aria-label="{{t.ltTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.ltTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.lt}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
 </div>
 <div style="overflow-x: auto">
@@ -257,6 +264,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </tbody>
 </table>
 </div>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.ltNote}}</p>
 </section>
 </div>
 </template>
@@ -264,13 +272,16 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <template data-sc="if" value="{{tabs.df}}" hint-placeholder-val="{{false}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
-<section aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<section id="panel-df" aria-label="{{t.dTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px">
 <div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.dTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.df}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
 </div>
-<span style="font-size: 12px; color: #4B5563">{{t.dNote}}</span>
+<span style="font-size: 12px; color: #4B5563">{{t.dNote}} ・ {{t.dCols}}</span>
 </div>
 <template data-sc="for" list="{{defects}}" as="d" hint-placeholder-count="4">
 <div style="display: flex; flex-direction: column; gap: 6px">
@@ -278,6 +289,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <span style="font-weight: 500">{{d.name}} <span style="color: #4B5563; font-weight: 400">{{d.local}}</span></span>
 <span style="font-family: 'Roboto Mono', monospace">{{d.text}}</span>
 </div>
+<span style="font-size: 12px; color: #4B5563">{{d.ctx}}</span>
 <div style="height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden">
 <div style="{{d.bar}}"></div>
 </div>
@@ -286,10 +298,13 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </section>
 </div>
 
-<section aria-label="{{t.cpTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-cp" aria-label="{{t.cpTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.cpTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.cp}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{cp.sub}}</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px">
@@ -414,10 +429,16 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <template data-sc="if" value="{{tabs.pr}}" hint-placeholder-val="{{false}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
-<section aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-fx" aria-label="{{t.fxTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fxTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.fx}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: #374151; padding-bottom: 4px; border-bottom: 1px solid #E5E7EB">
+<span style="width: 72px">{{t.fxHeadPallet}}</span><span style="flex: 1"></span><span style="width: 160px; text-align: right">{{t.fxHeadVals}}</span>
 </div>
 <template data-sc="for" list="{{fixtures}}" as="f" hint-placeholder-count="3">
 <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
@@ -426,12 +447,15 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <span style="width: 160px; text-align: right; font-family: 'Roboto Mono', monospace; color: #374151">{{f.text}}</span>
 </div>
 </template>
-<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.fxNote}}</p>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{fxNote}}</p>
 </section>
 
-<section aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-rv" aria-label="{{t.rvTitle}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.rvTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.rv}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
@@ -439,6 +463,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <div style="flex: 1 1 120px; border: 1px solid #E5E7EB; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
 <span style="font-size: 12px; color: #4B5563">{{x.label}}</span>
 <span style="{{x.style}}">{{x.value}}</span>
+<span style="font-size: 12px; color: #4B5563">{{x.sub}}</span>
 </div>
 </template>
 </div>
@@ -457,9 +482,12 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 
 <template data-sc="if" value="{{tabs.bd}}" hint-placeholder-val="{{false}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
-<section aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<section id="panel-bd" aria-label="{{t.bdTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px">
 <h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.bdTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.bd}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
 <span style="font-size: 12px; color: #4B5563">{{bdNote}}</span>
 <div role="group" aria-label="{{t.imgLoad}}" style="display: flex; align-items: center; gap: 6px">
@@ -538,6 +566,9 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 
 </div>
 </div>
+<template data-sc="if" value="{{toast.show}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: fixed; right: 16px; bottom: 16px; z-index: 40; padding: 10px 14px; border-radius: 4px; background: #1F2937; color: #FFFFFF; font-size: 13px">{{toast.text}}</div>
+</template>
 </template>
 <script>
 (function () {
@@ -637,6 +668,12 @@ var I18N = {
     isName: '錫量不足',
     prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
     noneSel: '未選擇', lineEmptyHint: '請至少選擇一條線別；關閉選單會恢復先前的選擇。', modelEmptyHint: '請至少選擇一個機種；關閉選單會恢復先前的選擇。',
+    snapLabel: '截圖此區塊', snapOk: '已下載截圖', snapFail: '截圖失敗，請改用系統截圖', dCols: '數值：DPU ・ 點數 ・ 占比',
+    dCtx: function (des, pct, vs) { return '主要位號 ' + des + '（' + pct + '%）' + (vs ? ' ・ 較近 7 天平均 ' + vs : ''); },
+    ltNote: '列出全部線體以便比較；藍底 = 已選線體；紅字 = 焊點不良率 > 2.5%',
+    fxHeadPallet: '載具', fxHeadVals: 'DPU ・ 板數',
+    fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + '，高於整體 ' + avg + ' 約 ' + pct + '%，建議優先確認其壓扣與磨耗狀況。'; },
+    rvRealSub: function (p) { return '占 AOI 報警 ' + p + '%'; }, rvFcSub: function (p) { return '誤判率 ' + p + '%'; }, rvPendSub: function (n, p) { return 'NG 板 ' + n + ' 片中的 ' + p + '%'; },
     last7: '近 7 天', today: '當天', yday: '昨天',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
@@ -685,12 +722,18 @@ var I18N = {
     isName: 'Insufficient solder',
     prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
     noneSel: 'None selected', lineEmptyHint: 'Select at least one line. Closing the menu restores the previous selection.', modelEmptyHint: 'Select at least one model. Closing the menu restores the previous selection.',
+    snapLabel: 'Screenshot this panel', snapOk: 'Screenshot downloaded', snapFail: 'Screenshot failed — use your system screenshot', dCols: 'Values: DPU · defects · share',
+    dCtx: function (des, pct, vs) { return 'Top designator ' + des + ' (' + pct + '%)' + (vs ? ' · vs 7-day avg ' + vs : ''); },
+    ltNote: 'All lines listed for comparison; blue rows = selected lines; red = defect rate (joints) > 2.5%',
+    fxHeadPallet: 'Pallet', fxHeadVals: 'DPU · boards',
+    fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' is ' + pct + '% above the overall ' + avg + '; check its hold-downs and wear first.'; },
+    rvRealSub: function (p) { return p + '% of AOI calls'; }, rvFcSub: function (p) { return 'False-call rate ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% of ' + n + ' NG boards'; },
     last7: 'Last 7 days', today: 'Today', yday: 'Yesterday',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
     dTitle: 'DPU by Defect Type', dNote: 'DPU = defects of type / boards produced', pts: ' pts',
-    dNames: ['Solder bridge', 'No pin', 'Pin high', 'Missing part'],
+    dNames: ['', '', '', ''],
     tTitle: 'Daily DPU Trend (Day / Night)', dayLegend: 'Day 08:00–20:00', nightLegend: 'Night 20:00–08:00',
     tAll: 'Night-shift DPU has been above day shift for 7 straight days', tSome: function (n) { return 'Night-shift DPU was above day shift on ' + n + ' of the last 7 days'; }, tTail: '; the 11/04 night shift is still running.',
     ltTitle: 'Line × Defect Type',
@@ -733,6 +776,12 @@ var I18N = {
     isName: 'บัดกรีไม่พอ',
     prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
     noneSel: 'ยังไม่ได้เลือก', lineEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์ การปิดเมนูจะคืนค่าการเลือกเดิม', modelEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งรุ่น การปิดเมนูจะคืนค่าการเลือกเดิม',
+    snapLabel: 'จับภาพส่วนนี้', snapOk: 'ดาวน์โหลดภาพแล้ว', snapFail: 'จับภาพไม่สำเร็จ โปรดใช้การจับภาพหน้าจอของระบบ', dCols: 'ค่า: DPU · จุด · สัดส่วน',
+    dCtx: function (des, pct, vs) { return 'Designator หลัก ' + des + ' (' + pct + '%)' + (vs ? ' · เทียบค่าเฉลี่ย 7 วัน ' + vs : ''); },
+    ltNote: 'แสดงทุกไลน์เพื่อเปรียบเทียบ; แถวสีฟ้า = ไลน์ที่เลือก; ตัวแดง = อัตราของเสีย (จุดบัดกรี) > 2.5%',
+    fxHeadPallet: 'พาเลท', fxHeadVals: 'DPU · บอร์ด',
+    fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' สูงกว่าค่ารวม ' + avg + ' ประมาณ ' + pct + '% ควรตรวจตัวกดยึดและการสึกหรอก่อน'; },
+    rvRealSub: function (p) { return p + '% ของจุดที่ AOI แจ้ง'; }, rvFcSub: function (p) { return 'อัตราแจ้งผิด ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% ของบอร์ด NG ' + n + ' แผ่น'; },
     last7: '7 วันล่าสุด', today: 'วันนี้', yday: 'เมื่อวาน',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -923,8 +972,19 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { toast: null, dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
+  }
+  snap(key) {
+    var self = this, t = I18N[this.lang()];
+    var el = document.getElementById('panel-' + key);
+    var done = function (msg) { self.setState({ toast: msg }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 2500); };
+    if (!el || !window.htmlToImage) { done(t.snapFail); return; }
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var name = 'AOI-' + key + '-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.png';
+    window.htmlToImage.toPng(el, { pixelRatio: 2, backgroundColor: '#FFFFFF', filter: function (n) { return !(n.getAttribute && n.getAttribute('data-noshot')); } })
+      .then(function (url) { var a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); done(t.snapOk); })
+      .catch(function () { done(t.snapFail); });
   }
   isAuto() {
     if (this.state.autoImg !== null) return this.state.autoImg;
@@ -1181,8 +1241,16 @@ class Component extends DCLogic {
 
     // 缺陷類型
     var maxPts = Math.max.apply(null, s.pts);
+    var cpForTop = cpAgg(selLines, selShifts, selModels);
+    var avg7 = null;
+    if (st.dateSel >= 0) { DATE_SEL = -1; var a7 = agg(selLines, selShifts, selModels); DATE_SEL = st.dateSel; avg7 = a7.pts.map(function (c) { return c / a7.b; }); }
     var defects = s.pts.map(function (c, i) {
+      var best = null, bestV = 0, totV = 0;
+      Object.keys(cpForTop).forEach(function (d) { var v = cpForTop[d].R[i]; totV += v; if (v > bestV) { bestV = v; best = d; } });
+      var vs = null;
+      if (avg7) { var dlt = c / s.b - avg7[i]; vs = (dlt >= 0 ? '+' : '−') + Math.abs(dlt).toFixed(2); }
       return {
+        ctx: best ? t.dCtx(best, Math.round(bestV / Math.max(1, totV) * 100), vs) : '',
         name: DCODES[i], local: t.dNames[i],
         text: (c / s.b).toFixed(2) + ' ・ ' + fmt(c) + t.pts + ' ・ ' + Math.round(c / s.real * 100) + '%',
         bar: 'height: 100%; width: ' + (c / maxPts * 100).toFixed(1) + '%; background: ' + DCOLORS[i]
@@ -1214,6 +1282,8 @@ class Component extends DCLogic {
     var fxShare = [0.19, 0.48, 0.33];
     var fxVals = fxF.map(function (f, i) { return overall * f * (0.96 + 0.08 * rnd(seedBase + 60 + i + selShifts.length * 3)); });
     var fxMax = Math.max.apply(null, fxVals);
+    var fxTopI = fxVals.indexOf(fxMax);
+    var fxNote = t.fxNoteFn(['SP-A02', 'SP-A03', 'SP-A04'][fxTopI], fxMax.toFixed(2), Math.round((fxMax / overall - 1) * 100), overall.toFixed(2));
     var fixtures = ['SP-A02', 'SP-A03', 'SP-A04'].map(function (v, i) {
       return { ver: v, text: fxVals[i].toFixed(2) + ' ・ ' + fmt(s.b * fxShare[i]) + t.boardsUnit,
         bar: 'height: 100%; background: #475569; width: ' + (fxVals[i] / fxMax * 100).toFixed(1) + '%' };
@@ -1222,9 +1292,9 @@ class Component extends DCLogic {
     // 複判
     var mid = "font-size: 20px; font-weight: 700; font-family: 'Roboto Mono', monospace; ";
     var rvBoxes = [
-      { label: t.real, value: fmt(s.real) + t.pts, style: mid },
-      { label: t.fcL, value: fmt(s.fcPts) + t.pts, style: mid + 'color: #B45309' },
-      { label: t.unrev, value: fmt(s.ng - s.rv) + t.pcs, style: mid + 'color: #B91C1C' }
+      { label: t.real, value: fmt(s.real) + t.pts, style: mid, sub: t.rvRealSub(Math.round(s.real / Math.max(1, s.calls) * 100)) },
+      { label: t.fcL, value: fmt(s.fcPts) + t.pts, style: mid + 'color: #B45309', sub: t.rvFcSub((s.fcPts / Math.max(1, s.calls) * 100).toFixed(1)) },
+      { label: t.unrev, value: fmt(s.ng - s.rv) + t.pcs, style: mid + 'color: #B91C1C', sub: t.rvPendSub(fmt(s.ng), ((s.ng - s.rv) / Math.max(1, s.ng) * 100).toFixed(1)) }
     ];
     var cpAll = cpAgg(selLines, selShifts, selModels);
     var fcByType = [0, 0, 0, 0, 0];
@@ -1443,7 +1513,9 @@ class Component extends DCLogic {
           })
         };
       })(),
-      kpis: kpis, ch: ch, cp: cp, defects: defects,
+      kpis: kpis, ch: ch, cp: cp, defects: defects, fxNote: fxNote,
+      toast: { show: !!st.toast, text: st.toast || '' },
+      snap: ['ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
       pScope: pScope,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
       bdNote: t.bdNote(pScope, boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
