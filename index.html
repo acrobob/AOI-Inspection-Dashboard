@@ -23,7 +23,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <p style="margin: 0; font-size: 13px; color: #4B5563">{{t.source}}</p>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
-<p style="margin: 0; font-size: 12px; color: #4B5563; font-family: 'Roboto Mono', monospace">{{t.updated}} 2026-11-04 07:30</p>
+<p style="margin: 0; font-size: 12px; color: #4B5563; font-family: 'Roboto Mono', monospace">{{t.updated}} 2026-11-04 23:30</p>
 <div role="group" aria-label="語言 / Language" style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
 <template data-sc="for" list="{{langs}}" as="l" hint-placeholder-count="2">
 <button type="button" aria-pressed="{{l.on}}" onClick="{{l.pick}}" style="{{l.style}}">{{l.label}}</button>
@@ -32,9 +32,8 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </header>
 
-<section aria-label="{{t.filters}}" style="position: sticky; top: 0; z-index: 15; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 12px 16px">
-<div role="group" aria-label="{{t.prodUnit}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding-right: 16px; border-right: 1px solid #E5E7EB">
-<span style="font-size: 13px; color: #374151; font-weight: 500">{{t.prodUnit}}</span>
+<section aria-label="{{t.filters}}" style="position: sticky; top: 0; z-index: 15; display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 12px 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px">
 <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4B5563">{{t.plant}}
 <select value="{{pu.plant}}" onChange="{{pu.plantChange}}" style="min-height: 36px; padding: 0 30px 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; appearance: none; -webkit-appearance: none; background: #FFFFFF url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%234B5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;) no-repeat right 10px center">
 <template data-sc="for" list="{{pu.plants}}" as="o" hint-placeholder-count="1">
@@ -67,22 +66,40 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </template>
 </div>
+<div style="position: relative; display: flex; align-items: center; gap: 6px">
+<label for="f-model-btn" style="font-size: 13px; color: #4B5563">{{t.model}}</label>
+<button id="f-model-btn" type="button" aria-haspopup="true" aria-expanded="{{md.openAttr}}" onClick="{{md.toggle}}" style="min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px">{{md.label}}</span>
+<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<template data-sc="if" value="{{md.open}}" hint-placeholder-val="{{false}}">
+<div onClick="{{md.close}}" style="position: fixed; inset: 0; z-index: 20"></div>
+<div role="group" aria-label="{{t.model}}" style="position: absolute; top: calc(100% + 4px); left: 40px; z-index: 21; min-width: 190px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 6px 0">
+<template data-sc="for" list="{{md.items}}" as="it" hint-placeholder-count="3">
+<label style="{{it.rowStyle}}">
+<input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
+<span style="{{it.swatch}}"></span>{{it.label}}
+</label>
+</template>
 </div>
+</template>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px">
+<div role="group" aria-label="{{t.date}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.date}}</span>
+<span style="min-height: 36px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #F9FAFB; font-size: 13px; color: #1F2937; font-family: 'Roboto Mono', monospace; white-space: nowrap">{{dt.rangeText}}</span>
+<template data-sc="for" list="{{dt.btns}}" as="p" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+</template>
+</div>
+<span aria-hidden="true" style="width: 1px; height: 24px; background: #E5E7EB"></span>
 <div role="group" aria-label="{{t.shift}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
 <span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.shift}}</span>
 <template data-sc="for" list="{{shifts}}" as="p" hint-placeholder-count="3">
 <button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
 </template>
 </div>
-<div role="group" aria-label="{{t.model}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
-<span style="font-size: 13px; color: #4B5563; margin-right: 4px">{{t.model}}</span>
-<template data-sc="for" list="{{models}}" as="p" hint-placeholder-count="3">
-<button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
-</template>
-</div>
-<div style="display: flex; align-items: center; gap: 6px">
-<label for="f-date" style="font-size: 13px; color: #4B5563">{{t.date}}</label>
-<button id="f-date" type="button" style="min-height: 36px; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; font-family: 'Roboto Mono', monospace">2026-10-29 ~ 2026-11-04</button>
 </div>
 <span style="font-size: 12px; color: #4B5563; margin-left: auto">{{scope}}</span>
 </section>
@@ -604,6 +621,7 @@ var I18N = {
     cpHeads: ['板序號', '檢測時間', '線體 / 班別', '位號', 'AOI 缺陷', '判定', '量測高度'],
     isName: '錫量不足',
     prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
+    last7: '近 7 天', today: '當天', yday: '昨天',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
     cmpNote: function (hi, lo, gap) { return '最高：' + hi + ' ・ 最低：' + lo + ' ・ 差距 ' + gap; },
@@ -650,6 +668,7 @@ var I18N = {
     cpHeads: ['Serial No.', 'Inspected', 'Line / Shift', 'Designator', 'AOI defect', 'Result', 'Height'],
     isName: 'Insufficient solder',
     prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
+    last7: 'Last 7 days', today: 'Today', yday: 'Yesterday',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'Highest: ' + hi + ' · Lowest: ' + lo + ' · Gap ' + gap; },
@@ -696,6 +715,7 @@ var I18N = {
     cpHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์ / กะ', 'Designator', 'ของเสีย AOI', 'ผลตัดสิน', 'ความสูง'],
     isName: 'บัดกรีไม่พอ',
     prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
+    last7: '7 วันล่าสุด', today: 'วันนี้', yday: 'เมื่อวาน',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
     cmpNote: function (hi, lo, gap) { return 'สูงสุด: ' + hi + ' · ต่ำสุด: ' + lo + ' · ส่วนต่าง ' + gap; },
@@ -770,7 +790,7 @@ function splitTotal(total, ratios) {
 var CP_CACHE = {};
 // 單一組合（班別 × 線體 × 機種）的位號計數：{ des: { R: [5], F: [5], R2: [5], F2: [5] } }
 function cpCombo(sh, l, m) {
-  var key = sh + l + m; if (CP_CACHE[key]) return CP_CACHE[key];
+  var key = sh + l + m + DATE_SEL; if (CP_CACHE[key]) return CP_CACHE[key];
   var a = agg([l], [sh], [m]);
   var seed = SHIFTS.indexOf(sh) * 1000 + LINES.indexOf(l) * 100 + MODELS.indexOf(m) * 10;
   var out = {};
@@ -849,17 +869,29 @@ SHIFTS.forEach(function (sh, si) {
 
 function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
 
+// 日期選擇：-1 = 近 7 天；0..6 = 單日（10/29..11/04）。11/04 夜班進行中（20:00 起），單日板數按比例
+var DATE_SEL = -1;
+var DATES = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'];
+var DAY_F = { D: [1.03, 0.96, 1.12, 0.93, 0.90, 0.97, 0.88], N: [1.01, 0.95, 1.13, 0.90, 0.93, 0.87, 0.82] };
 function agg(lines, shifts, models) {
   var s = { b: 0, pts: [0, 0, 0, 0], calls: 0, ng: 0, rv: 0 };
   shifts.forEach(function (sh) {
     lines.forEach(function (l) {
       models.forEach(function (m) {
         var r = DATA[sh][l][m];
+        var b = r.b, ds = 1;
+        if (DATE_SEL >= 0) {
+          var sd = SHIFTS.indexOf(sh) * 100 + LINES.indexOf(l) * 10 + MODELS.indexOf(m) + DATE_SEL * 7;
+          b = Math.max(1, Math.round(r.b / 7 * (0.9 + 0.2 * rnd(sd + 3)) * (DATE_SEL === 6 && sh === 'N' ? 0.3 : 1)));
+          var tot0 = r.d[0] + r.d[1] + r.d[2] + r.d[3], tot1 = tot0 * DAY_F[sh][DATE_SEL] * (0.94 + 0.12 * rnd(sd + 5)), r2 = rnd(sd + 9);
+          var tgt = tot1 > 5.8 ? 5.45 + 0.4 * r2 : (tot1 < 3.15 ? 3.12 + 0.35 * r2 : tot1);
+          ds = tgt / tot0;
+        }
         var real = 0;
-        r.d.forEach(function (v, i) { var c = Math.round(v * r.b); s.pts[i] += c; real += c; });
-        s.b += r.b;
+        r.d.forEach(function (v, i) { var c = Math.round(v * ds * b); s.pts[i] += c; real += c; });
+        s.b += b;
         s.calls += Math.round(real / (1 - r.fc));
-        var ng = Math.round(r.b * r.ng);
+        var ng = Math.round(b * r.ng);
         s.ng += ng;
         s.rv += Math.round(ng * r.rv);
       });
@@ -873,7 +905,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { dateSel: -1, mods: [true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -918,17 +950,38 @@ class Component extends DCLogic {
     var shifts = [['ALL', t.all], ['D', t.day], ['N', t.night]].map(function (x) {
       return { label: x[1], style: self.pill(st.shift === x[0]), pick: function () { self.setState({ shift: x[0] }); } };
     });
-    var models = [['ALL', t.all], ['A100', 'MDL-A100 (' + t.main + ')'], ['B210', 'MDL-B210 (' + t.sub + ')']].map(function (x) {
-      return { label: x[1], style: self.pill(st.model === x[0]), pick: function () { self.setState({ model: x[0] }); } };
+    DATE_SEL = st.dateSel;
+    var modMask = st.mods;
+    var modAll = modMask.every(Boolean);
+    var mdRow = 'display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; font-size: 13px; cursor: pointer; white-space: nowrap; ';
+    var md = {
+      label: modAll ? t.allModels : MODELS.filter(function (m, i) { return modMask[i]; }).map(function (m) { return MODEL_CODE[m]; }).join(', '),
+      open: st.mdOpen, openAttr: st.mdOpen ? 'true' : 'false',
+      toggle: function () { self.setState({ mdOpen: !st.mdOpen, ddOpen: false }); }, close: function () { self.setState({ mdOpen: false }); },
+      items: [{ label: t.selectAll, checked: modAll, swatch: 'display: none', rowStyle: mdRow + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
+        toggle: function () { self.setState({ mods: [true, true] }); } }].concat(MODELS.map(function (m, i) {
+          return { label: MODEL_CODE[m] + ' (' + (MODEL_TYPE[m] === 'main' ? t.main : t.sub) + ')', checked: modMask[i], swatch: 'display: none', rowStyle: mdRow,
+            toggle: function () { var nm = modMask.slice(); nm[i] = !nm[i]; if (nm.some(Boolean)) self.setState({ mods: nm }); } };
+        }))
+    };
+    var dt = {
+      rangeText: st.dateSel < 0 ? '2026-10-29 ~ 2026-11-04' : '2026-' + DATES[st.dateSel].replace('/', '-'),
+      btns: [[-1, t.last7], [6, t.today], [5, t.yday]].map(function (x) {
+        var on = st.dateSel === x[0];
+        return { label: x[1], on: on ? 'true' : 'false', style: self.pill(on), pick: function () { self.setState({ dateSel: x[0] }); } };
+      })
+    };
+    var models = [].map(function (x) {
+      return x;
     });
 
     var selShifts = st.shift === 'ALL' ? SHIFTS : [st.shift];
     var selLines = chSel;
-    var selModels = st.model === 'ALL' ? MODELS : [st.model];
+    var selModels = MODELS.filter(function (m, i) { return modMask[i]; });
     var shiftLabel = st.shift === 'ALL' ? t.allShifts : shiftName[st.shift];
-    var modelLabel = st.model === 'ALL' ? t.allModels : MODEL_CODE[st.model];
+    var modelLabel = modAll ? t.allModels : selModels.map(function (m) { return MODEL_CODE[m]; }).join(' + ');
     var lineLabel = chAll ? t.allLines : chSel.join(' + ');
-    var scope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel;
+    var scope = st.plant + t.sep + st.bu + t.sep + lineLabel + t.sep + shiftLabel + t.sep + modelLabel + (st.dateSel >= 0 ? t.sep + DATES[st.dateSel] : '');
     var pu = {
       plant: st.plant, bu: st.bu,
       plants: ['BP9P2'].map(function (v) { return { v: v, sel: st.plant === v }; }),
@@ -949,7 +1002,7 @@ class Component extends DCLogic {
     ];
 
     // 整合圖：X 軸 日期 / 線別 × 瑕疵層別
-    var seedBase = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 13 : 0); }, 0) + MODELS.indexOf(st.model) * 7 + 40;
+    var seedBase = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 13 : 0); }, 0) + modMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 7 : 0); }, 0) + (st.dateSel + 1) * 31 + 40;
     var types = st.types;
     var allOn = types.every(function (x) { return x; });
     var nOn = types.filter(function (x) { return x; }).length;
@@ -969,13 +1022,14 @@ class Component extends DCLogic {
           toggle: function () { var nm = chMask.slice(); nm[i] = !nm[i]; if (nm.some(Boolean)) self.setState({ chLines: nm }); } };
       }));
     var ddLabel = chAll ? t.allLines : (chSel.length === 0 ? '—' : (chSel.length <= 2 ? chSel.join(', ') : t.nLines(chSel.length)));
-    var chSeed = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 3 : 0); }, 0) + MODELS.indexOf(st.model) * 7 + 40;
+    var chSeed = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 3 : 0); }, 0) + modMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 7 : 0); }, 0) + (st.dateSel + 1) * 31 + 40;
     var chLineLabel = chAll ? t.allLines : chSel.join(' + ');
     var isLine = st.view === 'line';
     var stack = st.stack;
     var two = selShifts.length > 1;
-    var dates = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'];
-    var dayF = { D: [1.03, 0.96, 1.12, 0.93, 0.90, 0.97, 0.88], N: [1.01, 0.95, 1.13, 0.90, 0.93, 0.87, 0.82] };
+    var single = st.dateSel >= 0;
+    var dates = single ? [DATES[st.dateSel]] : DATES;
+    var dayF = DAY_F;
     function sum(v) { return v[0] + v[1] + v[2] + v[3]; }
     var LCOLORS = { CD101: '#1E3A8A', CD102: '#0F766E', CD103: '#C2410C', CD104: '#7C3AED' };
     var raw;
@@ -997,6 +1051,7 @@ class Component extends DCLogic {
           var li = LINES.indexOf(l);
           return { line: l, bars: selShifts.map(function (sh) {
             var si = sh === 'D' ? 0 : 1;
+            if (single) return { sh: sh, vals: baseT[l][sh].slice() };
             var v = baseT[l][sh].map(function (x, k) { return x * dayF[sh][i] * (0.88 + 0.24 * rnd(chSeed + li * 131 + i * 7 + k * 3 + si * 50)); });
             var tot = sum(v), r2 = rnd(chSeed + li * 17 + i * 5 + si * 29);
             var tgt = tot > 5.8 ? 5.45 + 0.4 * r2 : (tot < 3.15 ? 3.12 + 0.35 * r2 : tot);
@@ -1069,14 +1124,14 @@ class Component extends DCLogic {
     var typesText = allOn ? t.allDefects : DCODES.filter(function (c, i) { return types[i]; }).join(' + ');
     var note = '';
     if (hi) {
-      note = (!isLine && two && chSel.length === 1) ? (nightHigher === 7 ? t.tAll : t.tSome(nightHigher)) + t.tTail
+      note = (!isLine && two && chSel.length === 1 && !single) ? (nightHigher === 7 ? t.tAll : t.tSome(nightHigher)) + t.tTail
         : t.cmpNote(hi.n + ' ' + hi.v.toFixed(2), lo.n + ' ' + lo.v.toFixed(2), (hi.v - lo.v).toFixed(2));
     }
     var ch = {
       checks: checks, groups: groups, empty: nOn === 0 || !chSel.length, has: nOn > 0 && chSel.length > 0,
       emptyText: !chSel.length ? t.lineEmpty : t.cmpEmpty,
       ddItems: ddItems, ddLabel: ddLabel, ddOpen: st.ddOpen, ddOpenAttr: st.ddOpen ? 'true' : 'false',
-      ddToggle: function () { self.setState({ ddOpen: !st.ddOpen }); }, ddClose: function () { self.setState({ ddOpen: false }); },
+      ddToggle: function () { self.setState({ ddOpen: !st.ddOpen, mdOpen: false }); }, ddClose: function () { self.setState({ ddOpen: false }); },
       stack: stack, toggleStack: function () { self.setState({ stack: !stack }); },
       shiftLegend: !stack && !lineColorMode, stackNote: (stack || lineColorMode) && two,
       lineLegendOn: lineColorMode,
@@ -1086,7 +1141,7 @@ class Component extends DCLogic {
         return { label: v[0], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ view: v[1] }); } };
       }),
       axisTop: axisMax.toFixed(1), axisMid: (axisMax / 2).toFixed(1),
-      innerStyle: 'min-width: ' + (isLine ? 520 : Math.max(600, groupMin * 7)) + 'px; display: flex; border-left: 1px solid #D1D5DB',
+      innerStyle: 'min-width: ' + (isLine ? 520 : Math.max(single ? 320 : 600, groupMin * dates.length)) + 'px; display: flex; border-left: 1px solid #D1D5DB',
       sub: t.cmpSub(typesText, chLineLabel + t.sep + shiftLabel + t.sep + modelLabel),
       note: note
     };
@@ -1215,8 +1270,8 @@ class Component extends DCLogic {
       for (var k = 0; k < Math.min(6, pw); k++) {
         var r0 = rnd(hashStr(cpSel) + k * 17 + 3) * pw, e = pool[0];
         for (var q = 0; q < pool.length; q++) { r0 -= pool[q].w; if (r0 < 0) { e = pool[q]; break; } }
-        var day = Math.floor(rnd(hashStr(cpSel) + k * 29 + 5) * 7);
-        var hr = e.sh === 'D' ? 8 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 12) : (20 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 11)) % 24;
+        var day = st.dateSel >= 0 ? st.dateSel : Math.floor(rnd(hashStr(cpSel) + k * 29 + 5) * 7);
+        var hr = e.sh === 'D' ? 8 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 12) : (day === 6 ? 20 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 4) : (20 + Math.floor(rnd(k * 13 + hashStr(cpSel)) * 11)) % 24);
         var dd = day + (e.sh === 'N' && hr < 8 ? 1 : 0); if (dd > 6) { dd = 6; }
         var mi = Math.floor(rnd(k * 7 + 11 + hashStr(cpSel)) * 60);
         var dateLbl = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'][dd];
@@ -1277,6 +1332,14 @@ class Component extends DCLogic {
     });
     var badge = 'display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; white-space: nowrap; ';
     var allBoards = [
+      ['B2611042248', '11/04 22:48', 'CD103', 'N', 'A100', 'SP-A02', 'Pin Height', 0, '', ''],
+      ['B2611042131', '11/04 21:31', 'CD102', 'N', 'B210', 'SP-A03', 'Bridge', 1, 'real', 'K. Nattapong'],
+      ['B2611041912', '11/04 19:12', 'CD101', 'D', 'B210', 'SP-A03', 'No Pin', 0, '', ''],
+      ['B2611041803', '11/04 18:03', 'CD103', 'D', 'A100', 'SP-A02', 'Bridge', 1, 'real', '陳志明'],
+      ['B2611041547', '11/04 15:47', 'CD102', 'D', 'A100', 'SP-A04', 'Pin Height', 1, 'false', '林小芬'],
+      ['B2611041320', '11/04 13:20', 'CD104', 'D', 'B210', 'SP-A03', 'Missing', 1, 'real', '林小芬'],
+      ['B2611041056', '11/04 10:56', 'CD101', 'D', 'A100', 'SP-A02', 'Bridge', 1, 'real', '陳志明'],
+      ['B2611040915', '11/04 09:15', 'CD103', 'D', 'B210', 'SP-A04', 'No Pin', 1, 'false', '陳志明'],
       ['B2611040312', '11/04 06:52', 'CD103', 'N', 'A100', 'SP-A02', 'Bridge', 1, 'real', 'A. Somchai'],
       ['B2611040298', '11/04 06:31', 'CD101', 'N', 'A100', 'SP-A03', 'Pin Height', 1, 'false', 'K. Nattapong'],
       ['B2611040277', '11/04 05:58', 'CD102', 'N', 'B210', 'SP-A03', 'No Pin', 0, '', ''],
@@ -1294,7 +1357,9 @@ class Component extends DCLogic {
     ];
     function resultOf(code) { return code === 'real' ? t.isReal : (code === 'false' ? t.isFalse : '—'); }
     var boards = allBoards.filter(function (b) {
-      return chMask[LINES.indexOf(b[2])] && (st.shift === 'ALL' || b[3] === st.shift) && (st.model === 'ALL' || b[4] === st.model);
+      var di = DATES.indexOf(b[1].slice(0, 5)), hh = parseInt(b[1].slice(6, 8), 10);
+      var prodDay = (b[3] === 'N' && hh < 8) ? di - 1 : di; // 夜班 00:00–08:00 屬前一生產日
+      return chMask[LINES.indexOf(b[2])] && (st.shift === 'ALL' || b[3] === st.shift) && modMask[MODELS.indexOf(b[4])] && (st.dateSel < 0 || prodDay === st.dateSel);
     }).map(function (b) {
       var done = b[7] === 1;
       return {
@@ -1330,7 +1395,7 @@ class Component extends DCLogic {
     } : { sn: '', loadingText: '', placeholder: '', alt: '', rows: [] };
 
     return {
-      t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope, pu: pu,
+      t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope, pu: pu, md: md, dt: dt,
       tabs: (function () {
         var defs = [['ov', t.tabOv, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
         var cur = defs.filter(function (d) { return d[0] === st.tab; })[0];
@@ -1340,7 +1405,7 @@ class Component extends DCLogic {
             var on = st.tab === d[0];
             return { label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
               countStyle: "margin-left: 6px; padding: 0 6px; border-radius: 9px; font-size: 11px; font-family: 'Roboto Mono', monospace; " + (on ? 'background: #1F2937; color: #FFFFFF' : 'background: #F3F4F6; color: #374151'),
-              pick: function () { self.setState({ tab: d[0], ddOpen: false }); },
+              pick: function () { self.setState({ tab: d[0], ddOpen: false, mdOpen: false }); },
               style: 'min-height: 44px; padding: 0 4px; margin-bottom: -1px; border: 0; border-bottom: 2px solid ' + (on ? '#1F2937' : 'transparent') + '; background: transparent; font: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; ' + (on ? 'color: #1F2937; font-weight: 700' : 'color: #4B5563; font-weight: 500') };
           })
         };
