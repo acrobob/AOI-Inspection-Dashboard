@@ -668,7 +668,7 @@ var I18N = {
     isName: '錫量不足',
     prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
     noneSel: '未選擇', lineEmptyHint: '請至少選擇一條線別；關閉選單會恢復先前的選擇。', modelEmptyHint: '請至少選擇一個機種；關閉選單會恢復先前的選擇。',
-    snapLabel: '截圖此區塊', snapOk: '已下載截圖', snapFail: '截圖失敗，請改用系統截圖', dCols: '數值：DPU ・ 點數 ・ 占比',
+    snapLabel: '截圖此區塊', snapOk: '已截圖，已複製到剪貼簿，可直接貼上', snapDl: '已截圖；瀏覽器不允許複製，已改為下載', snapFail: '截圖失敗，請改用系統截圖', dCols: '數值：DPU ・ 點數 ・ 占比',
     dCtx: function (des, pct, vs) { return '主要位號 ' + des + '（' + pct + '%）' + (vs ? ' ・ 較近 7 天平均 ' + vs : ''); },
     ltNote: '列出全部線體以便比較；藍底 = 已選線體；紅字 = 焊點不良率 > 2.5%',
     fxHeadPallet: '載具', fxHeadVals: 'DPU ・ 板數',
@@ -722,7 +722,7 @@ var I18N = {
     isName: 'Insufficient solder',
     prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
     noneSel: 'None selected', lineEmptyHint: 'Select at least one line. Closing the menu restores the previous selection.', modelEmptyHint: 'Select at least one model. Closing the menu restores the previous selection.',
-    snapLabel: 'Screenshot this panel', snapOk: 'Screenshot downloaded', snapFail: 'Screenshot failed — use your system screenshot', dCols: 'Values: DPU · defects · share',
+    snapLabel: 'Screenshot this panel', snapOk: 'Screenshot copied to clipboard — paste it anywhere', snapDl: 'Screenshot taken; clipboard not allowed here, so it was downloaded', snapFail: 'Screenshot failed — use your system screenshot', dCols: 'Values: DPU · defects · share',
     dCtx: function (des, pct, vs) { return 'Top designator ' + des + ' (' + pct + '%)' + (vs ? ' · vs 7-day avg ' + vs : ''); },
     ltNote: 'All lines listed for comparison; blue rows = selected lines; red = defect rate (joints) > 2.5%',
     fxHeadPallet: 'Pallet', fxHeadVals: 'DPU · boards',
@@ -776,7 +776,7 @@ var I18N = {
     isName: 'บัดกรีไม่พอ',
     prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
     noneSel: 'ยังไม่ได้เลือก', lineEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์ การปิดเมนูจะคืนค่าการเลือกเดิม', modelEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งรุ่น การปิดเมนูจะคืนค่าการเลือกเดิม',
-    snapLabel: 'จับภาพส่วนนี้', snapOk: 'ดาวน์โหลดภาพแล้ว', snapFail: 'จับภาพไม่สำเร็จ โปรดใช้การจับภาพหน้าจอของระบบ', dCols: 'ค่า: DPU · จุด · สัดส่วน',
+    snapLabel: 'จับภาพส่วนนี้', snapOk: 'จับภาพแล้ว คัดลอกไปยังคลิปบอร์ดแล้ว วางได้ทันที', snapDl: 'จับภาพแล้ว แต่เบราว์เซอร์ไม่อนุญาตให้คัดลอก จึงดาวน์โหลดแทน', snapFail: 'จับภาพไม่สำเร็จ โปรดใช้การจับภาพหน้าจอของระบบ', dCols: 'ค่า: DPU · จุด · สัดส่วน',
     dCtx: function (des, pct, vs) { return 'Designator หลัก ' + des + ' (' + pct + '%)' + (vs ? ' · เทียบค่าเฉลี่ย 7 วัน ' + vs : ''); },
     ltNote: 'แสดงทุกไลน์เพื่อเปรียบเทียบ; แถวสีฟ้า = ไลน์ที่เลือก; ตัวแดง = อัตราของเสีย (จุดบัดกรี) > 2.5%',
     fxHeadPallet: 'พาเลท', fxHeadVals: 'DPU · บอร์ด',
@@ -978,13 +978,24 @@ class Component extends DCLogic {
   snap(key) {
     var self = this, t = I18N[this.lang()];
     var el = document.getElementById('panel-' + key);
-    var done = function (msg) { self.setState({ toast: msg }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 2500); };
+    var done = function (msg) { self.setState({ toast: msg }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 3000); };
     if (!el || !window.htmlToImage) { done(t.snapFail); return; }
     var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
     var name = 'AOI-' + key + '-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.png';
-    window.htmlToImage.toPng(el, { pixelRatio: 2, backgroundColor: '#FFFFFF', filter: function (n) { return !(n.getAttribute && n.getAttribute('data-noshot')); } })
-      .then(function (url) { var a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); done(t.snapOk); })
-      .catch(function () { done(t.snapFail); });
+    var opts = { pixelRatio: 2, backgroundColor: '#FFFFFF', filter: function (n) { return !(n.getAttribute && n.getAttribute('data-noshot')); } };
+    var download = function () {
+      return window.htmlToImage.toPng(el, opts).then(function (url) {
+        var a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); done(t.snapDl);
+      });
+    };
+    // 先複製到剪貼簿（ClipboardItem 直接接 Promise，保留使用者點擊手勢）；不支援或被拒時改為下載
+    if (navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new window.ClipboardItem({ 'image/png': window.htmlToImage.toBlob(el, opts) })])
+        .then(function () { done(t.snapOk); })
+        .catch(function () { download().catch(function () { done(t.snapFail); }); });
+    } else {
+      download().catch(function () { done(t.snapFail); });
+    }
   }
   isAuto() {
     if (this.state.autoImg !== null) return this.state.autoImg;
