@@ -50,7 +50,7 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </label>
 <div style="position: relative; display: flex; align-items: center; gap: 6px">
 <label for="ch-line-btn" style="font-size: 13px; color: #4B5563">{{t.line}}</label>
-<button id="ch-line-btn" type="button" aria-haspopup="true" aria-expanded="{{ch.ddOpenAttr}}" onClick="{{ch.ddToggle}}" style="min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<button id="ch-line-btn" type="button" aria-haspopup="true" aria-expanded="{{ch.ddOpenAttr}}" onClick="{{ch.ddToggle}}" style="{{ch.ddBtnStyle}}">
 <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px">{{ch.ddLabel}}</span>
 <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 </button>
@@ -63,12 +63,15 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <span style="{{it.swatch}}"></span>{{it.label}}
 </label>
 </template>
+<template data-sc="if" value="{{ch.ddEmpty}}" hint-placeholder-val="{{false}}">
+<p role="alert" style="margin: 4px 0 0; padding: 8px 14px 4px; border-top: 1px solid #F3F4F6; font-size: 12px; line-height: 18px; color: #B91C1C; max-width: 220px">{{t.lineEmptyHint}}</p>
+</template>
 </div>
 </template>
 </div>
 <div style="position: relative; display: flex; align-items: center; gap: 6px">
 <label for="f-model-btn" style="font-size: 13px; color: #4B5563">{{t.model}}</label>
-<button id="f-model-btn" type="button" aria-haspopup="true" aria-expanded="{{md.openAttr}}" onClick="{{md.toggle}}" style="min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<button id="f-model-btn" type="button" aria-haspopup="true" aria-expanded="{{md.openAttr}}" onClick="{{md.toggle}}" style="{{md.btnStyle}}">
 <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px">{{md.label}}</span>
 <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 </button>
@@ -80,6 +83,9 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 <input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1F2937">
 <span style="{{it.swatch}}"></span>{{it.label}}
 </label>
+</template>
+<template data-sc="if" value="{{md.empty}}" hint-placeholder-val="{{false}}">
+<p role="alert" style="margin: 4px 0 0; padding: 8px 14px 4px; border-top: 1px solid #F3F4F6; font-size: 12px; line-height: 18px; color: #B91C1C; max-width: 220px">{{t.modelEmptyHint}}</p>
 </template>
 </div>
 </template>
@@ -621,6 +627,7 @@ var I18N = {
     cpHeads: ['板序號', '檢測時間', '線體 / 班別', '位號', 'AOI 缺陷', '判定', '量測高度'],
     isName: '錫量不足',
     prodUnit: '生產單位', plant: '廠', bu: '產品廠', tabsLabel: '看板區塊', tabOv: '總覽', tabDf: '瑕疵分析', tabPr: '載具與複判', tabBd: '單板明細',
+    noneSel: '未選擇', lineEmptyHint: '請至少選擇一條線別；關閉選單會恢復先前的選擇。', modelEmptyHint: '請至少選擇一個機種；關閉選單會恢復先前的選擇。',
     last7: '近 7 天', today: '當天', yday: '昨天',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
@@ -668,6 +675,7 @@ var I18N = {
     cpHeads: ['Serial No.', 'Inspected', 'Line / Shift', 'Designator', 'AOI defect', 'Result', 'Height'],
     isName: 'Insufficient solder',
     prodUnit: 'Production unit', plant: 'Plant', bu: 'Product BU', tabsLabel: 'Dashboard sections', tabOv: 'Overview', tabDf: 'Defect analysis', tabPr: 'Pallet & review', tabBd: 'Board detail',
+    noneSel: 'None selected', lineEmptyHint: 'Select at least one line. Closing the menu restores the previous selection.', modelEmptyHint: 'Select at least one model. Closing the menu restores the previous selection.',
     last7: 'Last 7 days', today: 'Today', yday: 'Yesterday',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -715,6 +723,7 @@ var I18N = {
     cpHeads: ['หมายเลขบอร์ด', 'เวลาตรวจ', 'ไลน์ / กะ', 'Designator', 'ของเสีย AOI', 'ผลตัดสิน', 'ความสูง'],
     isName: 'บัดกรีไม่พอ',
     prodUnit: 'หน่วยผลิต', plant: 'โรงงาน', bu: 'BU ผลิตภัณฑ์', tabsLabel: 'ส่วนของแดชบอร์ด', tabOv: 'ภาพรวม', tabDf: 'วิเคราะห์ของเสีย', tabPr: 'พาเลทและการตรวจซ้ำ', tabBd: 'รายละเอียดรายบอร์ด',
+    noneSel: 'ยังไม่ได้เลือก', lineEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งไลน์ การปิดเมนูจะคืนค่าการเลือกเดิม', modelEmptyHint: 'กรุณาเลือกอย่างน้อยหนึ่งรุ่น การปิดเมนูจะคืนค่าการเลือกเดิม',
     last7: '7 วันล่าสุด', today: 'วันนี้', yday: 'เมื่อวาน',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -905,7 +914,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { dateSel: -1, mods: [true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   isAuto() {
@@ -943,7 +952,17 @@ class Component extends DCLogic {
       return { label: x[1], on: L === x[0] ? 'true' : 'false', style: self.seg(L === x[0]), pick: function () { self.setState({ lang: x[0] }); } };
     });
     // 線別（多選，篩選列）：至少保留一條
-    var chMask = st.chLines;
+    // 草稿（選單內勾選）與套用中（資料用）分開：草稿為空時保留上一次有效選擇
+    var chDraft = st.chLines, chMask = st.chApplied;
+    var closeMenus = function (extra) {
+      var patch = { ddOpen: false, mdOpen: false };
+      if (!chDraft.some(Boolean)) patch.chLines = st.chApplied.slice();
+      if (!st.mods.some(Boolean)) patch.mods = st.modsApplied.slice();
+      return Object.assign(patch, extra || {});
+    };
+    var setLines = function (nm) { self.setState(nm.some(Boolean) ? { chLines: nm, chApplied: nm } : { chLines: nm }); };
+    var setMods = function (nm) { self.setState(nm.some(Boolean) ? { mods: nm, modsApplied: nm } : { mods: nm }); };
+    var ddBtnBase = 'min-height: 36px; min-width: 168px; padding: 0 10px 0 12px; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1F2937; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; ';
     var chAll = chMask.every(function (x) { return x; });
     var chSel = LINES.filter(function (l, i) { return chMask[i]; });
     var lines = [];
@@ -951,17 +970,18 @@ class Component extends DCLogic {
       return { label: x[1], style: self.pill(st.shift === x[0]), pick: function () { self.setState({ shift: x[0] }); } };
     });
     DATE_SEL = st.dateSel;
-    var modMask = st.mods;
-    var modAll = modMask.every(Boolean);
+    var modDraft = st.mods, modMask = st.modsApplied;
+    var modAll = modMask.every(Boolean), modDraftAll = modDraft.every(Boolean), modEmpty = !modDraft.some(Boolean);
     var mdRow = 'display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; font-size: 13px; cursor: pointer; white-space: nowrap; ';
     var md = {
-      label: modAll ? t.allModels : MODELS.filter(function (m, i) { return modMask[i]; }).map(function (m) { return MODEL_CODE[m]; }).join(', '),
+      label: modEmpty ? t.noneSel : (modDraftAll ? t.allModels : MODELS.filter(function (m, i) { return modDraft[i]; }).map(function (m) { return MODEL_CODE[m]; }).join(', ')),
+      empty: modEmpty, btnStyle: ddBtnBase + (modEmpty ? 'border: 1px solid #B91C1C; color: #B91C1C' : 'border: 1px solid #D1D5DB'),
       open: st.mdOpen, openAttr: st.mdOpen ? 'true' : 'false',
-      toggle: function () { self.setState({ mdOpen: !st.mdOpen, ddOpen: false }); }, close: function () { self.setState({ mdOpen: false }); },
-      items: [{ label: t.selectAll, checked: modAll, swatch: 'display: none', rowStyle: mdRow + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
-        toggle: function () { self.setState({ mods: [true, true] }); } }].concat(MODELS.map(function (m, i) {
-          return { label: MODEL_CODE[m] + ' (' + (MODEL_TYPE[m] === 'main' ? t.main : t.sub) + ')', checked: modMask[i], swatch: 'display: none', rowStyle: mdRow,
-            toggle: function () { var nm = modMask.slice(); nm[i] = !nm[i]; if (nm.some(Boolean)) self.setState({ mods: nm }); } };
+      toggle: function () { self.setState(st.mdOpen ? closeMenus() : closeMenus({ mdOpen: true })); }, close: function () { self.setState(closeMenus()); },
+      items: [{ label: t.selectAll, checked: modDraftAll, swatch: 'display: none', rowStyle: mdRow + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
+        toggle: function () { setMods(modDraftAll ? [false, false] : [true, true]); } }].concat(MODELS.map(function (m, i) {
+          return { label: MODEL_CODE[m] + ' (' + (MODEL_TYPE[m] === 'main' ? t.main : t.sub) + ')', checked: modDraft[i], swatch: 'display: none', rowStyle: mdRow,
+            toggle: function () { var nm = modDraft.slice(); nm[i] = !nm[i]; setMods(nm); } };
         }))
     };
     var dt = {
@@ -1015,13 +1035,15 @@ class Component extends DCLogic {
       }));
     var LCOL = { CD101: '#1E3A8A', CD102: '#0F766E', CD103: '#C2410C', CD104: '#7C3AED' };
     var rowBase = 'display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; font-size: 13px; cursor: pointer; ';
-    var ddItems = [{ label: t.selectAll, checked: chAll, swatch: 'display: none', rowStyle: rowBase + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
-      toggle: function () { self.setState({ chLines: [true, true, true, true] }); } }]
+    var chDraftAll = chDraft.every(Boolean), chEmpty = !chDraft.some(Boolean);
+    var ddItems = [{ label: t.selectAll, checked: chDraftAll, swatch: 'display: none', rowStyle: rowBase + 'font-weight: 500; border-bottom: 1px solid #F3F4F6',
+      toggle: function () { setLines(chDraftAll ? [false, false, false, false] : [true, true, true, true]); } }]
       .concat(LINES.map(function (l, i) {
-        return { label: l, checked: chMask[i], rowStyle: rowBase, swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + LCOL[l],
-          toggle: function () { var nm = chMask.slice(); nm[i] = !nm[i]; if (nm.some(Boolean)) self.setState({ chLines: nm }); } };
+        return { label: l, checked: chDraft[i], rowStyle: rowBase, swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + LCOL[l],
+          toggle: function () { var nm = chDraft.slice(); nm[i] = !nm[i]; setLines(nm); } };
       }));
-    var ddLabel = chAll ? t.allLines : (chSel.length === 0 ? '—' : (chSel.length <= 2 ? chSel.join(', ') : t.nLines(chSel.length)));
+    var chDraftSel = LINES.filter(function (l, i) { return chDraft[i]; });
+    var ddLabel = chEmpty ? t.noneSel : (chDraftAll ? t.allLines : (chDraftSel.length <= 2 ? chDraftSel.join(', ') : t.nLines(chDraftSel.length)));
     var chSeed = chMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 3 : 0); }, 0) + modMask.reduce(function (a, x, i) { return a + (x ? (i + 1) * 7 : 0); }, 0) + (st.dateSel + 1) * 31 + 40;
     var chLineLabel = chAll ? t.allLines : chSel.join(' + ');
     var isLine = st.view === 'line';
@@ -1131,7 +1153,8 @@ class Component extends DCLogic {
       checks: checks, groups: groups, empty: nOn === 0 || !chSel.length, has: nOn > 0 && chSel.length > 0,
       emptyText: !chSel.length ? t.lineEmpty : t.cmpEmpty,
       ddItems: ddItems, ddLabel: ddLabel, ddOpen: st.ddOpen, ddOpenAttr: st.ddOpen ? 'true' : 'false',
-      ddToggle: function () { self.setState({ ddOpen: !st.ddOpen, mdOpen: false }); }, ddClose: function () { self.setState({ ddOpen: false }); },
+      ddToggle: function () { self.setState(st.ddOpen ? closeMenus() : closeMenus({ ddOpen: true })); }, ddClose: function () { self.setState(closeMenus()); },
+      ddEmpty: chEmpty, ddBtnStyle: ddBtnBase + (chEmpty ? 'border: 1px solid #B91C1C; color: #B91C1C' : 'border: 1px solid #D1D5DB'),
       stack: stack, toggleStack: function () { self.setState({ stack: !stack }); },
       shiftLegend: !stack && !lineColorMode, stackNote: (stack || lineColorMode) && two,
       lineLegendOn: lineColorMode,
@@ -1405,7 +1428,7 @@ class Component extends DCLogic {
             var on = st.tab === d[0];
             return { label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
               countStyle: "margin-left: 6px; padding: 0 6px; border-radius: 9px; font-size: 11px; font-family: 'Roboto Mono', monospace; " + (on ? 'background: #1F2937; color: #FFFFFF' : 'background: #F3F4F6; color: #374151'),
-              pick: function () { self.setState({ tab: d[0], ddOpen: false, mdOpen: false }); },
+              pick: function () { self.setState(closeMenus({ tab: d[0] })); },
               style: 'min-height: 44px; padding: 0 4px; margin-bottom: -1px; border: 0; border-bottom: 2px solid ' + (on ? '#1F2937' : 'transparent') + '; background: transparent; font: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; ' + (on ? 'color: #1F2937; font-weight: 700' : 'color: #4B5563; font-weight: 500') };
           })
         };
