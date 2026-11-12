@@ -297,6 +297,121 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 </div>
 </template>
 
+<template data-sc="if" value="{{tabs.fy}}" hint-placeholder-val="{{false}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
+<section id="panel-fy1" aria-label="{{t.fyTrendTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fyTrendTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.fy1}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px">
+<div role="group" aria-label="{{t.fyMetric}}" data-noshot="1" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 12px; color: #4B5563">{{t.fyMetric}}</span>
+<div style="display: flex; border: 1px solid #D1D5DB; border-radius: 4px; overflow: hidden">
+<template data-sc="for" list="{{fy.metrics}}" as="v" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</template>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: #374151">
+<template data-sc="for" list="{{fy.legend}}" as="ll" hint-placeholder-count="4">
+<span style="display: flex; align-items: center; gap: 6px"><span style="{{ll.swatch}}"></span>{{ll.label}}</span>
+</template>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 8px">
+<div style="display: flex; flex-direction: column; justify-content: space-between; height: 200px; margin-top: 18px; font-size: 11px; color: #4B5563; font-family: 'Roboto Mono', monospace; text-align: right; width: 40px">
+<span>{{fy.axisTop}}</span><span>{{fy.axisMid}}</span><span>0%</span>
+</div>
+<div style="flex: 1; min-width: 0; overflow-x: auto">
+<div style="{{fy.innerStyle}}">
+<template data-sc="for" list="{{fy.groups}}" as="g" hint-placeholder-count="7">
+<div style="{{g.style}}">
+<div style="height: 218px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 8px; border-bottom: 1px solid #D1D5DB">
+<template data-sc="for" list="{{g.bars}}" as="bar" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+<template data-sc="if" value="{{bar.showVal}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 11px; font-family: 'Roboto Mono', monospace; font-weight: 500; white-space: nowrap">{{bar.val}}</span>
+</template>
+<div title="{{bar.tip}}" style="{{bar.style}}"></div>
+</div>
+</template>
+</div>
+<span style="font-size: 12px; padding: 4px 0; font-family: 'Roboto Mono', monospace; font-weight: 500">{{g.label}}</span>
+</div>
+</template>
+</div>
+</div>
+</div>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{fy.note}}</p>
+</section>
+
+<section id="panel-fy2" aria-label="{{t.fyTblTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fyTblTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.fy2}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="background: #F9FAFB; color: #374151; text-align: right">
+<template data-sc="for" list="{{fy.heads}}" as="h" hint-placeholder-count="8">
+<th style="{{h.style}}">{{h.label}}</th>
+</template>
+</tr>
+</thead>
+<tbody>
+<template data-sc="for" list="{{fy.rows}}" as="r" hint-placeholder-count="5">
+<tr style="{{r.rowStyle}}">
+<td style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-family: 'Noto Sans TC', 'Noto Sans Thai', sans-serif; font-weight: 500">{{r.line}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.b}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.raw}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.rawPct}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.fcOnly}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.rev}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-weight: 700">{{r.revPct}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #F3F4F6">{{r.lift}}</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{t.fyTblNote}}</p>
+</section>
+
+<section id="panel-fy3" aria-label="{{t.fyCauseTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.fyCauseTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.fy3}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
+<span style="font-size: 12px; color: #4B5563">{{pScope}}</span>
+</div>
+<span style="font-size: 12px; color: #4B5563">{{t.fyCauseCols}}</span>
+</div>
+<template data-sc="for" list="{{fy.causes}}" as="c" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; font-size: 13px">
+<span style="font-weight: 500">{{c.name}} <span style="color: #4B5563; font-weight: 400">{{c.local}}</span></span>
+<span style="font-family: 'Roboto Mono', monospace">{{c.text}}</span>
+</div>
+<div style="height: 12px; background: #F3F4F6; border-radius: 2px; overflow: hidden"><div style="{{c.bar}}"></div></div>
+</div>
+</template>
+<p style="margin: 0; font-size: 12px; color: #4B5563">{{fy.causeNote}}</p>
+</section>
+</div>
+</template>
+
 <template data-sc="if" value="{{tabs.df}}" hint-placeholder-val="{{false}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
@@ -714,6 +829,15 @@ var I18N = {
     rvRealSub: function (p) { return '占 AOI 報警 ' + p + '%'; }, rvFcSub: function (p) { return '誤判率 ' + p + '%'; }, rvPendSub: function (n, p) { return 'NG 板 ' + n + ' 片中的 ' + p + '%'; },
     tabIn: '介紹', inTitle: 'AOI 檢測看板特色', inSub: '用一個網頁取代各機台各自調閱報表的作法', goTo: function (tab) { return '前往「' + tab + '」 →'; },
     feats: [['跨廠 / 線 / 站 / 機種', '即時切換各機台檢測結果，免用隨身碟取報表。'], ['不干擾機台', '獨立操作，不影響檢測運作。'], ['DPU 篩選與層別', '依瑕疵類型層別看趨勢，追蹤改善成效。'], ['串接載具資訊', '自動帶入載具（Solder Pallet）資訊。'], ['瑕疵影像速查', '快速調閱瑕疵圖片。'], ['資料雲端化', '免在機台本機調閱。']],
+    tabFy: '板階 FPYR', kFpy: '板階 FPYR（複判後）', kFpySub: function (raw) { return 'AOI 直通率 ' + raw; },
+    fyTrendTitle: '板階 FPYR 趨勢', fyMetric: '指標', fyRev: '複判後 FPYR', fyRaw: 'AOI 直通率',
+    fyDefRev: 'FPYR = 複判後無真不良的板數 / 檢測板數', fyDefRaw: 'AOI 直通率 = AOI 無任何報警的板數 / 檢測板數',
+    fyNote: function (def, hi, lo) { return def + ' ・ 最高：' + hi + ' ・ 最低：' + lo; },
+    fyTblTitle: '板階 FPYR × 線體',
+    fyHeads: ['線體', '檢測板數', 'AOI 無報警板', 'AOI 直通率', '僅誤判板', '複判後通過板', '複判後 FPYR', '複判提升'],
+    fyTotal: '已選合計', fyTblNote: '僅誤判板 = AOI 有報警但複判全為誤判；複判提升 = 複判後 FPYR − AOI 直通率。列出全部線體以便比較，藍底為已選線體。',
+    fyCauseTitle: '板子不良的主因', fyCauseCols: '數值：含此瑕疵的板比例 ・ DPU',
+    fyCauseNote: function (dpu) { return '平均每片板有 ' + dpu + ' 個真缺陷，幾乎每片板都至少含一種瑕疵，所以 FPYR 偏低；一片板可同時含多種瑕疵，比例加總會超過 100%。'; },
     last7: '近 7 天', today: '當天', yday: '昨天',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
@@ -770,6 +894,15 @@ var I18N = {
     rvRealSub: function (p) { return p + '% of AOI calls'; }, rvFcSub: function (p) { return 'False-call rate ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% of ' + n + ' NG boards'; },
     tabIn: 'Introduction', inTitle: 'AOI Inspection Dashboard — Highlights', inSub: 'One web page instead of pulling reports from each machine', goTo: function (tab) { return 'Go to ' + tab + ' →'; },
     feats: [['Across plants, lines, stations & models', 'Switch between every machine\'s inspection results in real time — no more pulling reports off USB drives.'], ['No impact on the machines', 'Runs independently and never interrupts inspection.'], ['DPU filtering & breakdown', 'Break trends down by defect type and track the effect of improvements.'], ['Linked Solder Pallet data', 'Solder Pallet information is brought in automatically.'], ['Quick defect image lookup', 'Pull up defect images in seconds.'], ['Data in the cloud', 'No need to look anything up on the machine itself.']],
+    tabFy: 'Board FPYR', kFpy: 'Board FPYR (after review)', kFpySub: function (raw) { return 'AOI first-pass ' + raw; },
+    fyTrendTitle: 'Board FPYR Trend', fyMetric: 'Metric', fyRev: 'FPYR after review', fyRaw: 'AOI first-pass',
+    fyDefRev: 'FPYR = boards with no true defect after review / boards inspected', fyDefRaw: 'AOI first-pass = boards with no AOI call / boards inspected',
+    fyNote: function (def, hi, lo) { return def + ' · Highest: ' + hi + ' · Lowest: ' + lo; },
+    fyTblTitle: 'Board FPYR × Line',
+    fyHeads: ['Line', 'Inspected', 'No AOI call', 'AOI first-pass', 'False calls only', 'Pass after review', 'FPYR after review', 'Lift from review'],
+    fyTotal: 'Selected total', fyTblNote: 'False calls only = AOI called the board but every call was judged false; lift = FPYR after review − AOI first-pass. All lines listed for comparison; blue rows = selected lines.',
+    fyCauseTitle: 'What Fails Boards', fyCauseCols: 'Values: share of boards with this defect · DPU',
+    fyCauseNote: function (dpu) { return 'Boards average ' + dpu + ' true defects each, so almost every board has at least one — which is why FPYR is low. A board can have several defect types, so the shares add up to more than 100%.'; },
     last7: 'Last 7 days', today: 'Today', yday: 'Yesterday',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -826,6 +959,15 @@ var I18N = {
     rvRealSub: function (p) { return p + '% ของจุดที่ AOI แจ้ง'; }, rvFcSub: function (p) { return 'อัตราแจ้งผิด ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% ของบอร์ด NG ' + n + ' แผ่น'; },
     tabIn: 'แนะนำ', inTitle: 'จุดเด่นของแดชบอร์ดตรวจสอบ AOI', inSub: 'ดูผลจากทุกเครื่องได้ในหน้าเว็บเดียว ไม่ต้องดึงรายงานทีละเครื่อง', goTo: function (tab) { return 'ไปที่ ' + tab + ' →'; },
     feats: [['ข้ามโรงงาน / ไลน์ / สถานี / รุ่น', 'สลับดูผลตรวจของแต่ละเครื่องได้แบบเรียลไทม์ ไม่ต้องใช้แฟลชไดรฟ์ดึงรายงาน'], ['ไม่รบกวนเครื่องจักร', 'ทำงานแยกอิสระ ไม่กระทบการตรวจสอบ'], ['กรองและแยกชั้น DPU', 'ดูแนวโน้มแยกตามประเภทของเสีย และติดตามผลการปรับปรุง'], ['เชื่อมข้อมูล Solder Pallet', 'ดึงข้อมูล Solder Pallet เข้ามาโดยอัตโนมัติ'], ['ค้นภาพของเสียได้รวดเร็ว', 'เรียกดูรูปของเสียได้ทันที'], ['ข้อมูลบนคลาวด์', 'ไม่ต้องเปิดดูที่เครื่องในไลน์']],
+    tabFy: 'FPYR ระดับบอร์ด', kFpy: 'FPYR ระดับบอร์ด (หลังตรวจซ้ำ)', kFpySub: function (raw) { return 'ผ่าน AOI รอบแรก ' + raw; },
+    fyTrendTitle: 'แนวโน้ม FPYR ระดับบอร์ด', fyMetric: 'ตัวชี้วัด', fyRev: 'FPYR หลังตรวจซ้ำ', fyRaw: 'ผ่าน AOI รอบแรก',
+    fyDefRev: 'FPYR = บอร์ดที่ไม่มีของเสียจริงหลังตรวจซ้ำ / บอร์ดที่ตรวจ', fyDefRaw: 'ผ่าน AOI รอบแรก = บอร์ดที่ AOI ไม่แจ้งเลย / บอร์ดที่ตรวจ',
+    fyNote: function (def, hi, lo) { return def + ' · สูงสุด: ' + hi + ' · ต่ำสุด: ' + lo; },
+    fyTblTitle: 'FPYR ระดับบอร์ด × ไลน์',
+    fyHeads: ['ไลน์', 'บอร์ดที่ตรวจ', 'AOI ไม่แจ้ง', 'ผ่าน AOI รอบแรก', 'แจ้งผิดล้วน', 'ผ่านหลังตรวจซ้ำ', 'FPYR หลังตรวจซ้ำ', 'เพิ่มจากการตรวจซ้ำ'],
+    fyTotal: 'รวมที่เลือก', fyTblNote: 'แจ้งผิดล้วน = AOI แจ้งแต่ตรวจซ้ำแล้วเป็นแจ้งผิดทั้งหมด; เพิ่มจากการตรวจซ้ำ = FPYR หลังตรวจซ้ำ − ผ่าน AOI รอบแรก แสดงทุกไลน์เพื่อเปรียบเทียบ แถวสีฟ้า = ไลน์ที่เลือก',
+    fyCauseTitle: 'สาเหตุหลักที่บอร์ดไม่ผ่าน', fyCauseCols: 'ค่า: สัดส่วนบอร์ดที่มีของเสียนี้ · DPU',
+    fyCauseNote: function (dpu) { return 'บอร์ดมีของเสียจริงเฉลี่ย ' + dpu + ' จุดต่อแผ่น เกือบทุกแผ่นจึงมีอย่างน้อยหนึ่งจุด FPYR จึงต่ำ บอร์ดหนึ่งแผ่นอาจมีหลายประเภท สัดส่วนรวมจึงเกิน 100%'; },
     last7: '7 วันล่าสุด', today: 'วันนี้', yday: 'เมื่อวาน',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -985,7 +1127,7 @@ var DATE_SEL = -1;
 var DATES = ['10/29', '10/30', '10/31', '11/01', '11/02', '11/03', '11/04'];
 var DAY_F = { D: [1.03, 0.96, 1.12, 0.93, 0.90, 0.97, 0.88], N: [1.01, 0.95, 1.13, 0.90, 0.93, 0.87, 0.82] };
 function agg(lines, shifts, models) {
-  var s = { b: 0, pts: [0, 0, 0, 0], calls: 0, ng: 0, rv: 0 };
+  var s = { b: 0, pts: [0, 0, 0, 0], calls: 0, ng: 0, rv: 0, passRaw: 0, passRev: 0 };
   shifts.forEach(function (sh) {
     lines.forEach(function (l) {
       models.forEach(function (m) {
@@ -1002,7 +1144,12 @@ function agg(lines, shifts, models) {
         r.d.forEach(function (v, i) { var c = Math.round(v * ds * b); s.pts[i] += c; real += c; });
         s.b += b;
         s.calls += Math.round(real / (1 - r.fc));
-        var ng = Math.round(b * r.ng);
+        // 版階：每片板真缺陷數 ~ Poisson(λ = DPU)，AOI 報警數 ~ Poisson(λ / (1 − 誤判率))
+        var lam = real / b;
+        var passRaw = Math.round(b * Math.exp(-lam / (1 - r.fc)));
+        var passRev = Math.max(passRaw, Math.round(b * Math.exp(-lam)));
+        var ng = b - passRaw;
+        s.passRaw += passRaw; s.passRev += passRev;
         s.ng += ng;
         s.rv += Math.round(ng * r.rv);
       });
@@ -1016,7 +1163,7 @@ function agg(lines, shifts, models) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { dTopN: 3, toast: null, dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
+    this.state = { fyMetric: 'rev', dTopN: 3, toast: null, dateSel: -1, mods: [true, true], modsApplied: [true, true], chApplied: [true, true, true, true], mdOpen: false, tab: 'ov', plant: 'BP9P2', bu: 'CDBU1', cpRes: 'ALL', cpPanel: 'ALL', cpTypes: [true, true, true, true, true], cpSel: null, shift: 'D', model: 'ALL', types: [true, true, true, true], view: 'date', stack: false, chLines: [true, true, true, true], ddOpen: false,
       imgSn: null, imgLoading: false, fetched: {}, autoImg: null, lang: null };
   }
   snap(key) {
@@ -1143,7 +1290,8 @@ class Component extends DCLogic {
       { label: t.kRate, value: (s.real / (s.b * PINS) * 100).toFixed(2) + '%', sub: t.kRateSub(fmt(s.real), fmt(s.b * PINS)), style: big },
       { label: t.kDpu, value: (s.real / s.b).toFixed(2), sub: t.kDpuSub(fmt(s.real), fmt(s.b)), style: big },
       { label: t.kFc, value: (s.fcPts / s.calls * 100).toFixed(1) + '%', sub: t.kFcSub(fmt(s.fcPts), fmt(s.calls)), style: big + 'color: #B45309' },
-      { label: t.kRv, value: (s.rv / s.ng * 100).toFixed(1) + '%', sub: t.kRvSub(fmt(s.rv), fmt(s.ng), fmt(s.ng - s.rv)), style: big }
+      { label: t.kRv, value: (s.rv / s.ng * 100).toFixed(1) + '%', sub: t.kRvSub(fmt(s.rv), fmt(s.ng), fmt(s.ng - s.rv)), style: big },
+      { label: t.kFpy, value: (s.passRev / s.b * 100).toFixed(2) + '%', sub: t.kFpySub((s.passRaw / s.b * 100).toFixed(2) + '%'), style: big }
     ];
 
     // 整合圖：X 軸 日期 / 線別 × 瑕疵層別
@@ -1557,10 +1705,10 @@ class Component extends DCLogic {
     return {
       t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope, pu: pu, md: md, dt: dt,
       tabs: (function () {
-        var defs = [['in', t.tabIn, null], ['ov', t.tabOv, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
+        var defs = [['in', t.tabIn, null], ['ov', t.tabOv, null], ['fy', t.tabFy, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
         var cur = defs.filter(function (d) { return d[0] === st.tab; })[0];
         return {
-          in: st.tab === 'in', ov: st.tab === 'ov', df: st.tab === 'df', pr: st.tab === 'pr', bd: st.tab === 'bd', cur: cur ? cur[1] : '',
+          in: st.tab === 'in', ov: st.tab === 'ov', fy: st.tab === 'fy', df: st.tab === 'df', pr: st.tab === 'pr', bd: st.tab === 'bd', cur: cur ? cur[1] : '',
           items: defs.map(function (d) {
             var on = st.tab === d[0];
             return { key: d[0], label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
@@ -1570,7 +1718,63 @@ class Component extends DCLogic {
           })
         };
       })(),
-      kpis: kpis, ch: ch, cp: cp, defects: defects, fxNote: fxNote,
+      kpis: kpis, ch: ch, cp: cp, defects: defects, fxNote: fxNote, fy: (function () {
+        var pct = function (n, d) { return d ? (n / d * 100) : 0; };
+        var key = st.fyMetric === 'raw' ? 'passRaw' : 'passRev';
+        var days = st.dateSel >= 0 ? [st.dateSel] : [0, 1, 2, 3, 4, 5, 6];
+        var raw = days.map(function (d) {
+          DATE_SEL = d;
+          var bars = chSel.map(function (l) { var a = agg([l], selShifts, selModels); return { l: l, v: pct(a[key], a.b) }; });
+          return { d: d, bars: bars };
+        });
+        DATE_SEL = st.dateSel;
+        var mx = 0, hi = null, lo = null;
+        raw.forEach(function (g) { g.bars.forEach(function (b) {
+          if (b.v > mx) mx = b.v;
+          var nm = DATES[g.d] + ' ' + b.l + ' ' + b.v.toFixed(2) + '%';
+          if (!hi || b.v > hi.v) hi = { n: nm, v: b.v }; if (!lo || b.v < lo.v) lo = { n: nm, v: b.v };
+        }); });
+        var want = Math.max(0.5, mx * 1.12);
+        var unit = want <= 2 ? 0.5 : (want <= 5 ? 1 : (want <= 10 ? 2 : (want <= 25 ? 5 : 10)));
+        var top = Math.ceil(want / unit) * unit, step = top / 2;
+        var n = chSel.length, bw = n <= 1 ? 40 : (n === 2 ? 30 : (n === 3 ? 22 : 16));
+        var showVal = bw + 8 >= 38 || days.length === 1;
+        var groups = raw.map(function (g, gi) {
+          return {
+            label: DATES[g.d],
+            style: 'flex: 1 1 0; box-sizing: border-box; min-width: ' + Math.max(72, n * (bw + 8) + 16) + 'px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 4px; ' + (gi > 0 ? 'border-left: 1px solid #D1D5DB' : ''),
+            bars: g.bars.map(function (b) {
+              return { val: b.v.toFixed(2) + '%', showVal: showVal, tip: DATES[g.d] + ' ' + b.l + ' ' + b.v.toFixed(2) + '%',
+                style: 'width: ' + bw + 'px; border-radius: 2px 2px 0 0; background: ' + LCOL[b.l] + '; height: ' + Math.max(1, b.v / top * 200).toFixed(1) + 'px' };
+            })
+          };
+        });
+        var thS = 'padding: 10px 12px; border-bottom: 1px solid #E5E7EB; font-weight: 500; white-space: nowrap; text-align: ';
+        var rowOf = function (label, a, style) {
+          return { line: label, b: fmt(a.b), raw: fmt(a.passRaw), rawPct: pct(a.passRaw, a.b).toFixed(2) + '%', fcOnly: fmt(a.passRev - a.passRaw),
+            rev: fmt(a.passRev), revPct: pct(a.passRev, a.b).toFixed(2) + '%', lift: '+' + (pct(a.passRev, a.b) - pct(a.passRaw, a.b)).toFixed(2) + ' pp', rowStyle: style };
+        };
+        var base = "text-align: right; font-family: 'Roboto Mono', monospace; ";
+        var rows = LINES.map(function (l, i) { return rowOf(l, agg([l], selShifts, selModels), base + (!chAll && chMask[i] ? 'background: #EFF6FF' : '')); });
+        rows.push(rowOf(t.fyTotal, s, base + 'background: #F9FAFB; font-weight: 700'));
+        var causes = s.pts.map(function (c, i) { var dpu = c / s.b; return { i: i, dpu: dpu, share: (1 - Math.exp(-dpu)) * 100 }; });
+        var cmax = Math.max.apply(null, causes.map(function (c) { return c.share; }));
+        return {
+          metrics: [['rev', t.fyRev], ['raw', t.fyRaw]].map(function (m) { var on = st.fyMetric === m[0]; return { label: m[1], on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ fyMetric: m[0] }); } }; }),
+          legend: chSel.map(function (l) { return { label: l, swatch: 'width: 10px; height: 10px; display: inline-block; background: ' + LCOL[l] }; }),
+          axisTop: (top % 1 ? top.toFixed(1) : top.toFixed(0)) + '%', axisMid: (step % 1 ? step.toFixed(step * 4 % 1 ? 2 : 1) : step.toFixed(0)) + '%',
+          innerStyle: 'min-width: ' + (days.length === 1 ? 240 : Math.max(600, days.length * Math.max(72, n * (bw + 8) + 16))) + 'px; display: flex; border-left: 1px solid #D1D5DB',
+          groups: groups,
+          note: hi ? t.fyNote(st.fyMetric === 'raw' ? t.fyDefRaw : t.fyDefRev, hi.n, lo.n) : '',
+          heads: t.fyHeads.map(function (h, i) { return { label: h, style: thS + (i === 0 ? 'left' : 'right') }; }),
+          rows: rows,
+          causes: causes.map(function (c) {
+            return { name: DCODES[c.i], local: t.dNames[c.i], text: c.share.toFixed(1) + '% ・ ' + c.dpu.toFixed(2),
+              bar: 'height: 100%; background: ' + DCOLORS[c.i] + '; width: ' + (c.share / cmax * 100).toFixed(1) + '%' };
+          }),
+          causeNote: t.fyCauseNote((s.real / s.b).toFixed(2))
+        };
+      })(),
       intro: (function () {
         var goTab = [['ov', t.tabOv], null, ['df', t.tabDf], ['pr', t.tabPr], ['bd', t.tabBd], null];
         return t.feats.map(function (f, i) {
@@ -1581,7 +1785,7 @@ class Component extends DCLogic {
       })(),
       dTopBtns: [3, 5].map(function (n) { var on = st.dTopN === n; return { label: 'Top ' + n, on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ dTopN: n }); } }; }),
       toast: { show: !!st.toast, text: st.toast || '' },
-      snap: ['in', 'ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
+      snap: ['in', 'fy1', 'fy2', 'fy3', 'ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
       pScope: pScope,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
       bdNote: t.bdNote(pScope, boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
