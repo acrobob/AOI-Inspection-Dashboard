@@ -123,9 +123,37 @@ a{color:#1D4ED8}a:hover{color:#1E3A8A}
 
 <div role="tablist" aria-label="{{t.tabsLabel}}" style="display: flex; flex-wrap: wrap; gap: 4px 24px; border-bottom: 1px solid #D1D5DB; padding: 0 4px">
 <template data-sc="for" list="{{tabs.items}}" as="tb" hint-placeholder-count="4">
-<button type="button" role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}<template data-sc="if" value="{{tb.hasCount}}" hint-placeholder-val="{{false}}"><span style="{{tb.countStyle}}">{{tb.count}}</span></template></button>
+<button type="button" role="tab" data-tabkey="{{tb.key}}" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}<template data-sc="if" value="{{tb.hasCount}}" hint-placeholder-val="{{false}}"><span style="{{tb.countStyle}}">{{tb.count}}</span></template></button>
 </template>
 </div>
+
+<template data-sc="if" value="{{tabs.in}}" hint-placeholder-val="{{false}}">
+<div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
+<section id="panel-in" aria-label="{{t.inTitle}}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">{{t.inTitle}}</h2>
+<button type="button" data-noshot="1" onClick="{{snap.in}}" aria-label="{{t.snapLabel}}" title="{{t.snapLabel}}" style="width: 32px; height: 32px; padding: 0; border: 1px solid #E5E7EB; border-radius: 4px; background: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1.2-1.8h4.6l1.2 1.8h2v7h-11z" fill="none" stroke="#4B5563" stroke-width="1.4" stroke-linejoin="round"></path><circle cx="8" cy="9" r="2.3" fill="none" stroke="#4B5563" stroke-width="1.4"></circle></svg></button>
+</div>
+<span style="font-size: 12px; color: #4B5563">{{t.inSub}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 12px">
+<template data-sc="for" list="{{intro}}" as="f" hint-placeholder-count="6">
+<div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: baseline; gap: 10px">
+<span style="font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 700; color: #1D4ED8">{{f.no}}</span>
+<h3 style="margin: 0; font-size: 15px; font-weight: 700; line-height: 22px">{{f.title}}</h3>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: #374151">{{f.desc}}</p>
+<template data-sc="if" value="{{f.hasGo}}" hint-placeholder-val="{{false}}">
+<button type="button" data-noshot="1" onClick="{{f.go}}" style="align-self: flex-start; margin-top: auto; min-height: 32px; padding: 0 10px; border: 1px solid #D1D5DB; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 12px; color: #1D4ED8; cursor: pointer">{{f.goLabel}}</button>
+</template>
+</div>
+</template>
+</div>
+</section>
+</div>
+</template>
 
 <template data-sc="if" value="{{tabs.ov}}" hint-placeholder-val="{{true}}">
 <div role="tabpanel" aria-label="{{tabs.cur}}" style="display: flex; flex-direction: column; gap: 16px">
@@ -684,6 +712,8 @@ var I18N = {
     fxHeadPallet: '載具', fxHeadVals: 'DPU ・ 板數',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + '，高於整體 ' + avg + ' 約 ' + pct + '%，建議優先確認其壓扣與磨耗狀況。'; },
     rvRealSub: function (p) { return '占 AOI 報警 ' + p + '%'; }, rvFcSub: function (p) { return '誤判率 ' + p + '%'; }, rvPendSub: function (n, p) { return 'NG 板 ' + n + ' 片中的 ' + p + '%'; },
+    tabIn: '介紹', inTitle: 'AOI 檢測看板特色', inSub: '用一個網頁取代各機台各自調閱報表的作法', goTo: function (tab) { return '前往「' + tab + '」 →'; },
+    feats: [['跨廠 / 線 / 站 / 機種', '即時切換各機台檢測結果，免用隨身碟取報表。'], ['不干擾機台', '獨立操作，不影響檢測運作。'], ['DPU 篩選與層別', '依瑕疵類型層別看趨勢，追蹤改善成效。'], ['串接載具資訊', '自動帶入載具（Solder Pallet）資訊。'], ['瑕疵影像速查', '快速調閱瑕疵圖片。'], ['資料雲端化', '免在機台本機調閱。']],
     last7: '近 7 天', today: '當天', yday: '昨天',
     cmpTitle: '線別對比', cmpPick: '選擇瑕疵類型', allDefects: '全部瑕疵', cmpEmpty: '請至少勾選一種瑕疵類型',
     cmpSub: function (types, scope) { return 'DPU（' + types + '）・ ' + scope; },
@@ -738,6 +768,8 @@ var I18N = {
     fxHeadPallet: 'Pallet', fxHeadVals: 'DPU · boards',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' is ' + pct + '% above the overall ' + avg + '; check its hold-downs and wear first.'; },
     rvRealSub: function (p) { return p + '% of AOI calls'; }, rvFcSub: function (p) { return 'False-call rate ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% of ' + n + ' NG boards'; },
+    tabIn: 'Introduction', inTitle: 'AOI Inspection Dashboard — Highlights', inSub: 'One web page instead of pulling reports from each machine', goTo: function (tab) { return 'Go to ' + tab + ' →'; },
+    feats: [['Across plants, lines, stations & models', 'Switch between every machine\'s inspection results in real time — no more pulling reports off USB drives.'], ['No impact on the machines', 'Runs independently and never interrupts inspection.'], ['DPU filtering & breakdown', 'Break trends down by defect type and track the effect of improvements.'], ['Linked Solder Pallet data', 'Solder Pallet information is brought in automatically.'], ['Quick defect image lookup', 'Pull up defect images in seconds.'], ['Data in the cloud', 'No need to look anything up on the machine itself.']],
     last7: 'Last 7 days', today: 'Today', yday: 'Yesterday',
     cmpTitle: 'Line Comparison', cmpPick: 'Select defect types', allDefects: 'All defects', cmpEmpty: 'Select at least one defect type',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -792,6 +824,8 @@ var I18N = {
     fxHeadPallet: 'พาเลท', fxHeadVals: 'DPU · บอร์ด',
     fxNoteFn: function (p, v, pct, avg) { return p + ' DPU ' + v + ' สูงกว่าค่ารวม ' + avg + ' ประมาณ ' + pct + '% ควรตรวจตัวกดยึดและการสึกหรอก่อน'; },
     rvRealSub: function (p) { return p + '% ของจุดที่ AOI แจ้ง'; }, rvFcSub: function (p) { return 'อัตราแจ้งผิด ' + p + '%'; }, rvPendSub: function (n, p) { return p + '% ของบอร์ด NG ' + n + ' แผ่น'; },
+    tabIn: 'แนะนำ', inTitle: 'จุดเด่นของแดชบอร์ดตรวจสอบ AOI', inSub: 'ดูผลจากทุกเครื่องได้ในหน้าเว็บเดียว ไม่ต้องดึงรายงานทีละเครื่อง', goTo: function (tab) { return 'ไปที่ ' + tab + ' →'; },
+    feats: [['ข้ามโรงงาน / ไลน์ / สถานี / รุ่น', 'สลับดูผลตรวจของแต่ละเครื่องได้แบบเรียลไทม์ ไม่ต้องใช้แฟลชไดรฟ์ดึงรายงาน'], ['ไม่รบกวนเครื่องจักร', 'ทำงานแยกอิสระ ไม่กระทบการตรวจสอบ'], ['กรองและแยกชั้น DPU', 'ดูแนวโน้มแยกตามประเภทของเสีย และติดตามผลการปรับปรุง'], ['เชื่อมข้อมูล Solder Pallet', 'ดึงข้อมูล Solder Pallet เข้ามาโดยอัตโนมัติ'], ['ค้นภาพของเสียได้รวดเร็ว', 'เรียกดูรูปของเสียได้ทันที'], ['ข้อมูลบนคลาวด์', 'ไม่ต้องเปิดดูที่เครื่องในไลน์']],
     last7: '7 วันล่าสุด', today: 'วันนี้', yday: 'เมื่อวาน',
     cmpTitle: 'เปรียบเทียบไลน์', cmpPick: 'เลือกประเภทของเสีย', allDefects: 'ของเสียทั้งหมด', cmpEmpty: 'กรุณาเลือกประเภทของเสียอย่างน้อยหนึ่งประเภท',
     cmpSub: function (types, scope) { return 'DPU (' + types + ') · ' + scope; },
@@ -1523,13 +1557,13 @@ class Component extends DCLogic {
     return {
       t: t, langs: langs, lines: lines, shifts: shifts, models: models, scope: scope, pu: pu, md: md, dt: dt,
       tabs: (function () {
-        var defs = [['ov', t.tabOv, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
+        var defs = [['in', t.tabIn, null], ['ov', t.tabOv, null], ['df', t.tabDf, null], ['pr', t.tabPr, null], ['bd', t.tabBd, boards.length]];
         var cur = defs.filter(function (d) { return d[0] === st.tab; })[0];
         return {
-          ov: st.tab === 'ov', df: st.tab === 'df', pr: st.tab === 'pr', bd: st.tab === 'bd', cur: cur ? cur[1] : '',
+          in: st.tab === 'in', ov: st.tab === 'ov', df: st.tab === 'df', pr: st.tab === 'pr', bd: st.tab === 'bd', cur: cur ? cur[1] : '',
           items: defs.map(function (d) {
             var on = st.tab === d[0];
-            return { label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
+            return { key: d[0], label: d[1], on: on ? 'true' : 'false', hasCount: d[2] !== null, count: d[2],
               countStyle: "margin-left: 6px; padding: 0 6px; border-radius: 9px; font-size: 11px; font-family: 'Roboto Mono', monospace; " + (on ? 'background: #1F2937; color: #FFFFFF' : 'background: #F3F4F6; color: #374151'),
               pick: function () { self.setState(closeMenus({ tab: d[0] })); },
               style: 'min-height: 44px; padding: 0 4px; margin-bottom: -1px; border: 0; border-bottom: 2px solid ' + (on ? '#1F2937' : 'transparent') + '; background: transparent; font: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; ' + (on ? 'color: #1F2937; font-weight: 700' : 'color: #4B5563; font-weight: 500') };
@@ -1537,9 +1571,17 @@ class Component extends DCLogic {
         };
       })(),
       kpis: kpis, ch: ch, cp: cp, defects: defects, fxNote: fxNote,
+      intro: (function () {
+        var goTab = [['ov', t.tabOv], null, ['df', t.tabDf], ['pr', t.tabPr], ['bd', t.tabBd], null];
+        return t.feats.map(function (f, i) {
+          var g = goTab[i];
+          return { no: '0' + (i + 1), title: f[0], desc: f[1], hasGo: !!g, goLabel: g ? t.goTo(g[1]) : '',
+            go: function () { if (g) { self.setState({ tab: g[0] }); window.scrollTo(0, 0); } } };
+        });
+      })(),
       dTopBtns: [3, 5].map(function (n) { var on = st.dTopN === n; return { label: 'Top ' + n, on: on ? 'true' : 'false', style: self.seg(on), pick: function () { self.setState({ dTopN: n }); } }; }),
       toast: { show: !!st.toast, text: st.toast || '' },
-      snap: ['ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
+      snap: ['in', 'ch', 'lt', 'df', 'cp', 'fx', 'rv', 'bd'].reduce(function (o, k) { o[k] = function () { self.snap(k); }; return o; }, {}),
       pScope: pScope,
       lineHeads: lineHeads, lineRows: lineRows, fixtures: fixtures, rvBoxes: rvBoxes, fcTop: fcTop,
       bdNote: t.bdNote(pScope, boards.length), bdHeads: t.bdHeads, modes: modes, boards: boards,
